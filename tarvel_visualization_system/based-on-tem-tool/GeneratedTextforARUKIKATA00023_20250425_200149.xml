@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="app.diagrams.net" version="26.2.14">
+  <diagram name="ページ1" id="2ZRpLLbBUlxefcGGf3Ci">
+    <mxGraphModel dx="1022" dy="1144" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="1-1" value="xx:xx - xx:xx" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;fillColor=none;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;html=1;" vertex="1" parent="1">
+          <mxGeometry x="40" y="40" width="140" height="52" as="geometry" />
+        </mxCell>
+        <mxCell id="2" value="自宅" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry y="26" width="140" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="3" value="07:30 - 07:50" style="shape=singleArrow;whiteSpace=wrap;html=1;arrowWidth=0.55;arrowSize=0.2;" vertex="1" parent="1">
+          <mxGeometry x="180" y="36" width="100" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="4" value="移動（車）" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;fillColor=none;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;html=1;" vertex="1" parent="1">
+          <mxGeometry x="280" y="40" width="140" height="52" as="geometry" />
+        </mxCell>
+        <mxCell id="5" value="07:50 - 08:20" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry y="26" width="140" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="6" value="徳光ＰＡ（北陸自動車道）" style="shape=singleArrow;whiteSpace=wrap;html=1;arrowWidth=0.55;arrowSize=0.2;" vertex="1" parent="1">
+          <mxGeometry x="420" y="36" width="100" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="7" value="08:20 - 11:40" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;fillColor=none;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;html=1;" vertex="1" parent="1">
+          <mxGeometry x="520" y="40" width="140" height="52" as="geometry" />
+        </mxCell>
+        <mxCell id="8" value="移動（バス）" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry y="26" width="140" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="9" value="11:40 - 12:30" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;fillColor=none;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;html=1;" vertex="1" parent="1">
+          <mxGeometry x="660" y="40" width="140" height="52" as="geometry" />
+        </mxCell>
+        <mxCell id="10" value="宇治川遊覧舟" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry y="26" width="140" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="11" value="12:30 - 12:40" style="shape=singleArrow;whiteSpace=wrap;html=1;arrowWidth=0.55;arrowSize=0.2;" vertex="1" parent="1">
+          <mxGeometry x="800" y="36" width="100" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="12" value="移動（徒歩）" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;fillColor=none;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;html=1;" vertex="1" parent="1">
+          <mxGeometry x="900" y="40" width="140" height="52" as="geometry" />
+        </mxCell>
+        <mxCell id="13" value="12:40 - 13:10" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry y="26" width="140" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="14" value="平等院" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;fillColor=none;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1040" y="40" width="140" height="78" as="geometry" />
+        </mxCell>
+        <mxCell id="15" value="お決まりですが、10円玉の表と比べてみました。" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="14">
+          <mxGeometry y="52" width="140" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="16" value="13:10 - 13:15" style="shape=singleArrow;whiteSpace=wrap;html=1;arrowWidth=0.55;arrowSize=0.2;" vertex="1" parent="1">
+          <mxGeometry x="1180" y="36" width="100" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="17" value="移動（徒歩）" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;fillColor=none;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1280" y="40" width="140" height="52" as="geometry" />
+        </mxCell>
+        <mxCell id="18" value="13:15 - 13:35" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry y="26" width="140" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="19" value="平等院参道沿いのお店" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;fillColor=none;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1420" y="40" width="140" height="78" as="geometry" />
+        </mxCell>
+        <mxCell id="20" value="参道沿いにはお茶のお店がた～くさん。抹茶ソフトやほうじ茶ゼリー等、美味しいものがいっぱいです。" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="19">
+          <mxGeometry y="52" width="140" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="21" value="13:35 - 13:40" style="shape=singleArrow;whiteSpace=wrap;html=1;arrowWidth=0.55;arrowSize=0.2;" vertex="1" parent="1">
+          <mxGeometry x="1560" y="36" width="100" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="22" value="移動（徒歩）" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;fillColor=none;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1660" y="40" width="140" height="52" as="geometry" />
+        </mxCell>
+        <mxCell id="23" value="13:40 - 14:00" style="shape=singleArrow;whiteSpace=wrap;html=1;arrowWidth=0.55;arrowSize=0.2;" vertex="1" parent="1">
+          <mxGeometry x="1800" y="36" width="100" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="24" value="移動（バス）" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;fillColor=none;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1900" y="40" width="140" height="52" as="geometry" />
+        </mxCell>
+        <mxCell id="25" value="14:00 - 14:40" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry y="26" width="140" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="26" value="三室戸寺" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;fillColor=none;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;html=1;" vertex="1" parent="1">
+          <mxGeometry x="2040" y="40" width="140" height="78" as="geometry" />
+        </mxCell>
+        <mxCell id="27" value="紅葉もきれいですが、花のお寺としても有名です。100円でお寺の鐘をつくことができますよ。" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="26">
+          <mxGeometry y="52" width="140" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="28" value="14:40 - 15:00" style="shape=singleArrow;whiteSpace=wrap;html=1;arrowWidth=0.55;arrowSize=0.2;" vertex="1" parent="1">
+          <mxGeometry x="2180" y="36" width="100" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="29" value="移動（バス）" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;fillColor=none;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;html=1;" vertex="1" parent="1">
+          <mxGeometry x="2280" y="40" width="140" height="52" as="geometry" />
+        </mxCell>
+        <mxCell id="30" value="15:00 - 16:10" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry y="26" width="140" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="31" value="石山寺" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;fillColor=none;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;html=1;" vertex="1" parent="1">
+          <mxGeometry x="2420" y="40" width="140" height="78" as="geometry" />
+        </mxCell>
+        <mxCell id="32" value="石山寺の付近では「しじみめし」を売っているお店が多いです。個人的には、寛政11年創業の「石柳」というお店がＮｏ.1。" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="31">
+          <mxGeometry y="52" width="140" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="33" value="16:10 - 18:00" style="shape=singleArrow;whiteSpace=wrap;html=1;arrowWidth=0.55;arrowSize=0.2;" vertex="1" parent="1">
+          <mxGeometry x="2560" y="36" width="100" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="34" value="移動（バス）" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;fillColor=none;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;html=1;" vertex="1" parent="1">
+          <mxGeometry x="2660" y="40" width="140" height="52" as="geometry" />
+        </mxCell>
+        <mxCell id="35" value="18:00 - 18:20" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry y="26" width="140" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="36" value="南条ＳＡ（北陸自動車道）" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;fillColor=none;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;html=1;" vertex="1" parent="1">
+          <mxGeometry x="2800" y="40" width="140" height="78" as="geometry" />
+        </mxCell>
+        <mxCell id="37" value="夜ご飯用に、南条ＳＡで速弁「かに献上」を買いました。3,000円とちょっとお高めですが、ズワイガニたっぷりで、味付けも抜群でした。おすすめの一品ですよ～。" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="36">
+          <mxGeometry y="52" width="140" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="38" value="18:20 - 19:30" style="shape=singleArrow;whiteSpace=wrap;html=1;arrowWidth=0.55;arrowSize=0.2;" vertex="1" parent="1">
+          <mxGeometry x="2940" y="36" width="100" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="39" value="移動（バス）" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;fillColor=none;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;html=1;" vertex="1" parent="1">
+          <mxGeometry x="3040" y="40" width="140" height="52" as="geometry" />
+        </mxCell>
+        <mxCell id="40" value="19:30 - 19:35" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry y="26" width="140" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="41" value="徳光ＰＡ（北陸自動車道）" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;fillColor=none;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;html=1;" vertex="1" parent="1">
+          <mxGeometry x="3180" y="40" width="140" height="52" as="geometry" />
+        </mxCell>
+        <mxCell id="42" value="19:35 - 19:50" style="shape=singleArrow;whiteSpace=wrap;html=1;arrowWidth=0.55;arrowSize=0.2;" vertex="1" parent="1">
+          <mxGeometry x="3320" y="36" width="100" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="43" value="移動（車）" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;fillColor=none;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;html=1;" vertex="1" parent="1">
+          <mxGeometry x="3420" y="40" width="140" height="52" as="geometry" />
+        </mxCell>
+        <mxCell id="44" value="xx:xx - xx:xx" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry y="26" width="140" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="45" value="自宅" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;fillColor=none;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;html=1;" vertex="1" parent="1">
+          <mxGeometry x="3560" y="40" width="140" height="52" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

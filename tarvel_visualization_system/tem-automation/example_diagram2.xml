@@ -1,0 +1,82 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36" version="26.0.4">
+  <diagram name="ページ1" id="kLe-RU0o9S5QHhZOCq6L">
+    <mxGraphModel dx="1034" dy="420" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="2-1" value="友達が猫を飼っていると聞く&lt;div&gt;[event]&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="500" y="50" width="200" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="2-2" value="友達を羨ましく思う&lt;div&gt;[event]&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="500" y="150" width="200" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="2-3" value="猫を飼う&lt;div&gt;[EFP]&lt;/div&gt;" style="shape=ext;double=1;rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="250" y="450" width="200" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="2-4" value="親にねだる&lt;div&gt;[BFP]&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="500" y="250" width="200" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="2-11" value="親を説得する&lt;div&gt;[BFP]&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="500" y="350" width="200" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="2-12" value="親にダメと言われる&lt;div&gt;[SD]&lt;/div&gt;" style="shape=singleArrow;direction=west;whiteSpace=wrap;html=1;arrowWidth=1;arrowSize=0.10896635910560462;" parent="1" vertex="1">
+          <mxGeometry x="800" y="300" width="200" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="2-13" value="祖母の理解を得る&lt;div&gt;[SG]&lt;/div&gt;" style="shape=singleArrow;whiteSpace=wrap;html=1;arrowWidth=1;arrowSize=0.14034440665409448;" parent="1" vertex="1">
+          <mxGeometry x="200" y="400" width="200" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="2-15" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" parent="1" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="599.66" y="210" as="sourcePoint" />
+            <mxPoint x="599.66" y="250" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="2-18" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" parent="1" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="599.5799999999999" y="310" as="sourcePoint" />
+            <mxPoint x="599.5799999999999" y="350" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="2-19" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" target="2-3" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="599.5799999999999" y="410" as="sourcePoint" />
+            <mxPoint x="599.5799999999999" y="450" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="3-1" value="猫を飼わない&lt;div&gt;[P-EFP]&lt;/div&gt;" style="shape=ext;double=1;rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="750" y="450" width="200" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="3-2" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" parent="1" source="2-11" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="849.76" y="410" as="sourcePoint" />
+            <mxPoint x="849.76" y="450" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="4-1" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" parent="1" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="599.71" y="110" as="sourcePoint" />
+            <mxPoint x="599.71" y="150" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ltE7rQdlZuUmMSzCZT6x-1" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" target="ltE7rQdlZuUmMSzCZT6x-2">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="350" y="510" as="sourcePoint" />
+            <mxPoint x="599.76" y="550" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ltE7rQdlZuUmMSzCZT6x-2" value="猫の世話をする&lt;div&gt;[EFP]&lt;/div&gt;" style="shape=ext;double=1;rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="250" y="550" width="200" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="ltE7rQdlZuUmMSzCZT6x-3" value="猫の世話をしない&lt;div&gt;[P-EFP]&lt;/div&gt;" style="shape=ext;double=1;rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="750" y="550" width="200" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="ltE7rQdlZuUmMSzCZT6x-4" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" target="ltE7rQdlZuUmMSzCZT6x-3">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="350" y="510" as="sourcePoint" />
+            <mxPoint x="599.76" y="550" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

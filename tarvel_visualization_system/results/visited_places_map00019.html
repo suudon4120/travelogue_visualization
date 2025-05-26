@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    
+        <script>
+            L_NO_TOUCH = false;
+            L_DISABLE_3D = false;
+        </script>
+    
+    <style>html, body {width: 100%;height: 100%;margin: 0;padding: 0;}</style>
+    <style>#map {position:absolute;top:0;bottom:0;right:0;left:0;}</style>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_ac1fa9cb6e078ac3f9cb0fe8ed3ccfe0 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+        
+</head>
+<body>
+    
+    
+            <div class="folium-map" id="map_ac1fa9cb6e078ac3f9cb0fe8ed3ccfe0" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_ac1fa9cb6e078ac3f9cb0fe8ed3ccfe0 = L.map(
+                "map_ac1fa9cb6e078ac3f9cb0fe8ed3ccfe0",
+                {
+                    center: [35.5, 135.8],
+                    crs: L.CRS.EPSG3857,
+                    ...{
+  "zoom": 10,
+  "zoomControl": true,
+  "preferCanvas": false,
+}
+
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_33d923a8a43d28272a48a0d69a61fb47 = L.tileLayer(
+                "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {
+  "minZoom": 0,
+  "maxZoom": 19,
+  "maxNativeZoom": 19,
+  "noWrap": false,
+  "attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors",
+  "subdomains": "abc",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_33d923a8a43d28272a48a0d69a61fb47.addTo(map_ac1fa9cb6e078ac3f9cb0fe8ed3ccfe0);
+        
+    
+            var marker_078bffd87d7490006bb142aa12cc892f = L.marker(
+                [34.6829008, 135.8545975],
+                {
+}
+            ).addTo(map_ac1fa9cb6e078ac3f9cb0fe8ed3ccfe0);
+        
+    
+            var icon_d271fef4d013d07a50389a3e1862a433 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_a5489a778642c58de2eb6ffc42582027 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_8c902967e9215f59b4bb10ca204198a9 = $(`<div id="html_8c902967e9215f59b4bb10ca204198a9" style="width: 100.0%; height: 100.0%;"><b>奈良公園</b><br>奈良公園のアイドル「しか」で～す。</div>`)[0];
+                popup_a5489a778642c58de2eb6ffc42582027.setContent(html_8c902967e9215f59b4bb10ca204198a9);
+            
+        
+
+        marker_078bffd87d7490006bb142aa12cc892f.bindPopup(popup_a5489a778642c58de2eb6ffc42582027)
+        ;
+
+        
+    
+    
+            marker_078bffd87d7490006bb142aa12cc892f.bindTooltip(
+                `<div>
+                     奈良公園
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_078bffd87d7490006bb142aa12cc892f.setIcon(icon_d271fef4d013d07a50389a3e1862a433);
+            
+    
+            var marker_454ce529106cff66162e05184a7fe814 = L.marker(
+                [34.6829744, 135.8318653],
+                {
+}
+            ).addTo(map_ac1fa9cb6e078ac3f9cb0fe8ed3ccfe0);
+        
+    
+            var icon_20fa23374e9d350d13542ae3cd8f9303 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_ac8906a95e34c5c4f5f4c8b6e3160a61 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_954a66303da54d8503e6438c19c1b623 = $(`<div id="html_954a66303da54d8503e6438c19c1b623" style="width: 100.0%; height: 100.0%;"><b>興福寺</b><br>写真は猿沢池からも見える興福寺の五重塔です。</div>`)[0];
+                popup_ac8906a95e34c5c4f5f4c8b6e3160a61.setContent(html_954a66303da54d8503e6438c19c1b623);
+            
+        
+
+        marker_454ce529106cff66162e05184a7fe814.bindPopup(popup_ac8906a95e34c5c4f5f4c8b6e3160a61)
+        ;
+
+        
+    
+    
+            marker_454ce529106cff66162e05184a7fe814.bindTooltip(
+                `<div>
+                     興福寺
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_454ce529106cff66162e05184a7fe814.setIcon(icon_20fa23374e9d350d13542ae3cd8f9303);
+            
+    
+            var marker_fecd60d16c36d2e482396ddba6d91268 = L.marker(
+                [34.6835328, 135.8325334],
+                {
+}
+            ).addTo(map_ac1fa9cb6e078ac3f9cb0fe8ed3ccfe0);
+        
+    
+            var icon_0de91a60f3d5b353c771c70d400fb3c1 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_90b0854ed3a3bf569555ca496c65ff8c = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_461d0d6a3f682c83d84a8f89a09a7c9b = $(`<div id="html_461d0d6a3f682c83d84a8f89a09a7c9b" style="width: 100.0%; height: 100.0%;"><b>国宝館</b><br>国宝館と東金堂に行く場合は、優待券がＨＰから印刷できますよ。</div>`)[0];
+                popup_90b0854ed3a3bf569555ca496c65ff8c.setContent(html_461d0d6a3f682c83d84a8f89a09a7c9b);
+            
+        
+
+        marker_fecd60d16c36d2e482396ddba6d91268.bindPopup(popup_90b0854ed3a3bf569555ca496c65ff8c)
+        ;
+
+        
+    
+    
+            marker_fecd60d16c36d2e482396ddba6d91268.bindTooltip(
+                `<div>
+                     国宝館
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_fecd60d16c36d2e482396ddba6d91268.setIcon(icon_0de91a60f3d5b353c771c70d400fb3c1);
+            
+    
+            var marker_94beb42e321cdd319aade88ff32d2a33 = L.marker(
+                [34.6829056, 135.8322141],
+                {
+}
+            ).addTo(map_ac1fa9cb6e078ac3f9cb0fe8ed3ccfe0);
+        
+    
+            var icon_ef50e5817f7b25607edfbd4089866495 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_e171948fae555e83cead641ed5b1f23f = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_847fbddbbb4c97bf5f82d357db023cb7 = $(`<div id="html_847fbddbbb4c97bf5f82d357db023cb7" style="width: 100.0%; height: 100.0%;"><b>東金堂</b><br>国宝館と東金堂に行く場合は、優待券がＨＰから印刷できますよ。</div>`)[0];
+                popup_e171948fae555e83cead641ed5b1f23f.setContent(html_847fbddbbb4c97bf5f82d357db023cb7);
+            
+        
+
+        marker_94beb42e321cdd319aade88ff32d2a33.bindPopup(popup_e171948fae555e83cead641ed5b1f23f)
+        ;
+
+        
+    
+    
+            marker_94beb42e321cdd319aade88ff32d2a33.bindTooltip(
+                `<div>
+                     東金堂
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_94beb42e321cdd319aade88ff32d2a33.setIcon(icon_ef50e5817f7b25607edfbd4089866495);
+            
+    
+            var marker_be3737a16fe2a73cc01bb8c285e03297 = L.marker(
+                [34.614013, 135.7360432],
+                {
+}
+            ).addTo(map_ac1fa9cb6e078ac3f9cb0fe8ed3ccfe0);
+        
+    
+            var icon_0b581b6a1b5436fa61a8adeedb2bf536 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_4dd4697f7421383e92e3628d7bf8424b = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_3dc3dc16eca6fd2b2baf0c3631073173 = $(`<div id="html_3dc3dc16eca6fd2b2baf0c3631073173" style="width: 100.0%; height: 100.0%;"><b>法隆寺</b><br>今頃は名前を書いたかわらが、法隆寺の屋根に使われているのかなぁ。</div>`)[0];
+                popup_4dd4697f7421383e92e3628d7bf8424b.setContent(html_3dc3dc16eca6fd2b2baf0c3631073173);
+            
+        
+
+        marker_be3737a16fe2a73cc01bb8c285e03297.bindPopup(popup_4dd4697f7421383e92e3628d7bf8424b)
+        ;
+
+        
+    
+    
+            marker_be3737a16fe2a73cc01bb8c285e03297.bindTooltip(
+                `<div>
+                     法隆寺
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_be3737a16fe2a73cc01bb8c285e03297.setIcon(icon_0b581b6a1b5436fa61a8adeedb2bf536);
+            
+</script>
+</html>

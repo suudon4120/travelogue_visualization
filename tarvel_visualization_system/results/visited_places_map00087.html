@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    
+        <script>
+            L_NO_TOUCH = false;
+            L_DISABLE_3D = false;
+        </script>
+    
+    <style>html, body {width: 100%;height: 100%;margin: 0;padding: 0;}</style>
+    <style>#map {position:absolute;top:0;bottom:0;right:0;left:0;}</style>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_76aeb6696530a62ef1733801e19eda9c {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+        
+</head>
+<body>
+    
+    
+            <div class="folium-map" id="map_76aeb6696530a62ef1733801e19eda9c" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_76aeb6696530a62ef1733801e19eda9c = L.map(
+                "map_76aeb6696530a62ef1733801e19eda9c",
+                {
+                    center: [35.7138, 139.777],
+                    crs: L.CRS.EPSG3857,
+                    ...{
+  "zoom": 12,
+  "zoomControl": true,
+  "preferCanvas": false,
+}
+
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_e44efe7018c79e8a2789e73b1284ca85 = L.tileLayer(
+                "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {
+  "minZoom": 0,
+  "maxZoom": 19,
+  "maxNativeZoom": 19,
+  "noWrap": false,
+  "attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors",
+  "subdomains": "abc",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_e44efe7018c79e8a2789e73b1284ca85.addTo(map_76aeb6696530a62ef1733801e19eda9c);
+        
+    
+            var marker_5c09bc3deb0579245dc05e71f9987c80 = L.marker(
+                [35.7138, 139.777],
+                {
+}
+            ).addTo(map_76aeb6696530a62ef1733801e19eda9c);
+        
+    
+            var icon_1cf0bd0ddbcd221719644550c14260eb = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_377e58f8024cbc35b0ecad887bd01b61 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_cddd32917db1b49a09c6dcb02e613b8b = $(`<div id="html_cddd32917db1b49a09c6dcb02e613b8b" style="width: 100.0%; height: 100.0%;">上野駅<br>上野駅13番ホーム。16:20発、寝台特急カシオペア号を途中青森まで牽引するEF81電気機関車。</div>`)[0];
+                popup_377e58f8024cbc35b0ecad887bd01b61.setContent(html_cddd32917db1b49a09c6dcb02e613b8b);
+            
+        
+
+        marker_5c09bc3deb0579245dc05e71f9987c80.bindPopup(popup_377e58f8024cbc35b0ecad887bd01b61)
+        ;
+
+        
+    
+    
+                marker_5c09bc3deb0579245dc05e71f9987c80.setIcon(icon_1cf0bd0ddbcd221719644550c14260eb);
+            
+    
+            var marker_57daab7ae903e28dfe58cef7b4ba343a = L.marker(
+                [35.6471479, 139.621933],
+                {
+}
+            ).addTo(map_76aeb6696530a62ef1733801e19eda9c);
+        
+    
+            var icon_34ba79ea9273b689308e26b3dbf26151 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_c9eb17d2068cd733a36446a601eea9b6 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_6cafb54c351323f22d6bcf90caef47fd = $(`<div id="html_6cafb54c351323f22d6bcf90caef47fd" style="width: 100.0%; height: 100.0%;">南千歳駅<br>カシオペアを降り、南千歳からは、スーパーおおぞら3号釧路行に乗車。</div>`)[0];
+                popup_c9eb17d2068cd733a36446a601eea9b6.setContent(html_6cafb54c351323f22d6bcf90caef47fd);
+            
+        
+
+        marker_57daab7ae903e28dfe58cef7b4ba343a.bindPopup(popup_c9eb17d2068cd733a36446a601eea9b6)
+        ;
+
+        
+    
+    
+                marker_57daab7ae903e28dfe58cef7b4ba343a.setIcon(icon_34ba79ea9273b689308e26b3dbf26151);
+            
+    
+            var marker_53ccc2edcdb5b9ea3d0019bc7ee2d6aa = L.marker(
+                [42.9849, 144.3819],
+                {
+}
+            ).addTo(map_76aeb6696530a62ef1733801e19eda9c);
+        
+    
+            var icon_f0c4502017459c4c75a89deefd2b07c0 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_dba7faf2a01973fa15b012c05ebd3752 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_635faa42a19b3b0bdf55442bbfccde2a = $(`<div id="html_635faa42a19b3b0bdf55442bbfccde2a" style="width: 100.0%; height: 100.0%;">釧路<br>釧路での宿は、「ラビスタ釧路川」というホテル。</div>`)[0];
+                popup_dba7faf2a01973fa15b012c05ebd3752.setContent(html_635faa42a19b3b0bdf55442bbfccde2a);
+            
+        
+
+        marker_53ccc2edcdb5b9ea3d0019bc7ee2d6aa.bindPopup(popup_dba7faf2a01973fa15b012c05ebd3752)
+        ;
+
+        
+    
+    
+                marker_53ccc2edcdb5b9ea3d0019bc7ee2d6aa.setIcon(icon_f0c4502017459c4c75a89deefd2b07c0);
+            
+    
+            var marker_8789b66d887183967eafed450775ebbb = L.marker(
+                [42.9849, 144.3819],
+                {
+}
+            ).addTo(map_76aeb6696530a62ef1733801e19eda9c);
+        
+    
+            var icon_de16612001357be809481948be4d94e3 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_0bbbbc233a070950f8d3688621c4f652 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_09cd5d058e2f8d278164969c503d4bad = $(`<div id="html_09cd5d058e2f8d278164969c503d4bad" style="width: 100.0%; height: 100.0%;">ラビスタ釧路川<br>釧路での宿は、「ラビスタ釧路川」というホテル。</div>`)[0];
+                popup_0bbbbc233a070950f8d3688621c4f652.setContent(html_09cd5d058e2f8d278164969c503d4bad);
+            
+        
+
+        marker_8789b66d887183967eafed450775ebbb.bindPopup(popup_0bbbbc233a070950f8d3688621c4f652)
+        ;
+
+        
+    
+    
+                marker_8789b66d887183967eafed450775ebbb.setIcon(icon_de16612001357be809481948be4d94e3);
+            
+    
+            var marker_1f2cd75838e49b5440b3d08bb9c435b1 = L.marker(
+                [42.9849, 144.3819],
+                {
+}
+            ).addTo(map_76aeb6696530a62ef1733801e19eda9c);
+        
+    
+            var icon_603963cbdffbc038c59d33c8b27cc717 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_16988b26624438f53be5591b4d2f4519 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_4885c2c2d242b565c4fb4e14e7322f5f = $(`<div id="html_4885c2c2d242b565c4fb4e14e7322f5f" style="width: 100.0%; height: 100.0%;">幣舞橋<br>幣舞橋、フィッシャマンズワーフMOOの近くにあり、観光にも便利です。</div>`)[0];
+                popup_16988b26624438f53be5591b4d2f4519.setContent(html_4885c2c2d242b565c4fb4e14e7322f5f);
+            
+        
+
+        marker_1f2cd75838e49b5440b3d08bb9c435b1.bindPopup(popup_16988b26624438f53be5591b4d2f4519)
+        ;
+
+        
+    
+    
+                marker_1f2cd75838e49b5440b3d08bb9c435b1.setIcon(icon_603963cbdffbc038c59d33c8b27cc717);
+            
+    
+            var marker_160bd133186c1b2d4f7ca0585179f1fd = L.marker(
+                [42.9849, 144.3819],
+                {
+}
+            ).addTo(map_76aeb6696530a62ef1733801e19eda9c);
+        
+    
+            var icon_06c2de27fad38012cd84bd9b3154e43b = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_c67514959640180f63bbbc8f83b04944 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_5fbc320a08542adcfa22bd6c8dbe3352 = $(`<div id="html_5fbc320a08542adcfa22bd6c8dbe3352" style="width: 100.0%; height: 100.0%;">フィッシャマンズワーフMOO<br>幣舞橋、フィッシャマンズワーフMOOの近くにあり、観光にも便利です。</div>`)[0];
+                popup_c67514959640180f63bbbc8f83b04944.setContent(html_5fbc320a08542adcfa22bd6c8dbe3352);
+            
+        
+
+        marker_160bd133186c1b2d4f7ca0585179f1fd.bindPopup(popup_c67514959640180f63bbbc8f83b04944)
+        ;
+
+        
+    
+    
+                marker_160bd133186c1b2d4f7ca0585179f1fd.setIcon(icon_06c2de27fad38012cd84bd9b3154e43b);
+            
+    
+            var marker_c25d3b2c71c95ebb5486cebc91c84e26 = L.marker(
+                [42.9849, 144.3819],
+                {
+}
+            ).addTo(map_76aeb6696530a62ef1733801e19eda9c);
+        
+    
+            var icon_16aff6e500d4d881db90db7ad00b9498 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_6ad7c81755ff44f243e3eadc369889fc = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_48c993255461867124086bf1069adde1 = $(`<div id="html_48c993255461867124086bf1069adde1" style="width: 100.0%; height: 100.0%;">和商市場<br>和商市場ほどではありませんが、魚介類も販売されています。</div>`)[0];
+                popup_6ad7c81755ff44f243e3eadc369889fc.setContent(html_48c993255461867124086bf1069adde1);
+            
+        
+
+        marker_c25d3b2c71c95ebb5486cebc91c84e26.bindPopup(popup_6ad7c81755ff44f243e3eadc369889fc)
+        ;
+
+        
+    
+    
+                marker_c25d3b2c71c95ebb5486cebc91c84e26.setIcon(icon_16aff6e500d4d881db90db7ad00b9498);
+            
+    
+            var marker_9b82614dab980c707cd7d8896124114f = L.marker(
+                [38.2643181, 140.869935],
+                {
+}
+            ).addTo(map_76aeb6696530a62ef1733801e19eda9c);
+        
+    
+            var icon_2a74b2a4311d37d7ba8f8f2cc5cce894 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_37f794dc1871f7483ce7d398cb905094 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_612396c4f849f283292ca7931eca4bf4 = $(`<div id="html_612396c4f849f283292ca7931eca4bf4" style="width: 100.0%; height: 100.0%;">炉ばた<br>釧路の繁華街、栄町で50年以上の歴史を持つという「炉ばた」。</div>`)[0];
+                popup_37f794dc1871f7483ce7d398cb905094.setContent(html_612396c4f849f283292ca7931eca4bf4);
+            
+        
+
+        marker_9b82614dab980c707cd7d8896124114f.bindPopup(popup_37f794dc1871f7483ce7d398cb905094)
+        ;
+
+        
+    
+    
+                marker_9b82614dab980c707cd7d8896124114f.setIcon(icon_2a74b2a4311d37d7ba8f8f2cc5cce894);
+            
+    
+            var marker_07f1f07bf467bbcc331fd4d258046f7f = L.marker(
+                [43.2300666, 144.3211862],
+                {
+}
+            ).addTo(map_76aeb6696530a62ef1733801e19eda9c);
+        
+    
+            var icon_9ba9dfe906cadfc7af8c08a561ca5337 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_14c12fc95b0bb91f13eedd95bdc11e50 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_139d1f1de55c03a107b95e9f5255d420 = $(`<div id="html_139d1f1de55c03a107b95e9f5255d420" style="width: 100.0%; height: 100.0%;">鶴居村<br>丹頂のいる、鶴居村への交通機関は、阿寒バスにて。</div>`)[0];
+                popup_14c12fc95b0bb91f13eedd95bdc11e50.setContent(html_139d1f1de55c03a107b95e9f5255d420);
+            
+        
+
+        marker_07f1f07bf467bbcc331fd4d258046f7f.bindPopup(popup_14c12fc95b0bb91f13eedd95bdc11e50)
+        ;
+
+        
+    
+    
+                marker_07f1f07bf467bbcc331fd4d258046f7f.setIcon(icon_9ba9dfe906cadfc7af8c08a561ca5337);
+            
+    
+            var marker_cdcdf10e0a33d66cc4c8b2ce37b32a3d = L.marker(
+                [43.1007709, 144.4477647],
+                {
+}
+            ).addTo(map_76aeb6696530a62ef1733801e19eda9c);
+        
+    
+            var icon_e88d7ef9e3ed4ba6f89d6090d0587491 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_61d7b22cbaa1e21c5ef2ccbb4de2e8be = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_e6e52d6f7db3ffdcdd17ee28e8bed012 = $(`<div id="html_e6e52d6f7db3ffdcdd17ee28e8bed012" style="width: 100.0%; height: 100.0%;">釧路湿原<br>途中、釧路湿原の雄大な風景を眺めながら。</div>`)[0];
+                popup_61d7b22cbaa1e21c5ef2ccbb4de2e8be.setContent(html_e6e52d6f7db3ffdcdd17ee28e8bed012);
+            
+        
+
+        marker_cdcdf10e0a33d66cc4c8b2ce37b32a3d.bindPopup(popup_61d7b22cbaa1e21c5ef2ccbb4de2e8be)
+        ;
+
+        
+    
+    
+                marker_cdcdf10e0a33d66cc4c8b2ce37b32a3d.setIcon(icon_e88d7ef9e3ed4ba6f89d6090d0587491);
+            
+    
+            var marker_65a68245e76def4dfced6d1ee457c85e = L.marker(
+                [43.2861, 144.3667],
+                {
+}
+            ).addTo(map_76aeb6696530a62ef1733801e19eda9c);
+        
+    
+            var icon_6d948a071651912cde6031d654a6f30e = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_16306b9f96068d1c0cc5bb79ee2c7a1b = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_75b79453c5c3801fd19def99ea83616e = $(`<div id="html_75b79453c5c3801fd19def99ea83616e" style="width: 100.0%; height: 100.0%;">丹頂サンクチュアリ<br>11:28、鶴居中学校前付近で下車（運転手さんに、「丹頂サンクチュアリに行く」といったら、停留所以外の最寄で下ろしてくれました）。</div>`)[0];
+                popup_16306b9f96068d1c0cc5bb79ee2c7a1b.setContent(html_75b79453c5c3801fd19def99ea83616e);
+            
+        
+
+        marker_65a68245e76def4dfced6d1ee457c85e.bindPopup(popup_16306b9f96068d1c0cc5bb79ee2c7a1b)
+        ;
+
+        
+    
+    
+                marker_65a68245e76def4dfced6d1ee457c85e.setIcon(icon_6d948a071651912cde6031d654a6f30e);
+            
+    
+            var marker_7f0eadac1ad51ae7e3b4676066ec0bdc = L.marker(
+                [43.2861, 144.3667],
+                {
+}
+            ).addTo(map_76aeb6696530a62ef1733801e19eda9c);
+        
+    
+            var icon_00a139f56f392ff8e089b504c06044b1 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_3e2f7b7c09e5c55d09085c6122d85d59 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_48b33be04797e08935daa82069e4833b = $(`<div id="html_48b33be04797e08935daa82069e4833b" style="width: 100.0%; height: 100.0%;">ホテルTAITO<br>北欧風の外観で、村役場の隣にあるので、目立ちます。</div>`)[0];
+                popup_3e2f7b7c09e5c55d09085c6122d85d59.setContent(html_48b33be04797e08935daa82069e4833b);
+            
+        
+
+        marker_7f0eadac1ad51ae7e3b4676066ec0bdc.bindPopup(popup_3e2f7b7c09e5c55d09085c6122d85d59)
+        ;
+
+        
+    
+    
+                marker_7f0eadac1ad51ae7e3b4676066ec0bdc.setIcon(icon_00a139f56f392ff8e089b504c06044b1);
+            
+    
+            var marker_d01115ff9393cdc116145a61ca387382 = L.marker(
+                [43.2861, 144.3667],
+                {
+}
+            ).addTo(map_76aeb6696530a62ef1733801e19eda9c);
+        
+    
+            var icon_8871c24a7840f132254acbd0b854cf43 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_9a47836a06d5ffe987776af57b8e7836 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_40c1340487c84567b52cbd3aba296e66 = $(`<div id="html_40c1340487c84567b52cbd3aba296e66" style="width: 100.0%; height: 100.0%;">カフェどれみふぁ空<br>冬場は、大変寒いので、防寒対策は必須です。どうしても寒くなったら、目の前のカフェ「どれみふぁ空」でブレイクしましょう。</div>`)[0];
+                popup_9a47836a06d5ffe987776af57b8e7836.setContent(html_40c1340487c84567b52cbd3aba296e66);
+            
+        
+
+        marker_d01115ff9393cdc116145a61ca387382.bindPopup(popup_9a47836a06d5ffe987776af57b8e7836)
+        ;
+
+        
+    
+    
+                marker_d01115ff9393cdc116145a61ca387382.setIcon(icon_8871c24a7840f132254acbd0b854cf43);
+            
+    
+            var marker_eabd7fec91f5f1d7cfcaadd557522865 = L.marker(
+                [35.0210316, 135.7301074],
+                {
+}
+            ).addTo(map_76aeb6696530a62ef1733801e19eda9c);
+        
+    
+            var icon_b56abd80d8d473b2ca5a8590a6af7518 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_83ab380f33426ee07cfa017c2f09ddd6 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_3bd936c9993c3d7b5823b4d4aeca50d2 = $(`<div id="html_3bd936c9993c3d7b5823b4d4aeca50d2" style="width: 100.0%; height: 100.0%;">鶴見台<br>鶴見台の前にあるカフェ「ドレミファ空」。</div>`)[0];
+                popup_83ab380f33426ee07cfa017c2f09ddd6.setContent(html_3bd936c9993c3d7b5823b4d4aeca50d2);
+            
+        
+
+        marker_eabd7fec91f5f1d7cfcaadd557522865.bindPopup(popup_83ab380f33426ee07cfa017c2f09ddd6)
+        ;
+
+        
+    
+    
+                marker_eabd7fec91f5f1d7cfcaadd557522865.setIcon(icon_b56abd80d8d473b2ca5a8590a6af7518);
+            
+    
+            var marker_b364d50196064f8d09375005d1c58581 = L.marker(
+                [35.0285448, 135.7085274],
+                {
+}
+            ).addTo(map_76aeb6696530a62ef1733801e19eda9c);
+        
+    
+            var icon_2d499441893d15554dbcdea97fc710ba = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_c8a7cc48cb4c844319dd6707af51b3ec = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_dda68672be6c4647183c314d128d2a16 = $(`<div id="html_dda68672be6c4647183c314d128d2a16" style="width: 100.0%; height: 100.0%;">釧網本線<br>冬季限定で、釧網本線の釧路―標茶・川湯温泉を1日1往復する「SL冬の湿原号」。</div>`)[0];
+                popup_c8a7cc48cb4c844319dd6707af51b3ec.setContent(html_dda68672be6c4647183c314d128d2a16);
+            
+        
+
+        marker_b364d50196064f8d09375005d1c58581.bindPopup(popup_c8a7cc48cb4c844319dd6707af51b3ec)
+        ;
+
+        
+    
+    
+                marker_b364d50196064f8d09375005d1c58581.setIcon(icon_2d499441893d15554dbcdea97fc710ba);
+            
+    
+            var marker_e8f50a1eeaaade3615120aac9bb9a014 = L.marker(
+                [43.1517934, 144.4972153],
+                {
+}
+            ).addTo(map_76aeb6696530a62ef1733801e19eda9c);
+        
+    
+            var icon_617531c9a3ecbf9e6b13046a7fcb792f = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_477d2f665669d122f21c237ba8109b43 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_fd13153f5bb50bcadef06034ad6c67a1 = $(`<div id="html_fd13153f5bb50bcadef06034ad6c67a1" style="width: 100.0%; height: 100.0%;">塘路<br>途中、塘路で降りましたが、鉄道ファンでなくても、おすすめです！</div>`)[0];
+                popup_477d2f665669d122f21c237ba8109b43.setContent(html_fd13153f5bb50bcadef06034ad6c67a1);
+            
+        
+
+        marker_e8f50a1eeaaade3615120aac9bb9a014.bindPopup(popup_477d2f665669d122f21c237ba8109b43)
+        ;
+
+        
+    
+    
+                marker_e8f50a1eeaaade3615120aac9bb9a014.setIcon(icon_617531c9a3ecbf9e6b13046a7fcb792f);
+            
+    
+            var marker_7cbfbbaa218db156ebebf51c9012c437 = L.marker(
+                [43.2364286, 144.5322783],
+                {
+}
+            ).addTo(map_76aeb6696530a62ef1733801e19eda9c);
+        
+    
+            var icon_d9c06edb5cefa6a908d6d286fe774b79 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_758c29d24f058b1061d9957171329cab = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_768b745068d6d5b4bc88c5f474db53f5 = $(`<div id="html_768b745068d6d5b4bc88c5f474db53f5" style="width: 100.0%; height: 100.0%;">釧路川<br>豊かな自然の中を蛇行した釧路川に沿ってラフティングするツアーに参加。</div>`)[0];
+                popup_758c29d24f058b1061d9957171329cab.setContent(html_768b745068d6d5b4bc88c5f474db53f5);
+            
+        
+
+        marker_7cbfbbaa218db156ebebf51c9012c437.bindPopup(popup_758c29d24f058b1061d9957171329cab)
+        ;
+
+        
+    
+    
+                marker_7cbfbbaa218db156ebebf51c9012c437.setIcon(icon_d9c06edb5cefa6a908d6d286fe774b79);
+            
+    
+            var marker_c0fdf7582945fd951c9331d7eae6dba8 = L.marker(
+                [43.041, 144.192],
+                {
+}
+            ).addTo(map_76aeb6696530a62ef1733801e19eda9c);
+        
+    
+            var icon_d4246eb39fce56b717d1b0f66d7e5a4f = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_f64fa7de39135f3312b2208497e2be06 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_44276c934c51cd67616cc1987087bef6 = $(`<div id="html_44276c934c51cd67616cc1987087bef6" style="width: 100.0%; height: 100.0%;">たんちょう釧路空港<br>釧路市内から連絡バスで50分のところにある「たんちょう釧路空港」。</div>`)[0];
+                popup_f64fa7de39135f3312b2208497e2be06.setContent(html_44276c934c51cd67616cc1987087bef6);
+            
+        
+
+        marker_c0fdf7582945fd951c9331d7eae6dba8.bindPopup(popup_f64fa7de39135f3312b2208497e2be06)
+        ;
+
+        
+    
+    
+                marker_c0fdf7582945fd951c9331d7eae6dba8.setIcon(icon_d4246eb39fce56b717d1b0f66d7e5a4f);
+            
+    
+            var poly_line_659a3db6ded88aecee6c8df563268433 = L.polyline(
+                [[35.7138, 139.777], [35.6471479, 139.621933], [42.9849, 144.3819], [42.9849, 144.3819], [42.9849, 144.3819], [42.9849, 144.3819], [42.9849, 144.3819], [38.2643181, 140.869935], [43.2300666, 144.3211862], [43.1007709, 144.4477647], [43.2861, 144.3667], [43.2861, 144.3667], [43.2861, 144.3667], [35.0210316, 135.7301074], [35.0285448, 135.7085274], [43.1517934, 144.4972153], [43.2364286, 144.5322783], [43.041, 144.192]],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "blue", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.7, "smoothFactor": 1.0, "stroke": true, "weight": 5}
+            ).addTo(map_76aeb6696530a62ef1733801e19eda9c);
+        
+</script>
+</html>

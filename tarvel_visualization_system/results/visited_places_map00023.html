@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    
+        <script>
+            L_NO_TOUCH = false;
+            L_DISABLE_3D = false;
+        </script>
+    
+    <style>html, body {width: 100%;height: 100%;margin: 0;padding: 0;}</style>
+    <style>#map {position:absolute;top:0;bottom:0;right:0;left:0;}</style>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_afbe44c05b76234c8bc42f95bfb934f4 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+        
+</head>
+<body>
+    
+    
+            <div class="folium-map" id="map_afbe44c05b76234c8bc42f95bfb934f4" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_afbe44c05b76234c8bc42f95bfb934f4 = L.map(
+                "map_afbe44c05b76234c8bc42f95bfb934f4",
+                {
+                    center: [34.8936, 135.8077],
+                    crs: L.CRS.EPSG3857,
+                    ...{
+  "zoom": 12,
+  "zoomControl": true,
+  "preferCanvas": false,
+}
+
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_51eac0c8f72635b90c66f3bf0eba01e8 = L.tileLayer(
+                "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {
+  "minZoom": 0,
+  "maxZoom": 19,
+  "maxNativeZoom": 19,
+  "noWrap": false,
+  "attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors",
+  "subdomains": "abc",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_51eac0c8f72635b90c66f3bf0eba01e8.addTo(map_afbe44c05b76234c8bc42f95bfb934f4);
+        
+    
+            var marker_5cb9a50ede225a6d4d7e681c61789eb9 = L.marker(
+                [34.8920497, 135.8059258],
+                {
+}
+            ).addTo(map_afbe44c05b76234c8bc42f95bfb934f4);
+        
+    
+            var icon_11272600af1c7689ef8afa3f260455ce = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_83b1abfbef110e27de946b9639a04b19 = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_d3cd2d15136ce0db9521d747c8c62e4d = $(`<div id="html_d3cd2d15136ce0db9521d747c8c62e4d" style="width: 100.0%; height: 100.0%;"><b>宇治川</b><br>宇治川に到着し、遊覧船で川下りしながらの昼食タイムを楽しんだ。</div>`)[0];
+                popup_83b1abfbef110e27de946b9639a04b19.setContent(html_d3cd2d15136ce0db9521d747c8c62e4d);
+            
+        
+
+        marker_5cb9a50ede225a6d4d7e681c61789eb9.bindPopup(popup_83b1abfbef110e27de946b9639a04b19)
+        ;
+
+        
+    
+    
+            marker_5cb9a50ede225a6d4d7e681c61789eb9.bindTooltip(
+                `<div>
+                     宇治川
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_5cb9a50ede225a6d4d7e681c61789eb9.setIcon(icon_11272600af1c7689ef8afa3f260455ce);
+            
+    
+            var poly_line_1cddd8df2d080eb61fc1ab9b86b558d6 = L.polyline(
+                [[34.8920497, 135.8059258]],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "blue", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.7, "smoothFactor": 1.0, "stroke": true, "weight": 5}
+            ).addTo(map_afbe44c05b76234c8bc42f95bfb934f4);
+        
+    
+            var marker_b853a549c16d1fc1c4ea3348ba53c45b = L.marker(
+                [34.8895001, 135.8074525],
+                {
+}
+            ).addTo(map_afbe44c05b76234c8bc42f95bfb934f4);
+        
+    
+            var icon_b9ffeeca727fff10dcda067e7ca1f046 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_070b4ea6a4c65eb0d4dd448715e8424a = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_051327355991af9e76200eeb43a0ffdf = $(`<div id="html_051327355991af9e76200eeb43a0ffdf" style="width: 100.0%; height: 100.0%;"><b>平等院</b><br>平等院を訪れ、初めての訪問に感動した。</div>`)[0];
+                popup_070b4ea6a4c65eb0d4dd448715e8424a.setContent(html_051327355991af9e76200eeb43a0ffdf);
+            
+        
+
+        marker_b853a549c16d1fc1c4ea3348ba53c45b.bindPopup(popup_070b4ea6a4c65eb0d4dd448715e8424a)
+        ;
+
+        
+    
+    
+            marker_b853a549c16d1fc1c4ea3348ba53c45b.bindTooltip(
+                `<div>
+                     平等院
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_b853a549c16d1fc1c4ea3348ba53c45b.setIcon(icon_b9ffeeca727fff10dcda067e7ca1f046);
+            
+    
+            var poly_line_1e8ab22bcacb8a75fc7a5343c22d47c3 = L.polyline(
+                [[34.8920497, 135.8059258], [34.8895001, 135.8074525]],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "blue", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.7, "smoothFactor": 1.0, "stroke": true, "weight": 5}
+            ).addTo(map_afbe44c05b76234c8bc42f95bfb934f4);
+        
+    
+            var marker_7c7a0f35517290e75d7c431c1c86e94a = L.marker(
+                [34.8997811, 135.8187013],
+                {
+}
+            ).addTo(map_afbe44c05b76234c8bc42f95bfb934f4);
+        
+    
+            var icon_36bfb2e037d27d31f42ab56685a53fb8 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_1514350efea3d113fb77d8d1db057bea = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_2bdb077fd33900a61a86f32727ba931b = $(`<div id="html_2bdb077fd33900a61a86f32727ba931b" style="width: 100.0%; height: 100.0%;"><b>三室戸寺</b><br>三室戸寺の庭園を訪れ、紅葉が始まったばかりの様子を見た。</div>`)[0];
+                popup_1514350efea3d113fb77d8d1db057bea.setContent(html_2bdb077fd33900a61a86f32727ba931b);
+            
+        
+
+        marker_7c7a0f35517290e75d7c431c1c86e94a.bindPopup(popup_1514350efea3d113fb77d8d1db057bea)
+        ;
+
+        
+    
+    
+            marker_7c7a0f35517290e75d7c431c1c86e94a.bindTooltip(
+                `<div>
+                     三室戸寺
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_7c7a0f35517290e75d7c431c1c86e94a.setIcon(icon_36bfb2e037d27d31f42ab56685a53fb8);
+            
+    
+            var poly_line_410a0b6f012f4a9e1509349c96dd5823 = L.polyline(
+                [[34.8920497, 135.8059258], [34.8895001, 135.8074525], [34.8997811, 135.8187013]],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "blue", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.7, "smoothFactor": 1.0, "stroke": true, "weight": 5}
+            ).addTo(map_afbe44c05b76234c8bc42f95bfb934f4);
+        
+    
+            var marker_55f6b5b0380fbbe417d551e734d92583 = L.marker(
+                [34.8984, 135.8191],
+                {
+}
+            ).addTo(map_afbe44c05b76234c8bc42f95bfb934f4);
+        
+    
+            var icon_246f3edbb199c441a0bec45e2a80e016 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_2ec2aa78268f6f59cc9843a124fb03c2 = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_a0a44f61fa0fa3dfb331c6f3a0426ce6 = $(`<div id="html_a0a44f61fa0fa3dfb331c6f3a0426ce6" style="width: 100.0%; height: 100.0%;"><b>紫式部ゆかりのお寺</b><br>紫式部ゆかりのお寺を訪れた。</div>`)[0];
+                popup_2ec2aa78268f6f59cc9843a124fb03c2.setContent(html_a0a44f61fa0fa3dfb331c6f3a0426ce6);
+            
+        
+
+        marker_55f6b5b0380fbbe417d551e734d92583.bindPopup(popup_2ec2aa78268f6f59cc9843a124fb03c2)
+        ;
+
+        
+    
+    
+            marker_55f6b5b0380fbbe417d551e734d92583.bindTooltip(
+                `<div>
+                     紫式部ゆかりのお寺
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_55f6b5b0380fbbe417d551e734d92583.setIcon(icon_246f3edbb199c441a0bec45e2a80e016);
+            
+    
+            var poly_line_3a9c6f5dbd9f3d66137d49fc79d1ed2a = L.polyline(
+                [[34.8920497, 135.8059258], [34.8895001, 135.8074525], [34.8997811, 135.8187013], [34.8984, 135.8191]],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "blue", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.7, "smoothFactor": 1.0, "stroke": true, "weight": 5}
+            ).addTo(map_afbe44c05b76234c8bc42f95bfb934f4);
+        
+    
+            var marker_cc6a38d0112021f3b012cf6a44e7190e = L.marker(
+                [34.8936, 135.8077],
+                {
+}
+            ).addTo(map_afbe44c05b76234c8bc42f95bfb934f4);
+        
+    
+            var icon_9e065ca08215754f49e7a2bfae3251b4 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_793b0687a79bf8b2f433dce3090efe8c = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_1f54b3c71123f8c34562a14de361857e = $(`<div id="html_1f54b3c71123f8c34562a14de361857e" style="width: 100.0%; height: 100.0%;"><b>速弁のかに献上</b><br>速弁の「かに献上」を購入し、食べた。</div>`)[0];
+                popup_793b0687a79bf8b2f433dce3090efe8c.setContent(html_1f54b3c71123f8c34562a14de361857e);
+            
+        
+
+        marker_cc6a38d0112021f3b012cf6a44e7190e.bindPopup(popup_793b0687a79bf8b2f433dce3090efe8c)
+        ;
+
+        
+    
+    
+            marker_cc6a38d0112021f3b012cf6a44e7190e.bindTooltip(
+                `<div>
+                     速弁のかに献上
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_cc6a38d0112021f3b012cf6a44e7190e.setIcon(icon_9e065ca08215754f49e7a2bfae3251b4);
+            
+    
+            var poly_line_823fe726fcf628a5dfaab0e3647d0e9c = L.polyline(
+                [[34.8920497, 135.8059258], [34.8895001, 135.8074525], [34.8997811, 135.8187013], [34.8984, 135.8191], [34.8936, 135.8077]],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "blue", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.7, "smoothFactor": 1.0, "stroke": true, "weight": 5}
+            ).addTo(map_afbe44c05b76234c8bc42f95bfb934f4);
+        
+</script>
+</html>

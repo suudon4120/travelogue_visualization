@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    
+        <script>
+            L_NO_TOUCH = false;
+            L_DISABLE_3D = false;
+        </script>
+    
+    <style>html, body {width: 100%;height: 100%;margin: 0;padding: 0;}</style>
+    <style>#map {position:absolute;top:0;bottom:0;right:0;left:0;}</style>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_d51b46ff393dbeda3ef3219646e0f667 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+        
+</head>
+<body>
+    
+    
+            <div class="folium-map" id="map_d51b46ff393dbeda3ef3219646e0f667" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_d51b46ff393dbeda3ef3219646e0f667 = L.map(
+                "map_d51b46ff393dbeda3ef3219646e0f667",
+                {
+                    center: [35.5, 135.8],
+                    crs: L.CRS.EPSG3857,
+                    ...{
+  "zoom": 10,
+  "zoomControl": true,
+  "preferCanvas": false,
+}
+
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_5a650a07ab8bf59e92afe13249229bd7 = L.tileLayer(
+                "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {
+  "minZoom": 0,
+  "maxZoom": 19,
+  "maxNativeZoom": 19,
+  "noWrap": false,
+  "attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors",
+  "subdomains": "abc",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_5a650a07ab8bf59e92afe13249229bd7.addTo(map_d51b46ff393dbeda3ef3219646e0f667);
+        
+    
+            var marker_abd9214fd928d321bb68509099cf2569 = L.marker(
+                [36.4906704, 139.0083979],
+                {
+}
+            ).addTo(map_d51b46ff393dbeda3ef3219646e0f667);
+        
+    
+            var icon_f1c15b10b30270d6cfbcb75ed7fa3a7f = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_6c983983e1c7167ab72657e2d486d749 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_499627f92042a1e300a78652ae1e4f0a = $(`<div id="html_499627f92042a1e300a78652ae1e4f0a" style="width: 100.0%; height: 100.0%;"><b>渋川駅</b><br>バスはこの後、渋川で関越を降りて渋川駅、伊香保温泉などを停まりながら草津を目指します。</div>`)[0];
+                popup_6c983983e1c7167ab72657e2d486d749.setContent(html_499627f92042a1e300a78652ae1e4f0a);
+            
+        
+
+        marker_abd9214fd928d321bb68509099cf2569.bindPopup(popup_6c983983e1c7167ab72657e2d486d749)
+        ;
+
+        
+    
+    
+            marker_abd9214fd928d321bb68509099cf2569.bindTooltip(
+                `<div>
+                     渋川駅
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_abd9214fd928d321bb68509099cf2569.setIcon(icon_f1c15b10b30270d6cfbcb75ed7fa3a7f);
+            
+    
+            var marker_334bce61a301b48e105cdf2cbc65c047 = L.marker(
+                [36.4971021, 138.9189433],
+                {
+}
+            ).addTo(map_d51b46ff393dbeda3ef3219646e0f667);
+        
+    
+            var icon_7303e30a7af179bfb736546802980fe5 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_11d54b538c516b7f38340b7d12168a2c = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_c3cee2ba4165ec83934120177ee3ae2a = $(`<div id="html_c3cee2ba4165ec83934120177ee3ae2a" style="width: 100.0%; height: 100.0%;"><b>伊香保温泉</b><br>バスはこの後、渋川で関越を降りて渋川駅、伊香保温泉などを停まりながら草津を目指します。</div>`)[0];
+                popup_11d54b538c516b7f38340b7d12168a2c.setContent(html_c3cee2ba4165ec83934120177ee3ae2a);
+            
+        
+
+        marker_334bce61a301b48e105cdf2cbc65c047.bindPopup(popup_11d54b538c516b7f38340b7d12168a2c)
+        ;
+
+        
+    
+    
+            marker_334bce61a301b48e105cdf2cbc65c047.bindTooltip(
+                `<div>
+                     伊香保温泉
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_334bce61a301b48e105cdf2cbc65c047.setIcon(icon_7303e30a7af179bfb736546802980fe5);
+            
+    
+            var marker_f77d16bb7e6f69e68b7e7201e2c8aacf = L.marker(
+                [36.6217652, 138.5930904],
+                {
+}
+            ).addTo(map_d51b46ff393dbeda3ef3219646e0f667);
+        
+    
+            var icon_58d61ef531b7353a95fba859cc5fe05f = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_dc697536aa5237d5dad3be5da64b85ca = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_a312ffc25fb1cea5d8772dc0834721b4 = $(`<div id="html_a312ffc25fb1cea5d8772dc0834721b4" style="width: 100.0%; height: 100.0%;"><b>草津白根観光ホテル櫻井</b><br>「プロが選ぶ日本のホテル・旅館100選」堂々第4位の草津白根観光ホテル櫻井です。</div>`)[0];
+                popup_dc697536aa5237d5dad3be5da64b85ca.setContent(html_a312ffc25fb1cea5d8772dc0834721b4);
+            
+        
+
+        marker_f77d16bb7e6f69e68b7e7201e2c8aacf.bindPopup(popup_dc697536aa5237d5dad3be5da64b85ca)
+        ;
+
+        
+    
+    
+            marker_f77d16bb7e6f69e68b7e7201e2c8aacf.bindTooltip(
+                `<div>
+                     草津白根観光ホテル櫻井
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_f77d16bb7e6f69e68b7e7201e2c8aacf.setIcon(icon_58d61ef531b7353a95fba859cc5fe05f);
+            
+    
+            var marker_ef581968f8f03734d5725a16b5255959 = L.marker(
+                [36.6229392, 138.5967297],
+                {
+}
+            ).addTo(map_d51b46ff393dbeda3ef3219646e0f667);
+        
+    
+            var icon_79b12f9964d41c6518cdd81aa508b7c0 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_15752e4c2c37d2e7f81588362868d453 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_6a33b4026aa3e54ecc3ae4069fcb2250 = $(`<div id="html_6a33b4026aa3e54ecc3ae4069fcb2250" style="width: 100.0%; height: 100.0%;"><b>湯畑</b><br>まずは母、念願の湯畑へホテルの送迎バスで到着。</div>`)[0];
+                popup_15752e4c2c37d2e7f81588362868d453.setContent(html_6a33b4026aa3e54ecc3ae4069fcb2250);
+            
+        
+
+        marker_ef581968f8f03734d5725a16b5255959.bindPopup(popup_15752e4c2c37d2e7f81588362868d453)
+        ;
+
+        
+    
+    
+            marker_ef581968f8f03734d5725a16b5255959.bindTooltip(
+                `<div>
+                     湯畑
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_ef581968f8f03734d5725a16b5255959.setIcon(icon_79b12f9964d41c6518cdd81aa508b7c0);
+            
+    
+            var marker_e294c02160e2d9718e2f26a6094ab13e = L.marker(
+                [36.2232288, 139.6050244],
+                {
+}
+            ).addTo(map_d51b46ff393dbeda3ef3219646e0f667);
+        
+    
+            var icon_c8e1db714086757becdd934903978a2f = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_5cc943853b824d5ca50ffbe3c3382fa0 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_0cd40f68e9cf3a4fba64b67bdb57fa39 = $(`<div id="html_0cd40f68e9cf3a4fba64b67bdb57fa39" style="width: 100.0%; height: 100.0%;"><b>坂道</b><br>母も３０分かけてホテル裏の坂道を降りて片岡鶴太郎美術館へ。</div>`)[0];
+                popup_5cc943853b824d5ca50ffbe3c3382fa0.setContent(html_0cd40f68e9cf3a4fba64b67bdb57fa39);
+            
+        
+
+        marker_e294c02160e2d9718e2f26a6094ab13e.bindPopup(popup_5cc943853b824d5ca50ffbe3c3382fa0)
+        ;
+
+        
+    
+    
+            marker_e294c02160e2d9718e2f26a6094ab13e.bindTooltip(
+                `<div>
+                     坂道
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_e294c02160e2d9718e2f26a6094ab13e.setIcon(icon_c8e1db714086757becdd934903978a2f);
+            
+    
+            var marker_acc84c113987582b5d0886040b54e1b2 = L.marker(
+                [36.6241021, 138.5925225],
+                {
+}
+            ).addTo(map_d51b46ff393dbeda3ef3219646e0f667);
+        
+    
+            var icon_873fd6a08b3390b105c5b147f7a793df = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_11b6d9b6ca0dd906baf11b5b049af423 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_8b2d7232e7cb4cc096ba548494ad9731 = $(`<div id="html_8b2d7232e7cb4cc096ba548494ad9731" style="width: 100.0%; height: 100.0%;"><b>片岡鶴太郎美術館</b><br>母も３０分かけてホテル裏の坂道を降りて片岡鶴太郎美術館へ。</div>`)[0];
+                popup_11b6d9b6ca0dd906baf11b5b049af423.setContent(html_8b2d7232e7cb4cc096ba548494ad9731);
+            
+        
+
+        marker_acc84c113987582b5d0886040b54e1b2.bindPopup(popup_11b6d9b6ca0dd906baf11b5b049af423)
+        ;
+
+        
+    
+    
+            marker_acc84c113987582b5d0886040b54e1b2.bindTooltip(
+                `<div>
+                     片岡鶴太郎美術館
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_acc84c113987582b5d0886040b54e1b2.setIcon(icon_873fd6a08b3390b105c5b147f7a793df);
+            
+    
+            var marker_263e0d23ae64627a19cf2c4d94a2af77 = L.marker(
+                [36.6243024, 138.5894948],
+                {
+}
+            ).addTo(map_d51b46ff393dbeda3ef3219646e0f667);
+        
+    
+            var icon_348b20f47237f0ac002ae47e9a7c2288 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_99a74e52d1c4f69851be8fc6d28b9e63 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_02193e46d5fa447be49d86b24c20b747 = $(`<div id="html_02193e46d5fa447be49d86b24c20b747" style="width: 100.0%; height: 100.0%;"><b>西の河原</b><br>美術館の前を流れる川。西の河原へのアプローチです。</div>`)[0];
+                popup_99a74e52d1c4f69851be8fc6d28b9e63.setContent(html_02193e46d5fa447be49d86b24c20b747);
+            
+        
+
+        marker_263e0d23ae64627a19cf2c4d94a2af77.bindPopup(popup_99a74e52d1c4f69851be8fc6d28b9e63)
+        ;
+
+        
+    
+    
+            marker_263e0d23ae64627a19cf2c4d94a2af77.bindTooltip(
+                `<div>
+                     西の河原
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_263e0d23ae64627a19cf2c4d94a2af77.setIcon(icon_348b20f47237f0ac002ae47e9a7c2288);
+            
+    
+            var marker_4782512f917e54bc485849149478502c = L.marker(
+                [36.6225844, 138.598208],
+                {
+}
+            ).addTo(map_d51b46ff393dbeda3ef3219646e0f667);
+        
+    
+            var icon_694d2383be53c6e52fdfdb1baed6237d = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_6c0ec77a2183fa46391e36b0e564a0e6 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_2ac3ba69e3a6840115d5c0742dbf5238 = $(`<div id="html_2ac3ba69e3a6840115d5c0742dbf5238" style="width: 100.0%; height: 100.0%;"><b>地蔵源泉</b><br>近くにお地蔵さんをいただいた「地蔵源泉」があります。</div>`)[0];
+                popup_6c0ec77a2183fa46391e36b0e564a0e6.setContent(html_2ac3ba69e3a6840115d5c0742dbf5238);
+            
+        
+
+        marker_4782512f917e54bc485849149478502c.bindPopup(popup_6c0ec77a2183fa46391e36b0e564a0e6)
+        ;
+
+        
+    
+    
+            marker_4782512f917e54bc485849149478502c.bindTooltip(
+                `<div>
+                     地蔵源泉
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_4782512f917e54bc485849149478502c.setIcon(icon_694d2383be53c6e52fdfdb1baed6237d);
+            
+    
+            var marker_4fad6ba5d1881fae20ce6dfcc8038f93 = L.marker(
+                [36.6230267, 138.6001871],
+                {
+}
+            ).addTo(map_d51b46ff393dbeda3ef3219646e0f667);
+        
+    
+            var icon_e5f736b268a76e829510e2c9f0990cb0 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_541b0ba6107cb1f7e5964cf31b30e193 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_1a399031381ab3e1b051243d8a29e7aa = $(`<div id="html_1a399031381ab3e1b051243d8a29e7aa" style="width: 100.0%; height: 100.0%;"><b>煮川源泉</b><br>数少ない煮川源泉。</div>`)[0];
+                popup_541b0ba6107cb1f7e5964cf31b30e193.setContent(html_1a399031381ab3e1b051243d8a29e7aa);
+            
+        
+
+        marker_4fad6ba5d1881fae20ce6dfcc8038f93.bindPopup(popup_541b0ba6107cb1f7e5964cf31b30e193)
+        ;
+
+        
+    
+    
+            marker_4fad6ba5d1881fae20ce6dfcc8038f93.bindTooltip(
+                `<div>
+                     煮川源泉
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_4fad6ba5d1881fae20ce6dfcc8038f93.setIcon(icon_e5f736b268a76e829510e2c9f0990cb0);
+            
+    
+            var marker_379293514c1bde4c84ada13f9021f13f = L.marker(
+                [36.6218547, 138.5972708],
+                {
+}
+            ).addTo(map_d51b46ff393dbeda3ef3219646e0f667);
+        
+    
+            var icon_ad856eebcdba967a1e8dd56bc8d3ebd1 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_1a9b36fa1712c5feeebe7063d7290313 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_105bab29a0f8725138e165b3a83cf423 = $(`<div id="html_105bab29a0f8725138e165b3a83cf423" style="width: 100.0%; height: 100.0%;"><b>ちちや</b><br>ちちやさんの栗餡入りとこし餡ＭＩＸの白い饅頭は美味いですよ。</div>`)[0];
+                popup_1a9b36fa1712c5feeebe7063d7290313.setContent(html_105bab29a0f8725138e165b3a83cf423);
+            
+        
+
+        marker_379293514c1bde4c84ada13f9021f13f.bindPopup(popup_1a9b36fa1712c5feeebe7063d7290313)
+        ;
+
+        
+    
+    
+            marker_379293514c1bde4c84ada13f9021f13f.bindTooltip(
+                `<div>
+                     ちちや
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_379293514c1bde4c84ada13f9021f13f.setIcon(icon_ad856eebcdba967a1e8dd56bc8d3ebd1);
+            
+</script>
+</html>

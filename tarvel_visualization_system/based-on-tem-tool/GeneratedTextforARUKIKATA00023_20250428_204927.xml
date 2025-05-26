@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="app.diagrams.net">
+  <diagram name="Page-1" id="2-1">
+    <mxGraphModel dx="1022" dy="1144" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="2-2" value="xx:xx - xx:xx" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;fillColor=none;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;html=1;" vertex="1" parent="1">
+          <mxGeometry x="40" y="480" width="140" height="52" as="geometry" />
+        </mxCell>
+        <mxCell id="2-3" value="自宅" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="2-2">
+          <mxGeometry y="26" width="140" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="2-4" value="移動（車）" style="shape=singleArrow;whiteSpace=wrap;html=1;arrowWidth=0.55;arrowSize=0.2;" vertex="1" parent="1">
+          <mxGeometry x="180" y="476" width="100" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="2-5" value="07:50 - 08:20" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;fillColor=none;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;html=1;" vertex="1" parent="1">
+          <mxGeometry x="280" y="480" width="140" height="52" as="geometry" />
+        </mxCell>
+        <mxCell id="2-6" value="徳光ＰＡ（北陸自動車道）" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="2-5">
+          <mxGeometry y="26" width="140" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="2-7" value="移動（バス）" style="shape=singleArrow;whiteSpace=wrap;html=1;arrowWidth=0.55;arrowSize=0.2;" vertex="1" parent="1">
+          <mxGeometry x="420" y="476" width="100" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="2-8" value="11:40 - 12:30" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;fillColor=none;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;html=1;" vertex="1" parent="1">
+          <mxGeometry x="520" y="480" width="140" height="52" as="geometry" />
+        </mxCell>
+        <mxCell id="2-9" value="宇治川遊覧舟" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="2-8">
+          <mxGeometry y="26" width="140" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="2-10" value="移動（徒歩）" style="shape=singleArrow;whiteSpace=wrap;html=1;arrowWidth=0.55;arrowSize=0.2;" vertex="1" parent="1">
+          <mxGeometry x="660" y="476" width="100" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="2-11" value="12:40 - 13:10" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;fillColor=none;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;html=1;" vertex="1" parent="1">
+          <mxGeometry x="760" y="480" width="140" height="78" as="geometry" />
+        </mxCell>
+        <mxCell id="2-12" value="平等院" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="2-11">
+          <mxGeometry y="26" width="140" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="2-13" value="お決まりですが、10円玉の表と比べてみました。" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="2-11">
+          <mxGeometry y="52" width="140" height="26" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

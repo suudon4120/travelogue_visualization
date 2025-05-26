@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    
+        <script>
+            L_NO_TOUCH = false;
+            L_DISABLE_3D = false;
+        </script>
+    
+    <style>html, body {width: 100%;height: 100%;margin: 0;padding: 0;}</style>
+    <style>#map {position:absolute;top:0;bottom:0;right:0;left:0;}</style>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_e4b652e1dca31fb3f627283cea2c9aa6 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+        
+</head>
+<body>
+    
+    
+            <div class="folium-map" id="map_e4b652e1dca31fb3f627283cea2c9aa6" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_e4b652e1dca31fb3f627283cea2c9aa6 = L.map(
+                "map_e4b652e1dca31fb3f627283cea2c9aa6",
+                {
+                    center: [35.5, 135.8],
+                    crs: L.CRS.EPSG3857,
+                    ...{
+  "zoom": 10,
+  "zoomControl": true,
+  "preferCanvas": false,
+}
+
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_565dcd5269acf93c02b3443bcf74ecce = L.tileLayer(
+                "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {
+  "minZoom": 0,
+  "maxZoom": 19,
+  "maxNativeZoom": 19,
+  "noWrap": false,
+  "attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors",
+  "subdomains": "abc",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_565dcd5269acf93c02b3443bcf74ecce.addTo(map_e4b652e1dca31fb3f627283cea2c9aa6);
+        
+    
+            var marker_3340e4f026bd6e21c9bfba2479cdeec1 = L.marker(
+                [42.3012856, 141.0022312],
+                {
+}
+            ).addTo(map_e4b652e1dca31fb3f627283cea2c9aa6);
+        
+    
+            var icon_2cede1d30fbee4f62ca6066f12ef819e = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_f7aec6a2eb6639faa11c2401323921d7 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_a535fc95856e5bf80a51aab45e2ad04d = $(`<div id="html_a535fc95856e5bf80a51aab45e2ad04d" style="width: 100.0%; height: 100.0%;"><b>地球岬</b><br>地球岬に立ち寄りました。</div>`)[0];
+                popup_f7aec6a2eb6639faa11c2401323921d7.setContent(html_a535fc95856e5bf80a51aab45e2ad04d);
+            
+        
+
+        marker_3340e4f026bd6e21c9bfba2479cdeec1.bindPopup(popup_f7aec6a2eb6639faa11c2401323921d7)
+        ;
+
+        
+    
+    
+            marker_3340e4f026bd6e21c9bfba2479cdeec1.bindTooltip(
+                `<div>
+                     地球岬
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_3340e4f026bd6e21c9bfba2479cdeec1.setIcon(icon_2cede1d30fbee4f62ca6066f12ef819e);
+            
+    
+            var marker_634b960fe47907c396181a3a62e40a86 = L.marker(
+                [42.4520087, 141.1808029],
+                {
+}
+            ).addTo(map_e4b652e1dca31fb3f627283cea2c9aa6);
+        
+    
+            var icon_7e1cafcc93869eefb30f20c7b3e52e20 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_8ec7e94285cd34f75aa1db67c8cdb70e = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_c493581881714f92eb09dca0e470c01b = $(`<div id="html_c493581881714f92eb09dca0e470c01b" style="width: 100.0%; height: 100.0%;"><b>登別</b><br>登別へようこそ。</div>`)[0];
+                popup_8ec7e94285cd34f75aa1db67c8cdb70e.setContent(html_c493581881714f92eb09dca0e470c01b);
+            
+        
+
+        marker_634b960fe47907c396181a3a62e40a86.bindPopup(popup_8ec7e94285cd34f75aa1db67c8cdb70e)
+        ;
+
+        
+    
+    
+            marker_634b960fe47907c396181a3a62e40a86.bindTooltip(
+                `<div>
+                     登別
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_634b960fe47907c396181a3a62e40a86.setIcon(icon_7e1cafcc93869eefb30f20c7b3e52e20);
+            
+    
+            var marker_fbe6f1476743f960584620870adf813a = L.marker(
+                [42.6019661, 140.8956911],
+                {
+}
+            ).addTo(map_e4b652e1dca31fb3f627283cea2c9aa6);
+        
+    
+            var icon_706fb54681d5da859d8883dad69ed9d9 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_47a9ac8806141073f58fb20464fb3ccb = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_29e035f725650857d23eb9d08bea713c = $(`<div id="html_29e035f725650857d23eb9d08bea713c" style="width: 100.0%; height: 100.0%;"><b>洞爺湖</b><br>洞爺湖周遊中。</div>`)[0];
+                popup_47a9ac8806141073f58fb20464fb3ccb.setContent(html_29e035f725650857d23eb9d08bea713c);
+            
+        
+
+        marker_fbe6f1476743f960584620870adf813a.bindPopup(popup_47a9ac8806141073f58fb20464fb3ccb)
+        ;
+
+        
+    
+    
+            marker_fbe6f1476743f960584620870adf813a.bindTooltip(
+                `<div>
+                     洞爺湖
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_fbe6f1476743f960584620870adf813a.setIcon(icon_706fb54681d5da859d8883dad69ed9d9);
+            
+    
+            var marker_c56c579a279ca67713fad086343ed430 = L.marker(
+                [43.6628044, 142.8437301],
+                {
+}
+            ).addTo(map_e4b652e1dca31fb3f627283cea2c9aa6);
+        
+    
+            var icon_9aa9ea7808298abe545a75e95717463c = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_a73726ab0408aa38e49089d91e9d50aa = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_5ee02c965c5e61930e58f80d0ebe0b69 = $(`<div id="html_5ee02c965c5e61930e58f80d0ebe0b69" style="width: 100.0%; height: 100.0%;"><b>地獄谷</b><br>地獄谷を散策です。</div>`)[0];
+                popup_a73726ab0408aa38e49089d91e9d50aa.setContent(html_5ee02c965c5e61930e58f80d0ebe0b69);
+            
+        
+
+        marker_c56c579a279ca67713fad086343ed430.bindPopup(popup_a73726ab0408aa38e49089d91e9d50aa)
+        ;
+
+        
+    
+    
+            marker_c56c579a279ca67713fad086343ed430.bindTooltip(
+                `<div>
+                     地獄谷
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_c56c579a279ca67713fad086343ed430.setIcon(icon_9aa9ea7808298abe545a75e95717463c);
+            
+</script>
+</html>

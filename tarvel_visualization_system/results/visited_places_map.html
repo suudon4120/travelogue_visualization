@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    
+        <script>
+            L_NO_TOUCH = false;
+            L_DISABLE_3D = false;
+        </script>
+    
+    <style>html, body {width: 100%;height: 100%;margin: 0;padding: 0;}</style>
+    <style>#map {position:absolute;top:0;bottom:0;right:0;left:0;}</style>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_befd828e36f202e70ccce0e66a083951 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+        
+</head>
+<body>
+    
+    
+            <div class="folium-map" id="map_befd828e36f202e70ccce0e66a083951" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_befd828e36f202e70ccce0e66a083951 = L.map(
+                "map_befd828e36f202e70ccce0e66a083951",
+                {
+                    center: [35.5, 135.8],
+                    crs: L.CRS.EPSG3857,
+                    ...{
+  "zoom": 10,
+  "zoomControl": true,
+  "preferCanvas": false,
+}
+
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_a4c0c8f0f63a9bdc1a5395f617626ff1 = L.tileLayer(
+                "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {
+  "minZoom": 0,
+  "maxZoom": 19,
+  "maxNativeZoom": 19,
+  "noWrap": false,
+  "attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors",
+  "subdomains": "abc",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_a4c0c8f0f63a9bdc1a5395f617626ff1.addTo(map_befd828e36f202e70ccce0e66a083951);
+        
+    
+            var marker_949ea6160b77c8f3b7854f2b38ef432e = L.marker(
+                [26.162828, 127.8954675],
+                {
+}
+            ).addTo(map_befd828e36f202e70ccce0e66a083951);
+        
+    
+            var icon_11ff2006d2f847d5756a8fa6236cdabb = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_d402157848345ef6c2ac4978767918de = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_8738e487b42c5d3bb21a98a14c6f10b7 = $(`<div id="html_8738e487b42c5d3bb21a98a14c6f10b7" style="width: 100.0%; height: 100.0%;"><b>久高島</b><br>橋の全体を見ることができるし、久高島まで見渡せますよ。</div>`)[0];
+                popup_d402157848345ef6c2ac4978767918de.setContent(html_8738e487b42c5d3bb21a98a14c6f10b7);
+            
+        
+
+        marker_949ea6160b77c8f3b7854f2b38ef432e.bindPopup(popup_d402157848345ef6c2ac4978767918de)
+        ;
+
+        
+    
+    
+            marker_949ea6160b77c8f3b7854f2b38ef432e.bindTooltip(
+                `<div>
+                     久高島
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_949ea6160b77c8f3b7854f2b38ef432e.setIcon(icon_11ff2006d2f847d5756a8fa6236cdabb);
+            
+    
+            var marker_5792385f94bf0844abf254f1b9eb9356 = L.marker(
+                [26.1398284, 127.7490139],
+                {
+}
+            ).addTo(map_befd828e36f202e70ccce0e66a083951);
+        
+    
+            var icon_1f6b52c61fe9aa5e6d638521bd04caf5 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_f3627914bb5d2efe67e4a47c507c5aa5 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_5875d38acf558617268c540c1d8f08b4 = $(`<div id="html_5875d38acf558617268c540c1d8f08b4" style="width: 100.0%; height: 100.0%;"><b>おきなわワールド</b><br>おきなわワールドでは、毎日４回「スーパーエイサー」を見ることができます。</div>`)[0];
+                popup_f3627914bb5d2efe67e4a47c507c5aa5.setContent(html_5875d38acf558617268c540c1d8f08b4);
+            
+        
+
+        marker_5792385f94bf0844abf254f1b9eb9356.bindPopup(popup_f3627914bb5d2efe67e4a47c507c5aa5)
+        ;
+
+        
+    
+    
+            marker_5792385f94bf0844abf254f1b9eb9356.bindTooltip(
+                `<div>
+                     おきなわワールド
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_5792385f94bf0844abf254f1b9eb9356.setIcon(icon_1f6b52c61fe9aa5e6d638521bd04caf5);
+            
+    
+            var marker_dbbedbb3ea0879aeeb203170747979c1 = L.marker(
+                [26.1404524, 127.7494943],
+                {
+}
+            ).addTo(map_befd828e36f202e70ccce0e66a083951);
+        
+    
+            var icon_d88b571cdd68a9e38a9d75b9d4d452ff = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_baf7e6f36fc3074685ef7784c5123991 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_49bee75e6748bf5a2668a88298bf24db = $(`<div id="html_49bee75e6748bf5a2668a88298bf24db" style="width: 100.0%; height: 100.0%;"><b>玉泉洞</b><br>写真は「玉泉洞」です。神秘的な感じだし、涼しい～♪</div>`)[0];
+                popup_baf7e6f36fc3074685ef7784c5123991.setContent(html_49bee75e6748bf5a2668a88298bf24db);
+            
+        
+
+        marker_dbbedbb3ea0879aeeb203170747979c1.bindPopup(popup_baf7e6f36fc3074685ef7784c5123991)
+        ;
+
+        
+    
+    
+            marker_dbbedbb3ea0879aeeb203170747979c1.bindTooltip(
+                `<div>
+                     玉泉洞
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_dbbedbb3ea0879aeeb203170747979c1.setIcon(icon_d88b571cdd68a9e38a9d75b9d4d452ff);
+            
+    
+            var marker_30057f427f44105b14faa63d1d53f80a = L.marker(
+                [28.3839816, 129.4927919],
+                {
+}
+            ).addTo(map_befd828e36f202e70ccce0e66a083951);
+        
+    
+            var icon_2b9cf44aa8ee0143faf81f2f401bd1fc = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_cc9d34adce2ebe99fe3108f7ca643031 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_18c18726380ad362b28be4156d395e3a = $(`<div id="html_18c18726380ad362b28be4156d395e3a" style="width: 100.0%; height: 100.0%;"><b>謝名亭</b><br>園内にあるそば処「謝名亭」でこの旅行３杯目の「沖縄そば」を食べました。</div>`)[0];
+                popup_cc9d34adce2ebe99fe3108f7ca643031.setContent(html_18c18726380ad362b28be4156d395e3a);
+            
+        
+
+        marker_30057f427f44105b14faa63d1d53f80a.bindPopup(popup_cc9d34adce2ebe99fe3108f7ca643031)
+        ;
+
+        
+    
+    
+            marker_30057f427f44105b14faa63d1d53f80a.bindTooltip(
+                `<div>
+                     謝名亭
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_30057f427f44105b14faa63d1d53f80a.setIcon(icon_2b9cf44aa8ee0143faf81f2f401bd1fc);
+            
+    
+            var marker_06bff8c4aba5c36ffdfe34b0e54e9775 = L.marker(
+                [26.2170037, 127.7188859],
+                {
+}
+            ).addTo(map_befd828e36f202e70ccce0e66a083951);
+        
+    
+            var icon_9d437ae95b2cfaa3815b85e3f1bf5e92 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_b6cf73f3365ed44293366c94696dd108 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_26c8f45d68344ad7d00b70f15bcfa84b = $(`<div id="html_26c8f45d68344ad7d00b70f15bcfa84b" style="width: 100.0%; height: 100.0%;"><b>奉神門</b><br>９時の開門前に「奉神門」へ行くと開門の儀式を見ることができます。</div>`)[0];
+                popup_b6cf73f3365ed44293366c94696dd108.setContent(html_26c8f45d68344ad7d00b70f15bcfa84b);
+            
+        
+
+        marker_06bff8c4aba5c36ffdfe34b0e54e9775.bindPopup(popup_b6cf73f3365ed44293366c94696dd108)
+        ;
+
+        
+    
+    
+            marker_06bff8c4aba5c36ffdfe34b0e54e9775.bindTooltip(
+                `<div>
+                     奉神門
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_06bff8c4aba5c36ffdfe34b0e54e9775.setIcon(icon_9d437ae95b2cfaa3815b85e3f1bf5e92);
+            
+</script>
+</html>
