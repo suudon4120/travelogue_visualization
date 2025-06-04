@@ -11,7 +11,7 @@ import time
 
 # ========== 設定 ==========
 # 保存先ディレクトリとファイルの基本名
-directory = "../2022-地球の歩き方旅行記データセット/data_arukikata/data/domestic/with_schedules/"
+directory = "../../2022-地球の歩き方旅行記データセット/data_arukikata/data/domestic/with_schedules/"
 base_name = "visited_places_map"
 extension = ".html"
 
