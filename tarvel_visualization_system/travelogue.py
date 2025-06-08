@@ -1,5 +1,6 @@
 import openai
-PATH_APIKEY = "../../suudo-openai-api-key.txt"
+import os
+PATH_APIKEY = os.getenv('OPENAI_API_KEY')
 with open(PATH_APIKEY, "r", encoding="utf-8") as k:
     your_api_key = k.read()
 openai.api_key = your_api_key
