@@ -1,9 +1,9 @@
 import openai
 import os
-PATH_APIKEY = os.getenv('OPENAI_API_KEY')
-with open(PATH_APIKEY, "r", encoding="utf-8") as k:
-    your_api_key = k.read()
-openai.api_key = your_api_key
+from dotenv import load_dotenv
+load_dotenv()
+API_KEY = os.getenv('OPENAI_API_KEY')
+openai.api_key = API_KEY
 import json
 import folium
 from geopy.geocoders import Nominatim
