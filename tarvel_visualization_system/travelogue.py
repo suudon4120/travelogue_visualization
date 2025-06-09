@@ -20,7 +20,6 @@ directory = "../../2022-地球の歩き方旅行記データセット/data_aruki
 base_name = "visited_places_map_"
 extension = ".html"
 
-# ### 変更点 ###: 複数の旅行記を処理するための設定
 # 各旅行記の経路に適用する色のリスト
 COLORS = ['blue', 'red', 'green', 'purple', 'orange', 'darkred', 'lightred', 'beige', 'darkblue', 'darkgreen', 'cadetblue', 'lightgray']
 
@@ -33,23 +32,28 @@ suffix = '```'
 # ==========================
 
 # Geopyの設定
-geolocator = Nominatim(user_agent="travel-map-multiple")
+geolocator = Nominatim(user_agent="travel-map-approach2")
 
-# 地名の緯度経度取得関数 (この関数は元のままですが、API呼び出し回数を減らすため、修正後のコードではGPTの座標を優先します)
+# 地名の緯度経度取得関数
 def geocode_place(name, region_hint):
+    """Geopyを使って地名の緯度経度を取得する"""
     try:
-        print(f"🗺️ Geocoding: {name}...")
-        location = geolocator.geocode(f"{name}, {region_hint}")
-        time.sleep(WAIT_TIME)
+        # ヒントを追加して検索精度を向上
+        query = f"{name}, {region_hint}"
+        print(f"🗺️ Geocoding (Geopy): '{query}'...")
+        location = geolocator.geocode(query, timeout=10)
+        time.sleep(WAIT_TIME) # APIへの負荷を考慮
         if location:
-            print(f"✅ 成功: {name} → {location.latitude}, {location.longitude}")
+            print(f"✅ Geopy Success: {name} → {location.latitude}, {location.longitude}")
             return location.latitude, location.longitude
     except Exception as e:
-        print(f"[ERROR] {name}: {e}")
+        print(f"[ERROR] Geopyでのジオコーディング中にエラーが発生しました: {name}: {e}")
+    print(f"❌ Geopy Failed: {name}")
     return None
 
-# OpenAI APIを使って地名を抽出する関数 (引数にREGION_HINTを追加)
+# OpenAI APIを使って地名を抽出する関数
 def extract_places(texts, region_hint):
+    """GPTを使って旅行記から地名と体験、フォールバック用の座標を抽出する"""
     prompt = f"""
     以下の旅行記のテキストから、訪れた場所の情報を抽出してください。
     出力には "place"（地名）、"latitude"（緯度）、"longitude"（経度）、"experience"（その場所での経験）、"reasoning"（その座標だと推定した理由）を必ず含めてください。
@@ -69,7 +73,6 @@ def extract_places(texts, region_hint):
 
     テキスト: {texts}
     """
-
     response = openai.ChatCompletion.create(
         model=MODEL,
         messages=[{"role": "system", "content": f"あなたは旅行記から訪問地を正確に抽出する優秀な旅行ガイドです。日本の「{region_hint}」に関する地理に詳しいです。"},
@@ -77,7 +80,7 @@ def extract_places(texts, region_hint):
         temperature=0.5
     )
     
-    print("🔍 OpenAI Response (API応答):")
+    print("🔍 OpenAI Response (地名抽出):")
     textforarukikata = response.choices[0].message.content
     textforarukikata = textforarukikata.strip()
     if textforarukikata.startswith(prefix):
@@ -90,7 +93,6 @@ def extract_places(texts, region_hint):
     try:
         result = json.loads(textforarukikata)
         if isinstance(result, list) and all(isinstance(item, dict) for item in result):
-            # 緯度経度が文字列で返ってくる場合があるのでfloatに変換
             for item in result:
                 item['latitude'] = float(item.get('latitude', 0.0))
                 item['longitude'] = float(item.get('longitude', 0.0))
@@ -104,8 +106,9 @@ def extract_places(texts, region_hint):
 
 # 地名のヒントを検出する関数
 def get_visit_hint(visited_places_text):
+    """旅行記テキストから訪問した都道府県のヒントを取得する"""
     if not visited_places_text.strip():
-        return "日本" #テキストが空の場合はデフォルト値を設定
+        return "日本"
     messages = [
         {"role": "system", "content": "都道府県名を答えるときは，県名のみを答えてください．"},
         {"role": "user", "content": f"以下の旅行記データから筆者が訪れたと考えられる都道府県を1つだけ答えてください．\n\n{visited_places_text}"}
@@ -121,18 +124,26 @@ def get_visit_hint(visited_places_text):
         print(f"エラーが発生しました: {e}")
         return "日本"
 
-# ### 変更点 ###: 複数の旅行記データを受け取り、地図を生成する関数
+# 複数の旅行記データを受け取り、地図を生成する関数
 def map_multiple_travels(travels_data, output_html):
+    """
+    複数の旅行記データを地図上に描画する。
+    Geopyでの座標取得を優先し、失敗したらGPTの座標を使用する。
+    """
     if not travels_data:
         print("[ERROR] 地図に描画するデータがありません。")
         return
 
-    # 最初の旅行記の最初の地点を中心に地図を作成
+    # 地図の中心を決定
     try:
         first_travel = travels_data[0]
-        start_lat = first_travel["places"][0]["latitude"]
-        start_lon = first_travel["places"][0]["longitude"]
-        m = folium.Map(location=[start_lat, start_lon], zoom_start=10)
+        # ### アプローチ2の変更点 ###: 最初の場所をGeopyで取得して中心にする
+        first_place = first_travel["places"][0]
+        region_hint = first_travel["region_hint"]
+        start_coords = geocode_place(first_place['place'], region_hint)
+        if not start_coords:
+             start_coords = (first_place['latitude'], first_place['longitude'])
+        m = folium.Map(location=start_coords, zoom_start=10)
     except (IndexError, KeyError):
         print("[ERROR] 地図の中心座標を決定できませんでした。東京駅をデフォルトにします。")
         m = folium.Map(location=[35.6812, 139.7671], zoom_start=10)
@@ -142,22 +153,31 @@ def map_multiple_travels(travels_data, output_html):
         file_num = travel["file_num"]
         places = travel["places"]
         color = travel["color"]
-        locations = []  # この旅行記の経路座標リスト
+        region_hint = travel["region_hint"] # ヒントを取得
+        locations = []
 
-        # 同じ場所の経験をまとめる
         grouped = defaultdict(list)
         for item in places:
             grouped[item['place']].append(item['experience'])
 
         for place, experiences in grouped.items():
-            coords = None
-            for item in places:
-                if item['place'] == place:
-                    # GPTが生成した座標を使用
-                    coords = (item['latitude'], item['longitude'])
-                    break
+            # ### アプローチ2の変更点 ###: ここからが座標決定のメインロジック
+            # 1. まずGeopyでジオコーディングを試みる
+            coords = geocode_place(place, region_hint)
             
-            if coords and coords[0] != 0.0 and coords[1] != 0.0:
+            # 2. Geopyで失敗した場合、GPTが生成した座標をフォールバックとして使用
+            if not coords:
+                print(f"[!] Geopyに失敗。GPTの推定座標を利用します: {place}")
+                for item in places:
+                    if item['place'] == place:
+                        gpt_coords = (item['latitude'], item['longitude'])
+                        # GPTの座標が(0,0)でないことを確認
+                        if gpt_coords[0] != 0.0 or gpt_coords[1] != 0.0:
+                            coords = gpt_coords
+                        break
+            # ### アプローチ2の変更点（ここまで） ###
+
+            if coords:
                 folium.Marker(
                     location=coords,
                     popup=folium.Popup(f"<b>{place} (旅行記: {file_num})</b><br>{'<br>'.join(experiences)}", max_width=350),
@@ -166,27 +186,21 @@ def map_multiple_travels(travels_data, output_html):
                 ).add_to(m)
                 locations.append(coords)
             else:
-                print(f"[!] 緯度経度が取得できませんでした: {place} (旅行記: {file_num})")
+                print(f"[!] 緯度経度が最終的に取得できませんでした: {place} (旅行記: {file_num})")
 
-        # 経路を線で結ぶ
         if len(locations) > 1:
             folium.PolyLine(locations, color=color, weight=5, opacity=0.7).add_to(m)
     
-    # 地図の保存
     m.save(output_html)
     print(f"\n🌐 複数の旅行記の地図を {output_html} に保存しました。")
 
 def main():
-    """
-    メイン処理
-    """
-    # ### 変更点 ###: 複数のファイル番号をカンマ区切りで受け取る
+    """メイン処理"""
     file_nums_str = input('分析を行うファイルの番号をカンマ区切りで入力してください（例: 1,5,10）：')
     file_nums = [num.strip() for num in file_nums_str.split(',')]
 
     all_travels_data = []
 
-    # ### 変更点 ###: 各ファイルをループ処理
     for i, file_num in enumerate(file_nums):
         path_journal = f'{directory}{file_num}.tra.json'
         print(f"\n{'='*20} [{file_num}] の処理を開始 {'='*20}")
@@ -205,19 +219,15 @@ def main():
         texts = []
         for entry in travel_data:
             texts.extend(entry['text'])
-        
         full_text = " ".join(texts)
 
-        # テキストが空ならスキップ
         if not full_text.strip():
             print(f"[WARNING] 旅行記 {file_num} にはテキストデータがありません。")
             continue
 
-        # 訪問地のヒント（都道府県）を取得
         region_hint = get_visit_hint(full_text)
         print(f"💡 訪問地のヒント: {region_hint}")
 
-        # 訪問地を抽出
         visited_places = extract_places(full_text, region_hint)
         if not visited_places:
             print(f"[WARNING] 旅行記 {file_num} から訪問地を抽出できませんでした。")
@@ -225,16 +235,15 @@ def main():
         
         print(f"📌 抽出された訪問地 ({file_num}): {len(visited_places)}件")
         
-        # 抽出結果をリストに追加
+        # ### アプローチ2の変更点 ###: `region_hint`もデータに含めて後続の関数に渡す
         all_travels_data.append({
             "file_num": file_num,
             "places": visited_places,
-            "color": COLORS[i % len(COLORS)] # 色を順番に割り当て
+            "color": COLORS[i % len(COLORS)],
+            "region_hint": region_hint 
         })
 
-    # ### 変更点 ###: 複数データを使って地図を作成
     if all_travels_data:
-        # 出力ファイル名を生成
         output_filename = f"{base_name}{'_'.join(file_nums)}{extension}"
         map_multiple_travels(all_travels_data, output_filename)
     else:
