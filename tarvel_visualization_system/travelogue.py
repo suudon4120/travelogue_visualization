@@ -6,6 +6,8 @@ import folium
 from geopy.geocoders import Nominatim
 from collections import defaultdict
 import time
+import requests ### 優先度変更による追加・変更点 ###
+import urllib.parse ### 優先度変更による追加・変更点 ###
 
 # .envファイルから環境変数を読み込む
 load_dotenv()
@@ -32,28 +34,52 @@ suffix = '```'
 # ==========================
 
 # Geopyの設定
-geolocator = Nominatim(user_agent="travel-map-approach2")
+geolocator = Nominatim(user_agent="travel-map-gsi-combined")
 
-# 地名の緯度経度取得関数
-def geocode_place(name, region_hint):
-    """Geopyを使って地名の緯度経度を取得する"""
+### 優先度変更による追加・変更点 ###
+def geocode_gsi(name):
+    """【最優先】国土地理院APIを使って地名の緯度経度を取得する"""
     try:
-        # ヒントを追加して検索精度を向上
+        # 地名をURLエンコード
+        query = urllib.parse.quote(name)
+        url = f"https://msearch.gsi.go.jp/address-search/AddressSearch?q={query}"
+        print(f"🗺️ Geocoding (GSI): '{name}'...")
+        response = requests.get(url, timeout=10)
+        response.raise_for_status()  # HTTPエラーがあれば例外を発生
+        data = response.json()
+        
+        # 結果が存在し、リスト形式であることを確認
+        if data and isinstance(data, list):
+            coords = data[0]['geometry']['coordinates']
+            # [経度, 緯度] の順なので、[緯度, 経度] のタプルに変換して返す
+            lon, lat = coords[0], coords[1]
+            print(f"✅ GSI Success: {name} → {lat}, {lon}")
+            return lat, lon
+    except requests.exceptions.RequestException as e:
+        print(f"[ERROR] 国土地理院APIリクエストエラー: {name}: {e}")
+    except (KeyError, IndexError, json.JSONDecodeError):
+        # レスポンス形式が不正、または結果が空の場合
+        print(f"❌ GSI Failed or No Result: {name}")
+    return None
+
+def geocode_place(name, region_hint):
+    """【次優先】Geopyを使って地名の緯度経度を取得する"""
+    try:
         query = f"{name}, {region_hint}"
         print(f"🗺️ Geocoding (Geopy): '{query}'...")
         location = geolocator.geocode(query, timeout=10)
-        time.sleep(WAIT_TIME) # APIへの負荷を考慮
+        time.sleep(WAIT_TIME)
         if location:
             print(f"✅ Geopy Success: {name} → {location.latitude}, {location.longitude}")
             return location.latitude, location.longitude
     except Exception as e:
-        print(f"[ERROR] Geopyでのジオコーディング中にエラーが発生しました: {name}: {e}")
+        print(f"[ERROR] Geopyエラー: {name}: {e}")
     print(f"❌ Geopy Failed: {name}")
     return None
 
-# OpenAI APIを使って地名を抽出する関数
+# OpenAI APIを使って地名を抽出する関数 (変更なし)
 def extract_places(texts, region_hint):
-    """GPTを使って旅行記から地名と体験、フォールバック用の座標を抽出する"""
+    # (この関数の実装は前回のコードと同じです)
     prompt = f"""
     以下の旅行記のテキストから、訪れた場所の情報を抽出してください。
     出力には "place"（地名）、"latitude"（緯度）、"longitude"（経度）、"experience"（その場所での経験）、"reasoning"（その座標だと推定した理由）を必ず含めてください。
@@ -104,9 +130,9 @@ def extract_places(texts, region_hint):
         print(f"[ERROR] OpenAIの応答解析に失敗しました: {e}")
         return []
 
-# 地名のヒントを検出する関数
+# 地名のヒントを検出する関数 (変更なし)
 def get_visit_hint(visited_places_text):
-    """旅行記テキストから訪問した都道府県のヒントを取得する"""
+    # (この関数の実装は前回のコードと同じです)
     if not visited_places_text.strip():
         return "日本"
     messages = [
@@ -124,25 +150,24 @@ def get_visit_hint(visited_places_text):
         print(f"エラーが発生しました: {e}")
         return "日本"
 
-# 複数の旅行記データを受け取り、地図を生成する関数
+
+### 優先度変更による追加・変更点 ###
 def map_multiple_travels(travels_data, output_html):
-    """
-    複数の旅行記データを地図上に描画する。
-    Geopyでの座標取得を優先し、失敗したらGPTの座標を使用する。
-    """
+    """複数の旅行記データを地図上に描画する。優先度: 1.国土地理院, 2.Geopy, 3.GPT"""
     if not travels_data:
         print("[ERROR] 地図に描画するデータがありません。")
         return
 
-    # 地図の中心を決定
+    # 地図の中心を決定 (ここも新しい優先順位を適用)
     try:
         first_travel = travels_data[0]
-        # ### アプローチ2の変更点 ###: 最初の場所をGeopyで取得して中心にする
-        first_place = first_travel["places"][0]
+        first_place = first_travel["places"][0]['place']
         region_hint = first_travel["region_hint"]
-        start_coords = geocode_place(first_place['place'], region_hint)
+        start_coords = geocode_gsi(first_place)
         if not start_coords:
-             start_coords = (first_place['latitude'], first_place['longitude'])
+            start_coords = geocode_place(first_place, region_hint)
+        if not start_coords:
+             start_coords = (first_travel["places"][0]['latitude'], first_travel["places"][0]['longitude'])
         m = folium.Map(location=start_coords, zoom_start=10)
     except (IndexError, KeyError):
         print("[ERROR] 地図の中心座標を決定できませんでした。東京駅をデフォルトにします。")
@@ -150,10 +175,7 @@ def map_multiple_travels(travels_data, output_html):
 
     # 各旅行記を地図に描画
     for travel in travels_data:
-        file_num = travel["file_num"]
-        places = travel["places"]
-        color = travel["color"]
-        region_hint = travel["region_hint"] # ヒントを取得
+        file_num, places, color, region_hint = travel["file_num"], travel["places"], travel["color"], travel["region_hint"]
         locations = []
 
         grouped = defaultdict(list)
@@ -161,21 +183,26 @@ def map_multiple_travels(travels_data, output_html):
             grouped[item['place']].append(item['experience'])
 
         for place, experiences in grouped.items():
-            # ### アプローチ2の変更点 ###: ここからが座標決定のメインロジック
-            # 1. まずGeopyでジオコーディングを試みる
-            coords = geocode_place(place, region_hint)
+            # === 座標決定のメインロジック (優先度順) ===
+            coords = None
             
-            # 2. Geopyで失敗した場合、GPTが生成した座標をフォールバックとして使用
+            # 1. 最優先: 国土地理院APIで試みる
+            coords = geocode_gsi(place)
+            
+            # 2. 次: Geopyで試みる
             if not coords:
-                print(f"[!] Geopyに失敗。GPTの推定座標を利用します: {place}")
+                coords = geocode_place(place, region_hint)
+            
+            # 3. フォールバック: GPTの推定座標を使用
+            if not coords:
+                print(f"[!] GSI/Geopyに失敗。GPTの推定座標を利用します: {place}")
                 for item in places:
                     if item['place'] == place:
                         gpt_coords = (item['latitude'], item['longitude'])
-                        # GPTの座標が(0,0)でないことを確認
                         if gpt_coords[0] != 0.0 or gpt_coords[1] != 0.0:
                             coords = gpt_coords
                         break
-            # ### アプローチ2の変更点（ここまで） ###
+            # === ロジックここまで ===
 
             if coords:
                 folium.Marker(
@@ -194,8 +221,9 @@ def map_multiple_travels(travels_data, output_html):
     m.save(output_html)
     print(f"\n🌐 複数の旅行記の地図を {output_html} に保存しました。")
 
+# main関数 (変更なし)
 def main():
-    """メイン処理"""
+    # (この関数の実装は前回のコードと同じです)
     file_nums_str = input('分析を行うファイルの番号をカンマ区切りで入力してください（例: 1,5,10）：')
     file_nums = [num.strip() for num in file_nums_str.split(',')]
 
@@ -235,7 +263,6 @@ def main():
         
         print(f"📌 抽出された訪問地 ({file_num}): {len(visited_places)}件")
         
-        # ### アプローチ2の変更点 ###: `region_hint`もデータに含めて後続の関数に渡す
         all_travels_data.append({
             "file_num": file_num,
             "places": visited_places,
@@ -248,6 +275,7 @@ def main():
         map_multiple_travels(all_travels_data, output_filename)
     else:
         print("\n地図を生成するためのデータがありませんでした。")
+
 
 if __name__ == '__main__':
     main()
