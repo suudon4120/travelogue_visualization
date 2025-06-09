@@ -51,15 +51,20 @@ def geocode_place(name, region_hint):
 # OpenAI APIを使って地名を抽出する関数 (引数にREGION_HINTを追加)
 def extract_places(texts, region_hint):
     prompt = f"""
-    以下の旅行記のテキストから、訪れた場所の名称を抽出してください。
-    出力には "place"（地名）、"latitude"（緯度）、"longitude"（経度）、"experience"（その場所での経験）を必ず含めてください。
-    緯度経度が不明な場合は、日本の「{region_hint}」周辺の地理情報に基づいて可能な限り正確に推定してください。
-    出力は**絶対にJSON形式のリスト**として返してください。
+    以下の旅行記のテキストから、訪れた場所の情報を抽出してください。
+    出力には "place"（地名）、"latitude"（緯度）、"longitude"（経度）、"experience"（その場所での経験）、"reasoning"（その座標だと推定した理由）を必ず含めてください。
+    緯度経度は、日本の「{region_hint}」周辺の地理情報と、テキスト内の文脈（例：「〇〇駅から徒歩5分」「△△の隣」など）を最大限考慮して、非常に高い精度で推定してください。
 
+    出力は**絶対にJSON形式のリスト**として返してください。
     例:
     [
-        {{"place": "草津温泉", "latitude": 36.6222, "longitude": 138.5964, "experience": "草津温泉バスターミナルに到着しました。"}},
-        {{"place": "湯畑", "latitude": 36.6214, "longitude": 138.5968, "experience": "湯畑を散策しました。"}}
+        {{
+            "place": "湯畑", 
+            "latitude": 36.6214, 
+            "longitude": 138.5968, 
+            "experience": "湯畑を散策しました。",
+            "reasoning": "群馬県草津温泉の中心的な観光スポットであり、旅行記の文脈から草津温泉への訪問が明らかなため、湯畑の座標を指定しました。"
+        }}
     ]
 
     テキスト: {texts}
