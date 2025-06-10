@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    
+        <script>
+            L_NO_TOUCH = false;
+            L_DISABLE_3D = false;
+        </script>
+    
+    <style>html, body {width: 100%;height: 100%;margin: 0;padding: 0;}</style>
+    <style>#map {position:absolute;top:0;bottom:0;right:0;left:0;}</style>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_3872a0258620e5d1e5a860e0a85c4965 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+        
+</head>
+<body>
+    
+    
+            <div class="folium-map" id="map_3872a0258620e5d1e5a860e0a85c4965" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_3872a0258620e5d1e5a860e0a85c4965 = L.map(
+                "map_3872a0258620e5d1e5a860e0a85c4965",
+                {
+                    center: [34.884445, 135.799728],
+                    crs: L.CRS.EPSG3857,
+                    ...{
+  "zoom": 10,
+  "zoomControl": true,
+  "preferCanvas": false,
+}
+
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_542e702e0e025d0971d3cad22d9d2159 = L.tileLayer(
+                "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {
+  "minZoom": 0,
+  "maxZoom": 19,
+  "maxNativeZoom": 19,
+  "noWrap": false,
+  "attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors",
+  "subdomains": "abc",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_542e702e0e025d0971d3cad22d9d2159.addTo(map_3872a0258620e5d1e5a860e0a85c4965);
+        
+    
+            var marker_48d1c520659bbede56e118db666b92e0 = L.marker(
+                [34.884445, 135.799728],
+                {
+}
+            ).addTo(map_3872a0258620e5d1e5a860e0a85c4965);
+        
+    
+            var icon_72bc3036365febf0472c35c4196b00bf = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_95746750198367e978190502b5f10294 = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_59d4cb81399e8e3dd827f2934ca92080 = $(`<div id="html_59d4cb81399e8e3dd827f2934ca92080" style="width: 100.0%; height: 100.0%;"><b>宇治川 (旅行記: 00023)</b><br>宇治川で遊覧船に乗り、川下りしながら昼食を楽しみました。</div>`)[0];
+                popup_95746750198367e978190502b5f10294.setContent(html_59d4cb81399e8e3dd827f2934ca92080);
+            
+        
+
+        marker_48d1c520659bbede56e118db666b92e0.bindPopup(popup_95746750198367e978190502b5f10294)
+        ;
+
+        
+    
+    
+            marker_48d1c520659bbede56e118db666b92e0.bindTooltip(
+                `<div>
+                     宇治川 (00023)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_48d1c520659bbede56e118db666b92e0.setIcon(icon_72bc3036365febf0472c35c4196b00bf);
+            
+    
+            var marker_289b970c33027311432f044cb1e7af8e = L.marker(
+                [38.112896, 140.844315],
+                {
+}
+            ).addTo(map_3872a0258620e5d1e5a860e0a85c4965);
+        
+    
+            var icon_30de456c43c427479d67fdde15dca921 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_2d6e64b308055f399718a17915834c39 = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_0be38fcfff3251f1d3ac5d29eb4aa069 = $(`<div id="html_0be38fcfff3251f1d3ac5d29eb4aa069" style="width: 100.0%; height: 100.0%;"><b>平等院 (旅行記: 00023)</b><br>平等院を訪れ、初めての訪問で感動しました。</div>`)[0];
+                popup_2d6e64b308055f399718a17915834c39.setContent(html_0be38fcfff3251f1d3ac5d29eb4aa069);
+            
+        
+
+        marker_289b970c33027311432f044cb1e7af8e.bindPopup(popup_2d6e64b308055f399718a17915834c39)
+        ;
+
+        
+    
+    
+            marker_289b970c33027311432f044cb1e7af8e.bindTooltip(
+                `<div>
+                     平等院 (00023)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_289b970c33027311432f044cb1e7af8e.setIcon(icon_30de456c43c427479d67fdde15dca921);
+            
+    
+            var marker_7a96b3084d587e4f720a279099baf7aa = L.marker(
+                [35.884796, 139.676117],
+                {
+}
+            ).addTo(map_3872a0258620e5d1e5a860e0a85c4965);
+        
+    
+            var icon_23fcaad51f8e2c5d84bc0be2d54285e5 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_91e985f33e31e0e335625436ab97c70f = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_258284d824c17dd64e0a4fb30fdaaa9c = $(`<div id="html_258284d824c17dd64e0a4fb30fdaaa9c" style="width: 100.0%; height: 100.0%;"><b>三室戸寺 (旅行記: 00023)</b><br>三室戸寺の庭園を訪れ、紅葉が始まったばかりの景色を楽しみました。</div>`)[0];
+                popup_91e985f33e31e0e335625436ab97c70f.setContent(html_258284d824c17dd64e0a4fb30fdaaa9c);
+            
+        
+
+        marker_7a96b3084d587e4f720a279099baf7aa.bindPopup(popup_91e985f33e31e0e335625436ab97c70f)
+        ;
+
+        
+    
+    
+            marker_7a96b3084d587e4f720a279099baf7aa.bindTooltip(
+                `<div>
+                     三室戸寺 (00023)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_7a96b3084d587e4f720a279099baf7aa.setIcon(icon_23fcaad51f8e2c5d84bc0be2d54285e5);
+            
+    
+            var poly_line_e3929495fcff86c33dbbdb19fccd91b7 = L.polyline(
+                [[34.884445, 135.799728], [38.112896, 140.844315], [35.884796, 139.676117]],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "blue", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.7, "smoothFactor": 1.0, "stroke": true, "weight": 5}
+            ).addTo(map_3872a0258620e5d1e5a860e0a85c4965);
+        
+</script>
+</html>
