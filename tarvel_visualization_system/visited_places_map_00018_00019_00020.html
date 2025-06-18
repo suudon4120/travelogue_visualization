@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    
+        <script>
+            L_NO_TOUCH = false;
+            L_DISABLE_3D = false;
+        </script>
+    
+    <style>html, body {width: 100%;height: 100%;margin: 0;padding: 0;}</style>
+    <style>#map {position:absolute;top:0;bottom:0;right:0;left:0;}</style>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_64ac63c73a135cc36eb288f378bbea5f {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+        
+</head>
+<body>
+    
+    
+            <div class="folium-map" id="map_64ac63c73a135cc36eb288f378bbea5f" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_64ac63c73a135cc36eb288f378bbea5f = L.map(
+                "map_64ac63c73a135cc36eb288f378bbea5f",
+                {
+                    center: [35.5944635, 135.8998816],
+                    crs: L.CRS.EPSG3857,
+                    ...{
+  "zoom": 10,
+  "zoomControl": true,
+  "preferCanvas": false,
+}
+
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_359b9cc0d3d748aa23d679b5aa4d4fd6 = L.tileLayer(
+                "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {
+  "minZoom": 0,
+  "maxZoom": 19,
+  "maxNativeZoom": 19,
+  "noWrap": false,
+  "attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors",
+  "subdomains": "abc",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_359b9cc0d3d748aa23d679b5aa4d4fd6.addTo(map_64ac63c73a135cc36eb288f378bbea5f);
+        
+    
+            var marker_8b761dafc79fe8c38bbf78ee2759daae = L.marker(
+                [35.5944635, 135.8998816],
+                {
+}
+            ).addTo(map_64ac63c73a135cc36eb288f378bbea5f);
+        
+    
+            var icon_53bfc1e5adda473f649d9e9b317937ed = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_d380eee0603819a2ebf4f6e900c01735 = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_157b31888179b3287d9fef1bbe3aac33 = $(`<div id="html_157b31888179b3287d9fef1bbe3aac33" style="width: 100.0%; height: 100.0%;"><b>三方五湖 (旅行記: 00018)</b><br>梅の花が咲く三方五湖の周りを散策し、展望台から日本海と三方五湖の風景を楽しみました。</div>`)[0];
+                popup_d380eee0603819a2ebf4f6e900c01735.setContent(html_157b31888179b3287d9fef1bbe3aac33);
+            
+        
+
+        marker_8b761dafc79fe8c38bbf78ee2759daae.bindPopup(popup_d380eee0603819a2ebf4f6e900c01735)
+        ;
+
+        
+    
+    
+            marker_8b761dafc79fe8c38bbf78ee2759daae.bindTooltip(
+                `<div>
+                     三方五湖 (00018)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_8b761dafc79fe8c38bbf78ee2759daae.setIcon(icon_53bfc1e5adda473f649d9e9b317937ed);
+            
+    
+            var marker_3d65944c5a0d3afe13981c1443f67d98 = L.marker(
+                [34.6829008, 135.8545975],
+                {
+}
+            ).addTo(map_64ac63c73a135cc36eb288f378bbea5f);
+        
+    
+            var icon_a9427ac31dd635a327ab93e3c92d419e = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "red",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_df9be05b6ef2c91be8b4af1af6926dc3 = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_0ef8c0890c42bfaca1bf519b0d09b302 = $(`<div id="html_0ef8c0890c42bfaca1bf519b0d09b302" style="width: 100.0%; height: 100.0%;"><b>奈良公園 (旅行記: 00019)</b><br>奈良公園で鹿にせんべいをあげたくなった。</div>`)[0];
+                popup_df9be05b6ef2c91be8b4af1af6926dc3.setContent(html_0ef8c0890c42bfaca1bf519b0d09b302);
+            
+        
+
+        marker_3d65944c5a0d3afe13981c1443f67d98.bindPopup(popup_df9be05b6ef2c91be8b4af1af6926dc3)
+        ;
+
+        
+    
+    
+            marker_3d65944c5a0d3afe13981c1443f67d98.bindTooltip(
+                `<div>
+                     奈良公園 (00019)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_3d65944c5a0d3afe13981c1443f67d98.setIcon(icon_a9427ac31dd635a327ab93e3c92d419e);
+            
+    
+            var marker_a6995b2d9731d7d10eb2fe8c9fb5cd33 = L.marker(
+                [34.6882437, 135.8397568],
+                {
+}
+            ).addTo(map_64ac63c73a135cc36eb288f378bbea5f);
+        
+    
+            var icon_a6bc5b016a08b186c5919347734ceb90 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "red",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_0b96ac848b7ba52e446789c303ea8000 = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_fd5d66147c61ab405427152282778530 = $(`<div id="html_fd5d66147c61ab405427152282778530" style="width: 100.0%; height: 100.0%;"><b>東大寺 (旅行記: 00019)</b><br>大仏様を見て、柱の穴をくぐろうとした。</div>`)[0];
+                popup_0b96ac848b7ba52e446789c303ea8000.setContent(html_fd5d66147c61ab405427152282778530);
+            
+        
+
+        marker_a6995b2d9731d7d10eb2fe8c9fb5cd33.bindPopup(popup_0b96ac848b7ba52e446789c303ea8000)
+        ;
+
+        
+    
+    
+            marker_a6995b2d9731d7d10eb2fe8c9fb5cd33.bindTooltip(
+                `<div>
+                     東大寺 (00019)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_a6995b2d9731d7d10eb2fe8c9fb5cd33.setIcon(icon_a6bc5b016a08b186c5919347734ceb90);
+            
+    
+            var marker_6c57372ba27a8fe37ad4549931ab0a3f = L.marker(
+                [34.6829744, 135.8318653],
+                {
+}
+            ).addTo(map_64ac63c73a135cc36eb288f378bbea5f);
+        
+    
+            var icon_d5feb8823e9df6ae5da48e59b1c930dd = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "red",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_8049f9a9f4cc2b5f53320b356e31f463 = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_ee12a66aee994d04ec0432f7136a489e = $(`<div id="html_ee12a66aee994d04ec0432f7136a489e" style="width: 100.0%; height: 100.0%;"><b>興福寺 (旅行記: 00019)</b><br>猿沢池から興福寺の五重塔を見た。夜はライトアップされていた。</div>`)[0];
+                popup_8049f9a9f4cc2b5f53320b356e31f463.setContent(html_ee12a66aee994d04ec0432f7136a489e);
+            
+        
+
+        marker_6c57372ba27a8fe37ad4549931ab0a3f.bindPopup(popup_8049f9a9f4cc2b5f53320b356e31f463)
+        ;
+
+        
+    
+    
+            marker_6c57372ba27a8fe37ad4549931ab0a3f.bindTooltip(
+                `<div>
+                     興福寺 (00019)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_6c57372ba27a8fe37ad4549931ab0a3f.setIcon(icon_d5feb8823e9df6ae5da48e59b1c930dd);
+            
+    
+            var marker_7453dc9339c56f457bda01caceba0ef5 = L.marker(
+                [34.614013, 135.7360432],
+                {
+}
+            ).addTo(map_64ac63c73a135cc36eb288f378bbea5f);
+        
+    
+            var icon_d5680fea3d760bb268874137ae053ae2 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "red",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_9e44b7d9ed9b83c7ed947966692ce106 = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_2332363bc0e7c2da2f417f817dfbf8e7 = $(`<div id="html_2332363bc0e7c2da2f417f817dfbf8e7" style="width: 100.0%; height: 100.0%;"><b>法隆寺 (旅行記: 00019)</b><br>法隆寺に瓦を寄贈した。</div>`)[0];
+                popup_9e44b7d9ed9b83c7ed947966692ce106.setContent(html_2332363bc0e7c2da2f417f817dfbf8e7);
+            
+        
+
+        marker_7453dc9339c56f457bda01caceba0ef5.bindPopup(popup_9e44b7d9ed9b83c7ed947966692ce106)
+        ;
+
+        
+    
+    
+            marker_7453dc9339c56f457bda01caceba0ef5.bindTooltip(
+                `<div>
+                     法隆寺 (00019)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_7453dc9339c56f457bda01caceba0ef5.setIcon(icon_d5680fea3d760bb268874137ae053ae2);
+            
+    
+            var poly_line_b916461b416f6ad58f5d320e0402d065 = L.polyline(
+                [[34.6829008, 135.8545975], [34.6882437, 135.8397568], [34.6829744, 135.8318653], [34.614013, 135.7360432]],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.7, "smoothFactor": 1.0, "stroke": true, "weight": 5}
+            ).addTo(map_64ac63c73a135cc36eb288f378bbea5f);
+        
+    
+            var marker_b39177d5ecc1f5bf128daa61fddd53fc = L.marker(
+                [34.9675192, 135.7797101],
+                {
+}
+            ).addTo(map_64ac63c73a135cc36eb288f378bbea5f);
+        
+    
+            var icon_38539e89637eb9f821b8150fa581e6ae = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "green",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_11abc11e27ffa36b525f17c01f4dee36 = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_67d3386cc7b1bb1cec4f64893faa113a = $(`<div id="html_67d3386cc7b1bb1cec4f64893faa113a" style="width: 100.0%; height: 100.0%;"><b>伏見稲荷大社 (旅行記: 00020)</b><br>鳥居がずら～っと並んでいます。 その中を歩いていると異次元に来たみたい！</div>`)[0];
+                popup_11abc11e27ffa36b525f17c01f4dee36.setContent(html_67d3386cc7b1bb1cec4f64893faa113a);
+            
+        
+
+        marker_b39177d5ecc1f5bf128daa61fddd53fc.bindPopup(popup_11abc11e27ffa36b525f17c01f4dee36)
+        ;
+
+        
+    
+    
+            marker_b39177d5ecc1f5bf128daa61fddd53fc.bindTooltip(
+                `<div>
+                     伏見稲荷大社 (00020)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_b39177d5ecc1f5bf128daa61fddd53fc.setIcon(icon_38539e89637eb9f821b8150fa581e6ae);
+            
+    
+            var marker_06183c4efe2df13820f94575ae346ea5 = L.marker(
+                [34.9881723, 135.7717781],
+                {
+}
+            ).addTo(map_64ac63c73a135cc36eb288f378bbea5f);
+        
+    
+            var icon_ad35bb05b9ef1923d97a334e04ff3b4f = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "green",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_c40dd94d5db34b499f1ec96235a06040 = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_4aebb267388f89b315ec797c0d8e4977 = $(`<div id="html_4aebb267388f89b315ec797c0d8e4977" style="width: 100.0%; height: 100.0%;"><b>三十三間堂 (旅行記: 00020)</b><br>1,001体の観音像は圧倒されますよ。 昔は端から端まで「通し矢」をしてたんですって。</div>`)[0];
+                popup_c40dd94d5db34b499f1ec96235a06040.setContent(html_4aebb267388f89b315ec797c0d8e4977);
+            
+        
+
+        marker_06183c4efe2df13820f94575ae346ea5.bindPopup(popup_c40dd94d5db34b499f1ec96235a06040)
+        ;
+
+        
+    
+    
+            marker_06183c4efe2df13820f94575ae346ea5.bindTooltip(
+                `<div>
+                     三十三間堂 (00020)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_06183c4efe2df13820f94575ae346ea5.setIcon(icon_ad35bb05b9ef1923d97a334e04ff3b4f);
+            
+    
+            var marker_2bb9b2399b5135d0a31dd37ce3af7981 = L.marker(
+                [34.994303, 135.7844389],
+                {
+}
+            ).addTo(map_64ac63c73a135cc36eb288f378bbea5f);
+        
+    
+            var icon_496913145e20b8f13e227cc57aab5c52 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "green",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_e54403cf88b129b51f69e5fa9403f9ce = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_066e4864d9428eb89b417f524bba7018 = $(`<div id="html_066e4864d9428eb89b417f524bba7018" style="width: 100.0%; height: 100.0%;"><b>清水寺 (旅行記: 00020)</b><br>写真は清水の舞台です。 た、たかい…。 「奥の院」から写真を撮ると、舞台全体を写真に収める事ができます。</div>`)[0];
+                popup_e54403cf88b129b51f69e5fa9403f9ce.setContent(html_066e4864d9428eb89b417f524bba7018);
+            
+        
+
+        marker_2bb9b2399b5135d0a31dd37ce3af7981.bindPopup(popup_e54403cf88b129b51f69e5fa9403f9ce)
+        ;
+
+        
+    
+    
+            marker_2bb9b2399b5135d0a31dd37ce3af7981.bindTooltip(
+                `<div>
+                     清水寺 (00020)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_2bb9b2399b5135d0a31dd37ce3af7981.setIcon(icon_496913145e20b8f13e227cc57aab5c52);
+            
+    
+            var marker_5628bea8e977541b1989906a1247eb9a = L.marker(
+                [34.9850601, 135.7526928],
+                {
+}
+            ).addTo(map_64ac63c73a135cc36eb288f378bbea5f);
+        
+    
+            var icon_b5c88050213579bc5e7ce195ada7c325 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "green",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_2f1a64c7685e84f22d3ffeada3fb3805 = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_425857407f0e770b97806697bc755df3 = $(`<div id="html_425857407f0e770b97806697bc755df3" style="width: 100.0%; height: 100.0%;"><b>京都駅 (旅行記: 00020)</b><br>中央口付近からは、シンボルの京都タワーがよく見えます。 夜になるとライトアップされて、と～ってもきれいです。</div>`)[0];
+                popup_2f1a64c7685e84f22d3ffeada3fb3805.setContent(html_425857407f0e770b97806697bc755df3);
+            
+        
+
+        marker_5628bea8e977541b1989906a1247eb9a.bindPopup(popup_2f1a64c7685e84f22d3ffeada3fb3805)
+        ;
+
+        
+    
+    
+            marker_5628bea8e977541b1989906a1247eb9a.bindTooltip(
+                `<div>
+                     京都駅 (00020)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_5628bea8e977541b1989906a1247eb9a.setIcon(icon_b5c88050213579bc5e7ce195ada7c325);
+            
+    
+            var marker_038fee7a0722763d0a5bfd617ce375d4 = L.marker(
+                [34.6875241, 135.8219121],
+                {
+}
+            ).addTo(map_64ac63c73a135cc36eb288f378bbea5f);
+        
+    
+            var icon_a54e734725957e28af51c0a4821cfbbb = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "green",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_7362f63095652e42dfc195ca36495bb9 = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_946e05469737b4a78866640a89092f78 = $(`<div id="html_946e05469737b4a78866640a89092f78" style="width: 100.0%; height: 100.0%;"><b>もりしま (旅行記: 00020)</b><br>近江牛のお店で～す。 ついつい、たくさん頼んじゃいました。 お腹はいっぱい、お財布はカラカラ…。</div>`)[0];
+                popup_7362f63095652e42dfc195ca36495bb9.setContent(html_946e05469737b4a78866640a89092f78);
+            
+        
+
+        marker_038fee7a0722763d0a5bfd617ce375d4.bindPopup(popup_7362f63095652e42dfc195ca36495bb9)
+        ;
+
+        
+    
+    
+            marker_038fee7a0722763d0a5bfd617ce375d4.bindTooltip(
+                `<div>
+                     もりしま (00020)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_038fee7a0722763d0a5bfd617ce375d4.setIcon(icon_a54e734725957e28af51c0a4821cfbbb);
+            
+    
+            var poly_line_7ff9a8ee7c52474355179b8d91c2c3d4 = L.polyline(
+                [[34.9675192, 135.7797101], [34.9881723, 135.7717781], [34.994303, 135.7844389], [34.9850601, 135.7526928], [34.6875241, 135.8219121]],
+                {"bubblingMouseEvents": true, "color": "green", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "green", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.7, "smoothFactor": 1.0, "stroke": true, "weight": 5}
+            ).addTo(map_64ac63c73a135cc36eb288f378bbea5f);
+        
+</script>
+</html>
