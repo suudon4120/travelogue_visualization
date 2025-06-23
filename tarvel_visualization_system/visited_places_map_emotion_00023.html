@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_466b3df1d6a9f7ff5ce73298e561450c {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+
+            <style>html, body {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            </style>
+
+            <style>#map {
+                position:absolute;
+                top:0;
+                bottom:0;
+                right:0;
+                left:0;
+                }
+            </style>
+
+            <script>
+                L_NO_TOUCH = false;
+                L_DISABLE_3D = false;
+            </script>
+
+        
+    <script src="https://cdn.jsdelivr.net/gh/python-visualization/folium@main/folium/templates/leaflet_heat.min.js"></script>
+</head>
+<body>
+    
+    
+            <div class="folium-map" id="map_466b3df1d6a9f7ff5ce73298e561450c" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_466b3df1d6a9f7ff5ce73298e561450c = L.map(
+                "map_466b3df1d6a9f7ff5ce73298e561450c",
+                {
+                    center: [34.8920497, 135.8059258],
+                    crs: L.CRS.EPSG3857,
+                    ...{
+  "zoom": 10,
+  "zoomControl": true,
+  "preferCanvas": false,
+}
+
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_56e1f746e322782fa491cfdd115c87a2 = L.tileLayer(
+                "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {
+  "minZoom": 0,
+  "maxZoom": 19,
+  "maxNativeZoom": 19,
+  "noWrap": false,
+  "attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors",
+  "subdomains": "abc",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_56e1f746e322782fa491cfdd115c87a2.addTo(map_466b3df1d6a9f7ff5ce73298e561450c);
+        
+    
+            var feature_group_9e0e7e97849319fe42f8e61585826210 = L.featureGroup(
+                {
+}
+            );
+        
+    
+            var marker_b5f73dedf2d579aff44b43820486e6d2 = L.marker(
+                [34.8920497, 135.8059258],
+                {
+}
+            ).addTo(feature_group_9e0e7e97849319fe42f8e61585826210);
+        
+    
+            var icon_7f3a1721aff8ea8916ea94694e599f6d = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_e43ec4466a75b61dbb090c3078226832 = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_8a74e028fb7f36bc152feae91b57d3e4 = $(`<div id="html_8a74e028fb7f36bc152feae91b57d3e4" style="width: 100.0%; height: 100.0%;"><b>宇治川</b> (旅行記: 00023)<br><b>感情スコア: 0.80</b><br><hr>遊覧船で川下りしながらの昼食タイムを楽しみました。</div>`)[0];
+                popup_e43ec4466a75b61dbb090c3078226832.setContent(html_8a74e028fb7f36bc152feae91b57d3e4);
+            
+        
+
+        marker_b5f73dedf2d579aff44b43820486e6d2.bindPopup(popup_e43ec4466a75b61dbb090c3078226832)
+        ;
+
+        
+    
+    
+            marker_b5f73dedf2d579aff44b43820486e6d2.bindTooltip(
+                `<div>
+                     宇治川 (00023)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_b5f73dedf2d579aff44b43820486e6d2.setIcon(icon_7f3a1721aff8ea8916ea94694e599f6d);
+            
+    
+            var marker_66e2cee5552d9f4f0a7f3b3e2f002911 = L.marker(
+                [34.8895001, 135.8074525],
+                {
+}
+            ).addTo(feature_group_9e0e7e97849319fe42f8e61585826210);
+        
+    
+            var icon_fe021b335c7c23a19af2dab44be1c3e1 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_cf947fd5808642b6b5910b4b1e275bc0 = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_89c03b22a1e023706a5f1f3f6ed4dfc6 = $(`<div id="html_89c03b22a1e023706a5f1f3f6ed4dfc6" style="width: 100.0%; height: 100.0%;"><b>平等院</b> (旅行記: 00023)<br><b>感情スコア: 0.90</b><br><hr>平等院を初めて訪れて感動しました。</div>`)[0];
+                popup_cf947fd5808642b6b5910b4b1e275bc0.setContent(html_89c03b22a1e023706a5f1f3f6ed4dfc6);
+            
+        
+
+        marker_66e2cee5552d9f4f0a7f3b3e2f002911.bindPopup(popup_cf947fd5808642b6b5910b4b1e275bc0)
+        ;
+
+        
+    
+    
+            marker_66e2cee5552d9f4f0a7f3b3e2f002911.bindTooltip(
+                `<div>
+                     平等院 (00023)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_66e2cee5552d9f4f0a7f3b3e2f002911.setIcon(icon_fe021b335c7c23a19af2dab44be1c3e1);
+            
+    
+            var marker_2dffaeb008e977876a4a326c0b42ba63 = L.marker(
+                [34.8997811, 135.8187013],
+                {
+}
+            ).addTo(feature_group_9e0e7e97849319fe42f8e61585826210);
+        
+    
+            var icon_4aafb07f300d1e821879eba0ad3c9982 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_8c4b0eec1d6f643695ef357ecbcca737 = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_5b0e5a3de93e50f8df43bc377f6962cb = $(`<div id="html_5b0e5a3de93e50f8df43bc377f6962cb" style="width: 100.0%; height: 100.0%;"><b>三室戸寺</b> (旅行記: 00023)<br><b>感情スコア: 0.80</b><br><hr>三室戸寺の庭園を訪れ、紅葉が始まったばかりの様子を楽しみました。</div>`)[0];
+                popup_8c4b0eec1d6f643695ef357ecbcca737.setContent(html_5b0e5a3de93e50f8df43bc377f6962cb);
+            
+        
+
+        marker_2dffaeb008e977876a4a326c0b42ba63.bindPopup(popup_8c4b0eec1d6f643695ef357ecbcca737)
+        ;
+
+        
+    
+    
+            marker_2dffaeb008e977876a4a326c0b42ba63.bindTooltip(
+                `<div>
+                     三室戸寺 (00023)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_2dffaeb008e977876a4a326c0b42ba63.setIcon(icon_4aafb07f300d1e821879eba0ad3c9982);
+            
+    
+            var poly_line_87387266ef78d86b95c47de6389a6da8 = L.polyline(
+                [[34.8920497, 135.8059258], [34.8895001, 135.8074525], [34.8997811, 135.8187013]],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "blue", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.7, "smoothFactor": 1.0, "stroke": true, "weight": 5}
+            ).addTo(feature_group_9e0e7e97849319fe42f8e61585826210);
+        
+    
+            feature_group_9e0e7e97849319fe42f8e61585826210.addTo(map_466b3df1d6a9f7ff5ce73298e561450c);
+        
+    
+            var feature_group_74dd6ec129325db7572b2f783373e6bb = L.featureGroup(
+                {
+}
+            );
+        
+    
+            var heat_map_71dbca6b27f0aefbd5b3b4025eda9fc6 = L.heatLayer(
+                [[34.8920497, 135.8059258, 0.8], [34.8895001, 135.8074525, 0.9], [34.8997811, 135.8187013, 0.8]],
+                {
+  "minOpacity": 0.5,
+  "maxZoom": 18,
+  "radius": 25,
+  "blur": 15,
+}
+            );
+        
+    
+            heat_map_71dbca6b27f0aefbd5b3b4025eda9fc6.addTo(feature_group_74dd6ec129325db7572b2f783373e6bb);
+        
+    
+            var layer_control_16f8ffd1e58e3729bd6a7df4dd399040_layers = {
+                base_layers : {
+                    "openstreetmap" : tile_layer_56e1f746e322782fa491cfdd115c87a2,
+                },
+                overlays :  {
+                    "\u65c5\u884c\u8a18\u30eb\u30fc\u30c8: 00023" : feature_group_9e0e7e97849319fe42f8e61585826210,
+                    "\u611f\u60c5\u30d2\u30fc\u30c8\u30de\u30c3\u30d7" : feature_group_74dd6ec129325db7572b2f783373e6bb,
+                },
+            };
+            let layer_control_16f8ffd1e58e3729bd6a7df4dd399040 = L.control.layers(
+                layer_control_16f8ffd1e58e3729bd6a7df4dd399040_layers.base_layers,
+                layer_control_16f8ffd1e58e3729bd6a7df4dd399040_layers.overlays,
+                {
+  "position": "topright",
+  "collapsed": true,
+  "autoZIndex": true,
+}
+            ).addTo(map_466b3df1d6a9f7ff5ce73298e561450c);
+
+        
+</script>
+</html>
