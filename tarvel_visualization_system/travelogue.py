@@ -9,6 +9,7 @@ from collections import defaultdict
 import time
 import requests
 import urllib.parse
+from datetime import datetime ### 機能追加 ###
 
 # .envファイルから環境変数を読み込む
 load_dotenv()
@@ -30,7 +31,7 @@ suffix = '```'
 
 geolocator = Nominatim(user_agent="travel-map-emotion")
 
-# --- 座標取得関数群 (変更なし) ---
+# --- 座標取得・テキスト抽出・感情分析の各関数 (これらの関数に変更はありません) ---
 def geocode_gsi(name):
     """【次優先】国土地理院APIを使って地名の緯度経度を取得する"""
     try:
@@ -66,9 +67,6 @@ def geocode_place(name, region_hint):
     print(f"❌ Geopy Failed: {name}")
     return None
 
-# --- テキスト処理・データ抽出関数群 ---
-
-### ★★★ プロンプトを精度重視のバージョンに戻しました ★★★
 def extract_places(texts, region_hint):
     """GPTを使って旅行記から地名と体験、フォールバック用の座標を抽出する"""
     print("📌 訪問地抽出のプロンプトを精度重視のバージョンで実行します...")
@@ -97,15 +95,10 @@ def extract_places(texts, region_hint):
                   {"role": "user", "content": prompt}],
         temperature=0.5
     )
-    
     textforarukikata = response.choices[0].message.content.strip()
-    # 応答からJSON部分を安全に抽出
-    if prefix in textforarukikata:
-        textforarukikata = textforarukikata.split(prefix, 1)[1]
-    if suffix in textforarukikata:
-        textforarukikata = textforarukikata.rsplit(suffix, 1)[0]
+    if prefix in textforarukikata: textforarukikata = textforarukikata.split(prefix, 1)[1]
+    if suffix in textforarukikata: textforarukikata = textforarukikata.rsplit(suffix, 1)[0]
     textforarukikata = textforarukikata.strip()
-
     try:
         result = json.loads(textforarukikata)
         if isinstance(result, list) and all(isinstance(item, dict) for item in result):
@@ -114,14 +107,11 @@ def extract_places(texts, region_hint):
                 item['longitude'] = float(item.get('longitude', 0.0))
             return result
         else: 
-            print("[ERROR] 形式がリストではありません")
-            return []
+            print("[ERROR] 形式がリストではありません"); return []
     except Exception as e:
-        print(f"[ERROR] OpenAIの応答解析に失敗しました: {e}")
-        return []
+        print(f"[ERROR] OpenAIの応答解析に失敗しました: {e}"); return []
 
 def get_visit_hint(visited_places_text):
-    # (この関数の実装は変更ありません)
     if not visited_places_text.strip(): return "日本"
     messages = [{"role": "system", "content": "都道府県名を答えるときは，県名のみを答えてください．"},
                 {"role": "user", "content": f"以下の旅行記データから筆者が訪れたと考えられる都道府県を1つだけ答えてください．\n\n{visited_places_text}"}]
@@ -129,11 +119,9 @@ def get_visit_hint(visited_places_text):
         response = openai.ChatCompletion.create(model='gpt-3.5-turbo', messages=messages, temperature=0.2)
         return response.choices[0].message.content.strip()
     except Exception as e:
-        print(f"エラーが発生しました: {e}")
-        return "日本"
+        print(f"エラーが発生しました: {e}"); return "日本"
 
 def analyze_emotion(text):
-    # (この関数の実装は変更ありません)
     if not text or not text.strip(): return 0.5
     print(f"🧠 Analyzing emotion for: '{text[:40]}...'")
     prompt = f"""
@@ -161,15 +149,11 @@ def analyze_emotion(text):
         print(f"✅ Emotion score: {score}")
         return score
     except Exception as e:
-        print(f"[ERROR] 感情分析中にエラーが発生しました: {e}")
-        return 0.5
+        print(f"[ERROR] 感情分析中にエラーが発生しました: {e}"); return 0.5
 
-# --- 地図描画・メイン処理 (変更なし) ---
 def map_emotion_and_routes(travels_data, output_html):
     # (この関数の実装は変更ありません)
-    if not travels_data:
-        print("[ERROR] 地図に描画するデータがありません。")
-        return
+    if not travels_data: print("[ERROR] 地図に描画するデータがありません。"); return
     try:
         first_travel = travels_data[0]['places'][0]
         start_coords = (first_travel['latitude'], first_travel['longitude'])
@@ -207,61 +191,74 @@ def map_emotion_and_routes(travels_data, output_html):
     print(f"\n🌐 感情分析付きの地図を {output_html} に保存しました。")
 
 def main():
-    # (この関数の実装は変更ありません)
+    """メイン処理"""
     file_nums_str = input('分析を行うファイルの番号をカンマ区切りで入力してください（例: 1,5,10）：')
     file_nums = [num.strip() for num in file_nums_str.split(',')]
     all_travels_data = []
+
     for i, file_num in enumerate(file_nums):
         path_journal = f'{directory}{file_num}.tra.json'
         print(f"\n{'='*20} [{file_num}] の処理を開始 {'='*20}")
-        if not os.path.exists(path_journal): continue
+        if not os.path.exists(path_journal):
+            print(f"[WARNING] ファイルが見つかりません: {path_journal}"); continue
         try:
-            with open(path_journal, "r", encoding="utf-8") as f:
-                travel_data = json.load(f)
+            with open(path_journal, "r", encoding="utf-8") as f: travel_data = json.load(f)
         except Exception as e:
             print(f"[ERROR] JSON読み込み失敗: {e}"); continue
         texts = [];
         for entry in travel_data: texts.extend(entry['text'])
         full_text = " ".join(texts)
-        if not full_text.strip(): continue
+        if not full_text.strip(): print(f"[WARNING] 旅行記 {file_num} にはテキストデータがありません。"); continue
+        
         region_hint = get_visit_hint(full_text)
         print(f"💡 訪問地のヒント: {region_hint}")
         extracted_places = extract_places(full_text, region_hint)
-        if not extracted_places: continue
+        if not extracted_places: print(f"[WARNING] 旅行記 {file_num} から訪問地を抽出できませんでした。"); continue
+
         places_with_coords = []
         for place_data in extracted_places:
             place_name = place_data['place']
             coords = geocode_place(place_name, region_hint)
-            if not coords:
-                coords = geocode_gsi(place_name)
-            if not coords:
-                coords = (place_data['latitude'], place_data['longitude'])
+            if not coords: coords = geocode_gsi(place_name)
+            if not coords: coords = (place_data['latitude'], place_data['longitude'])
             if coords and (coords[0] != 0.0 or coords[1] != 0.0):
                 place_data['latitude'] = coords[0]
                 place_data['longitude'] = coords[1]
                 places_with_coords.append(place_data)
+
         grouped_experiences = defaultdict(list)
-        for p in places_with_coords:
-            grouped_experiences[p['place']].append(p['experience'])
+        for p in places_with_coords: grouped_experiences[p['place']].append(p['experience'])
         place_emotion_scores = {}
         for place, experiences in grouped_experiences.items():
-            combined_experience = " ".join(experiences)
-            score = analyze_emotion(combined_experience)
+            score = analyze_emotion(" ".join(experiences))
             place_emotion_scores[place] = score
         for p in places_with_coords:
             p['emotion_score'] = place_emotion_scores.get(p['place'], 0.5)
+        
         print(f"📌 処理完了 ({file_num}): {len(places_with_coords)}件の訪問地を地図に追加します。")
         all_travels_data.append({
-            "file_num": file_num,
-            "places": places_with_coords,
-            "color": COLORS[i % len(COLORS)],
-            "region_hint": region_hint 
+            "file_num": file_num, "places": places_with_coords,
+            "color": COLORS[i % len(COLORS)], "region_hint": region_hint 
         })
+
     if all_travels_data:
-        output_filename = f"{base_name}{'_'.join(file_nums)}{extension}"
+        ### ★★★ ここからが修正箇所です ★★★
+        # 読み込むファイル数に応じてファイル名を変更
+        if len(file_nums) >= 4:
+            # 4つ以上の場合はタイムスタンプをファイル名に使用
+            # YYYYMMDD_HHMMSS形式で、ファイル名の衝突を防ぎます
+            timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+            output_filename = f"{base_name}{timestamp}{extension}"
+            print(f"\nINFO: 処理ファイルが4つ以上のため、タイムスタンプで保存します: {output_filename}")
+        else:
+            # 3つ以下の場合はファイル番号を連結（従来通り）
+            output_filename = f"{base_name}{'_'.join(file_nums)}{extension}"
+        ### ★★★ 修正ここまで ★★★
+
         map_emotion_and_routes(all_travels_data, output_filename)
     else:
         print("\n地図を生成するためのデータがありませんでした。")
+
 
 if __name__ == '__main__':
     main()
