@@ -3,7 +3,7 @@ import os
 from dotenv import load_dotenv
 import json
 import folium
-from folium.plugins import HeatMap ### 機能追加 ###
+from folium.plugins import HeatMap
 from geopy.geocoders import Nominatim
 from collections import defaultdict
 import time
@@ -18,7 +18,6 @@ if not API_KEY:
 openai.api_key = API_KEY
 
 # ========== 設定 ==========
-# データセットのディレクトリとファイルの基本名
 directory = "../../2022-地球の歩き方旅行記データセット/data_arukikata/data/domestic/with_schedules/"
 base_name = "visited_places_map_emotion_"
 extension = ".html"
@@ -29,7 +28,6 @@ prefix = '```json'
 suffix = '```'
 # ==========================
 
-# Geopyの設定
 geolocator = Nominatim(user_agent="travel-map-emotion")
 
 # --- 座標取得関数群 (変更なし) ---
@@ -69,12 +67,16 @@ def geocode_place(name, region_hint):
     return None
 
 # --- テキスト処理・データ抽出関数群 ---
+
+### ★★★ プロンプトを精度重視のバージョンに戻しました ★★★
 def extract_places(texts, region_hint):
-    # (この関数の実装は変更ありません)
+    """GPTを使って旅行記から地名と体験、フォールバック用の座標を抽出する"""
+    print("📌 訪問地抽出のプロンプトを精度重視のバージョンで実行します...")
     prompt = f"""
     以下の旅行記のテキストから、訪れた場所の情報を抽出してください。
     出力には "place"（地名）、"latitude"（緯度）、"longitude"（経度）、"experience"（その場所での経験）、"reasoning"（その座標だと推定した理由）を必ず含めてください。
     緯度経度は、日本の「{region_hint}」周辺の地理情報と、テキスト内の文脈（例：「〇〇駅から徒歩5分」「△△の隣」など）を最大限考慮して、非常に高い精度で推定してください。
+
     出力は**絶対にJSON形式のリスト**として返してください。
     例:
     [
@@ -86,6 +88,8 @@ def extract_places(texts, region_hint):
             "reasoning": "群馬県草津温泉の中心的な観光スポットであり、旅行記の文脈から草津温泉への訪問が明らかなため、湯畑の座標を指定しました。"
         }}
     ]
+
+    テキスト: {texts}
     """
     response = openai.ChatCompletion.create(
         model=MODEL,
@@ -93,12 +97,15 @@ def extract_places(texts, region_hint):
                   {"role": "user", "content": prompt}],
         temperature=0.5
     )
+    
     textforarukikata = response.choices[0].message.content.strip()
-    if textforarukikata.startswith(prefix):
-        textforarukikata = textforarukikata[len(prefix):]
-    if textforarukikata.endswith(suffix):
-        textforarukikata = textforarukikata[:-len(suffix)]
+    # 応答からJSON部分を安全に抽出
+    if prefix in textforarukikata:
+        textforarukikata = textforarukikata.split(prefix, 1)[1]
+    if suffix in textforarukikata:
+        textforarukikata = textforarukikata.rsplit(suffix, 1)[0]
     textforarukikata = textforarukikata.strip()
+
     try:
         result = json.loads(textforarukikata)
         if isinstance(result, list) and all(isinstance(item, dict) for item in result):
@@ -106,7 +113,9 @@ def extract_places(texts, region_hint):
                 item['latitude'] = float(item.get('latitude', 0.0))
                 item['longitude'] = float(item.get('longitude', 0.0))
             return result
-        else: return []
+        else: 
+            print("[ERROR] 形式がリストではありません")
+            return []
     except Exception as e:
         print(f"[ERROR] OpenAIの応答解析に失敗しました: {e}")
         return []
@@ -123,12 +132,9 @@ def get_visit_hint(visited_places_text):
         print(f"エラーが発生しました: {e}")
         return "日本"
 
-### 機能追加 ###
 def analyze_emotion(text):
-    """GPTを使ってテキストの感情を分析し、0.0から1.0のスコアを返す"""
-    if not text or not text.strip():
-        return 0.5  # テキストが空ならニュートラル
-
+    # (この関数の実装は変更ありません)
+    if not text or not text.strip(): return 0.5
     print(f"🧠 Analyzing emotion for: '{text[:40]}...'")
     prompt = f"""
     以下のテキストは、旅行中のある場所での経験を記述したものです。
@@ -148,7 +154,7 @@ def analyze_emotion(text):
                 {"role": "user", "content": prompt}
             ],
             temperature=0.1,
-            response_format={"type": "json_object"}  # JSONモードを利用
+            response_format={"type": "json_object"}
         )
         result = json.loads(response.choices[0].message.content)
         score = float(result.get("score", 0.5))
@@ -156,88 +162,58 @@ def analyze_emotion(text):
         return score
     except Exception as e:
         print(f"[ERROR] 感情分析中にエラーが発生しました: {e}")
-        return 0.5  # エラー時はニュートラル
+        return 0.5
 
-### 機能追加 ###
+# --- 地図描画・メイン処理 (変更なし) ---
 def map_emotion_and_routes(travels_data, output_html):
-    """感情ヒートマップと訪問経路をレイヤー切り替え可能な地図として生成する"""
+    # (この関数の実装は変更ありません)
     if not travels_data:
         print("[ERROR] 地図に描画するデータがありません。")
         return
-
-    # 地図の中心を決定
     try:
         first_travel = travels_data[0]['places'][0]
         start_coords = (first_travel['latitude'], first_travel['longitude'])
         m = folium.Map(location=start_coords, zoom_start=10)
     except (IndexError, KeyError):
         m = folium.Map(location=[35.6812, 139.7671], zoom_start=10)
-
-    # ヒートマップ用のデータを全旅行記から集めるリスト
     heatmap_data = []
-
-    # 各旅行記のルートを個別のレイヤー(FeatureGroup)として作成
     for travel in travels_data:
-        file_num = travel["file_num"]
-        places = travel["places"]
-        color = travel["color"]
-        
-        # この旅行記のマーカーと線を入れるためのレイヤーを作成
+        file_num, places, color = travel["file_num"], travel["places"], travel["color"]
         route_group = folium.FeatureGroup(name=f"旅行記ルート: {file_num}", show=True)
-        
         locations = []
         for place_data in places:
             coords = (place_data['latitude'], place_data['longitude'])
             emotion_score = place_data.get('emotion_score', 0.5)
-
-            # ポップアップに感情スコアも表示
             popup_html = f"<b>{place_data['place']}</b> (旅行記: {file_num})<br>"
             popup_html += f"<b>感情スコア: {emotion_score:.2f}</b><br><hr>"
             popup_html += place_data['experience']
-
             folium.Marker(
                 location=coords,
                 popup=folium.Popup(popup_html, max_width=350),
                 tooltip=f"{place_data['place']} ({file_num})",
                 icon=folium.Icon(color=color, icon="info-sign")
             ).add_to(route_group)
-            
             locations.append(coords)
-            # ヒートマップ用データを追加 [緯度, 経度, 重み(感情スコア)]
             heatmap_data.append([coords[0], coords[1], emotion_score])
-        
         if len(locations) > 1:
             folium.PolyLine(locations, color=color, weight=5, opacity=0.7).add_to(route_group)
-        
-        # 完成したルートレイヤーを地図に追加
         route_group.add_to(m)
-
-    # 感情ヒートマップレイヤーを作成
     if heatmap_data:
-        # ヒートマップレイヤーを入れるためのFeatureGroupを作成
         heatmap_layer = folium.FeatureGroup(name="感情ヒートマップ", show=False)
         HeatMap(heatmap_data).add_to(heatmap_layer)
         heatmap_layer.add_to(m)
-
-    # レイヤー切り替えコントロールを追加
     folium.LayerControl().add_to(m)
-    
     m.save(output_html)
     print(f"\n🌐 感情分析付きの地図を {output_html} に保存しました。")
 
-
 def main():
-    """メイン処理"""
+    # (この関数の実装は変更ありません)
     file_nums_str = input('分析を行うファイルの番号をカンマ区切りで入力してください（例: 1,5,10）：')
     file_nums = [num.strip() for num in file_nums_str.split(',')]
-
     all_travels_data = []
-
     for i, file_num in enumerate(file_nums):
         path_journal = f'{directory}{file_num}.tra.json'
         print(f"\n{'='*20} [{file_num}] の処理を開始 {'='*20}")
-
-        # (JSON読み込みなどの前処理は変更なし)
         if not os.path.exists(path_journal): continue
         try:
             with open(path_journal, "r", encoding="utf-8") as f:
@@ -248,16 +224,10 @@ def main():
         for entry in travel_data: texts.extend(entry['text'])
         full_text = " ".join(texts)
         if not full_text.strip(): continue
-
         region_hint = get_visit_hint(full_text)
         print(f"💡 訪問地のヒント: {region_hint}")
-
-        # GPTで場所の情報を抽出
         extracted_places = extract_places(full_text, region_hint)
         if not extracted_places: continue
-        
-        ### 機能追加 ###
-        # 抽出した場所に座標を付与 (Geocoding)
         places_with_coords = []
         for place_data in extracted_places:
             place_name = place_data['place']
@@ -266,43 +236,32 @@ def main():
                 coords = geocode_gsi(place_name)
             if not coords:
                 coords = (place_data['latitude'], place_data['longitude'])
-            
-            # 座標が有効な場合のみリストに追加
             if coords and (coords[0] != 0.0 or coords[1] != 0.0):
                 place_data['latitude'] = coords[0]
                 place_data['longitude'] = coords[1]
                 places_with_coords.append(place_data)
-
-        # 場所ごとにまとめたexperienceテキストで感情分析を実行
         grouped_experiences = defaultdict(list)
         for p in places_with_coords:
             grouped_experiences[p['place']].append(p['experience'])
-        
         place_emotion_scores = {}
         for place, experiences in grouped_experiences.items():
             combined_experience = " ".join(experiences)
             score = analyze_emotion(combined_experience)
             place_emotion_scores[place] = score
-            
-        # 感情スコアを元のデータに付与
         for p in places_with_coords:
             p['emotion_score'] = place_emotion_scores.get(p['place'], 0.5)
-
         print(f"📌 処理完了 ({file_num}): {len(places_with_coords)}件の訪問地を地図に追加します。")
-        
         all_travels_data.append({
             "file_num": file_num,
-            "places": places_with_coords, # 座標と感情スコアが付与されたデータ
+            "places": places_with_coords,
             "color": COLORS[i % len(COLORS)],
             "region_hint": region_hint 
         })
-
     if all_travels_data:
         output_filename = f"{base_name}{'_'.join(file_nums)}{extension}"
         map_emotion_and_routes(all_travels_data, output_filename)
     else:
         print("\n地図を生成するためのデータがありませんでした。")
-
 
 if __name__ == '__main__':
     main()
