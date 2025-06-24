@@ -9,7 +9,7 @@ from collections import defaultdict
 import time
 import requests
 import urllib.parse
-from datetime import datetime ### 機能追加 ###
+from datetime import datetime
 
 # .envファイルから環境変数を読み込む
 load_dotenv()
@@ -151,56 +151,77 @@ def analyze_emotion(text):
     except Exception as e:
         print(f"[ERROR] 感情分析中にエラーが発生しました: {e}"); return 0.5
 
+### ★★★ ここからが修正箇所です ★★★
 def map_emotion_and_routes(travels_data, output_html):
-    # (この関数の実装は変更ありません)
-    if not travels_data: print("[ERROR] 地図に描画するデータがありません。"); return
+    """感情ヒートマップと訪問経路をレイヤー切り替え可能な地図として生成する"""
+    if not travels_data:
+        print("[ERROR] 地図に描画するデータがありません。")
+        return
+
+    # 地図の中心を決定
     try:
         first_travel = travels_data[0]['places'][0]
         start_coords = (first_travel['latitude'], first_travel['longitude'])
         m = folium.Map(location=start_coords, zoom_start=10)
     except (IndexError, KeyError):
         m = folium.Map(location=[35.6812, 139.7671], zoom_start=10)
+
     heatmap_data = []
     for travel in travels_data:
         file_num, places, color = travel["file_num"], travel["places"], travel["color"]
         route_group = folium.FeatureGroup(name=f"旅行記ルート: {file_num}", show=True)
         locations = []
+
         for place_data in places:
             coords = (place_data['latitude'], place_data['longitude'])
             emotion_score = place_data.get('emotion_score', 0.5)
+
+            # --- ポップアップに表示するHTMLを組み立て ---
             popup_html = f"<b>{place_data['place']}</b> (旅行記: {file_num})<br>"
-            popup_html += f"<b>感情スコア: {emotion_score:.2f}</b><br><hr>"
-            popup_html += place_data['experience']
+            popup_html += f"<b>感情スコア: {emotion_score:.2f}</b><br>"
+            
+            # reasoningが存在すればポップアップに追加
+            if 'reasoning' in place_data and place_data['reasoning']:
+                popup_html += f"<hr style='margin: 3px 0;'>" # 水平線
+                popup_html += f"<b>推定理由:</b><br>{place_data['reasoning']}<br>"
+
+            popup_html += f"<hr style='margin: 3px 0;'>" # 水平線
+            popup_html += f"<b>体験:</b><br>{place_data['experience']}"
+            # --- HTML組み立てここまで ---
+
             folium.Marker(
                 location=coords,
                 popup=folium.Popup(popup_html, max_width=350),
                 tooltip=f"{place_data['place']} ({file_num})",
                 icon=folium.Icon(color=color, icon="info-sign")
             ).add_to(route_group)
+            
             locations.append(coords)
             heatmap_data.append([coords[0], coords[1], emotion_score])
+        
         if len(locations) > 1:
             folium.PolyLine(locations, color=color, weight=5, opacity=0.7).add_to(route_group)
+        
         route_group.add_to(m)
+
     if heatmap_data:
         heatmap_layer = folium.FeatureGroup(name="感情ヒートマップ", show=False)
         HeatMap(heatmap_data).add_to(heatmap_layer)
         heatmap_layer.add_to(m)
+
     folium.LayerControl().add_to(m)
     m.save(output_html)
     print(f"\n🌐 感情分析付きの地図を {output_html} に保存しました。")
 
 def main():
-    """メイン処理"""
+    # (この関数の実装は変更ありません)
     file_nums_str = input('分析を行うファイルの番号をカンマ区切りで入力してください（例: 1,5,10）：')
     file_nums = [num.strip() for num in file_nums_str.split(',')]
     all_travels_data = []
-
     for i, file_num in enumerate(file_nums):
         path_journal = f'{directory}{file_num}.tra.json'
         print(f"\n{'='*20} [{file_num}] の処理を開始 {'='*20}")
-        if not os.path.exists(path_journal):
-            print(f"[WARNING] ファイルが見つかりません: {path_journal}"); continue
+        if not os.path.exists(path_journal): print(f"[WARNING] ファイルが見つかりません: {path_journal}"); continue
         try:
             with open(path_journal, "r", encoding="utf-8") as f: travel_data = json.load(f)
         except Exception as e:
@@ -242,23 +263,15 @@ def main():
         })
 
     if all_travels_data:
-        ### ★★★ ここからが修正箇所です ★★★
-        # 読み込むファイル数に応じてファイル名を変更
         if len(file_nums) >= 4:
-            # 4つ以上の場合はタイムスタンプをファイル名に使用
-            # YYYYMMDD_HHMMSS形式で、ファイル名の衝突を防ぎます
             timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
             output_filename = f"{base_name}{timestamp}{extension}"
             print(f"\nINFO: 処理ファイルが4つ以上のため、タイムスタンプで保存します: {output_filename}")
         else:
-            # 3つ以下の場合はファイル番号を連結（従来通り）
             output_filename = f"{base_name}{'_'.join(file_nums)}{extension}"
-        ### ★★★ 修正ここまで ★★★
-
         map_emotion_and_routes(all_travels_data, output_filename)
     else:
         print("\n地図を生成するためのデータがありませんでした。")
-
 
 if __name__ == '__main__':
     main()
