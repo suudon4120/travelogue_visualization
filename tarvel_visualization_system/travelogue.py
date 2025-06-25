@@ -33,7 +33,7 @@ geolocator = Nominatim(user_agent="travel-map-emotion")
 
 # --- 座標取得・テキスト抽出・感情分析の各関数 (これらの関数に変更はありません) ---
 def geocode_gsi(name):
-    """【次優先】国土地理院APIを使って地名の緯度経度を取得する"""
+    """【最終手段】国土地理院APIを使って地名の緯度経度を取得する"""
     try:
         query = urllib.parse.quote(name)
         url = f"https://msearch.gsi.go.jp/address-search/AddressSearch?q={query}"
@@ -151,7 +151,6 @@ def analyze_emotion(text):
     except Exception as e:
         print(f"[ERROR] 感情分析中にエラーが発生しました: {e}"); return 0.5
 
-### ★★★ ここからが修正箇所です ★★★
 def map_emotion_and_routes(travels_data, output_html):
     """感情ヒートマップと訪問経路をレイヤー切り替え可能な地図として生成する"""
     if not travels_data:
@@ -161,7 +160,28 @@ def map_emotion_and_routes(travels_data, output_html):
     # 地図の中心を決定
     try:
         first_travel = travels_data[0]['places'][0]
-        start_coords = (first_travel['latitude'], first_travel['longitude'])
+        first_place_name = first_travel['place']
+        region_hint = travels_data[0]['region_hint']
+        
+        ### ★★★ 優先度変更 (1/2) ★★★
+        # 1. Geopy
+        start_coords = geocode_place(first_place_name, region_hint)
+        
+        # 2. GPT
+        if not start_coords:
+             start_coords = (first_travel['latitude'], first_travel['longitude'])
+             # GPTの座標が(0,0)なら無効とみなし、次に進む
+             if start_coords[0] == 0.0 and start_coords[1] == 0.0:
+                 start_coords = None
+        
+        # 3. 国土地理院API
+        if not start_coords:
+            start_coords = geocode_gsi(first_place_name)
+        
+        # それでもダメならデフォルト値
+        if not start_coords:
+             start_coords = (35.6812, 139.7671)
+
         m = folium.Map(location=start_coords, zoom_start=10)
     except (IndexError, KeyError):
         m = folium.Map(location=[35.6812, 139.7671], zoom_start=10)
@@ -175,19 +195,13 @@ def map_emotion_and_routes(travels_data, output_html):
         for place_data in places:
             coords = (place_data['latitude'], place_data['longitude'])
             emotion_score = place_data.get('emotion_score', 0.5)
-
-            # --- ポップアップに表示するHTMLを組み立て ---
             popup_html = f"<b>{place_data['place']}</b> (旅行記: {file_num})<br>"
             popup_html += f"<b>感情スコア: {emotion_score:.2f}</b><br>"
-            
-            # reasoningが存在すればポップアップに追加
             if 'reasoning' in place_data and place_data['reasoning']:
-                popup_html += f"<hr style='margin: 3px 0;'>" # 水平線
+                popup_html += f"<hr style='margin: 3px 0;'>"
                 popup_html += f"<b>推定理由:</b><br>{place_data['reasoning']}<br>"
-
-            popup_html += f"<hr style='margin: 3px 0;'>" # 水平線
+            popup_html += f"<hr style='margin: 3px 0;'>"
             popup_html += f"<b>体験:</b><br>{place_data['experience']}"
-            # --- HTML組み立てここまで ---
 
             folium.Marker(
                 location=coords,
@@ -195,26 +209,23 @@ def map_emotion_and_routes(travels_data, output_html):
                 tooltip=f"{place_data['place']} ({file_num})",
                 icon=folium.Icon(color=color, icon="info-sign")
             ).add_to(route_group)
-            
             locations.append(coords)
             heatmap_data.append([coords[0], coords[1], emotion_score])
         
         if len(locations) > 1:
             folium.PolyLine(locations, color=color, weight=5, opacity=0.7).add_to(route_group)
-        
         route_group.add_to(m)
 
     if heatmap_data:
         heatmap_layer = folium.FeatureGroup(name="感情ヒートマップ", show=False)
         HeatMap(heatmap_data).add_to(heatmap_layer)
         heatmap_layer.add_to(m)
-
     folium.LayerControl().add_to(m)
     m.save(output_html)
     print(f"\n🌐 感情分析付きの地図を {output_html} に保存しました。")
 
 def main():
-    # (この関数の実装は変更ありません)
+    """メイン処理"""
     file_nums_str = input('分析を行うファイルの番号をカンマ区切りで入力してください（例: 1,5,10）：')
     file_nums = [num.strip() for num in file_nums_str.split(',')]
     all_travels_data = []
@@ -239,13 +250,28 @@ def main():
         places_with_coords = []
         for place_data in extracted_places:
             place_name = place_data['place']
+            
+            ### ★★★ 優先度変更 (2/2) ★★★
+            # 1. Geopy
             coords = geocode_place(place_name, region_hint)
-            if not coords: coords = geocode_gsi(place_name)
-            if not coords: coords = (place_data['latitude'], place_data['longitude'])
-            if coords and (coords[0] != 0.0 or coords[1] != 0.0):
+            
+            # 2. GPTの推定
+            if not coords:
+                coords = (place_data['latitude'], place_data['longitude'])
+                # GPTの座標が(0,0)などの無効値ならNoneに戻す
+                if coords[0] == 0.0 and coords[1] == 0.0:
+                    coords = None
+            
+            # 3. 国土地理院API
+            if not coords:
+                coords = geocode_gsi(place_name)
+
+            if coords:
                 place_data['latitude'] = coords[0]
                 place_data['longitude'] = coords[1]
                 places_with_coords.append(place_data)
+            else:
+                print(f"[!] 全てのジオコーディングに失敗しました: {place_name}")
 
         grouped_experiences = defaultdict(list)
         for p in places_with_coords: grouped_experiences[p['place']].append(p['experience'])
