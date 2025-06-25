@@ -74,20 +74,7 @@ def extract_places(texts, region_hint):
     以下の旅行記のテキストから、訪れた場所の情報を抽出してください。
     出力には "place"（地名）、"latitude"（緯度）、"longitude"（経度）、"experience"（その場所での経験）、"reasoning"（その座標だと推定した理由）を必ず含めてください。
     緯度経度は、日本の「{region_hint}」周辺の地理情報と、テキスト内の文脈（例：「〇〇駅から徒歩5分」「△△の隣」など）を最大限考慮して、非常に高い精度で推定してください。
-
     出力は**絶対にJSON形式のリスト**として返してください。
-    例:
-    [
-        {{
-            "place": "湯畑", 
-            "latitude": 36.6214, 
-            "longitude": 138.5968, 
-            "experience": "湯畑を散策しました。",
-            "reasoning": "群馬県草津温泉の中心的な観光スポットであり、旅行記の文脈から草津温泉への訪問が明らかなため、湯畑の座標を指定しました。"
-        }}
-    ]
-
-    テキスト: {texts}
     """
     response = openai.ChatCompletion.create(
         model=MODEL,
@@ -152,46 +139,26 @@ def analyze_emotion(text):
         print(f"[ERROR] 感情分析中にエラーが発生しました: {e}"); return 0.5
 
 def map_emotion_and_routes(travels_data, output_html):
-    """感情ヒートマップと訪問経路をレイヤー切り替え可能な地図として生成する"""
-    if not travels_data:
-        print("[ERROR] 地図に描画するデータがありません。")
-        return
-
-    # 地図の中心を決定
+    # (この関数の実装は変更ありません)
+    if not travels_data: print("[ERROR] 地図に描画するデータがありません。"); return
     try:
         first_travel = travels_data[0]['places'][0]
         first_place_name = first_travel['place']
         region_hint = travels_data[0]['region_hint']
-        
-        ### ★★★ 優先度変更 (1/2) ★★★
-        # 1. Geopy
         start_coords = geocode_place(first_place_name, region_hint)
-        
-        # 2. GPT
         if not start_coords:
              start_coords = (first_travel['latitude'], first_travel['longitude'])
-             # GPTの座標が(0,0)なら無効とみなし、次に進む
-             if start_coords[0] == 0.0 and start_coords[1] == 0.0:
-                 start_coords = None
-        
-        # 3. 国土地理院API
-        if not start_coords:
-            start_coords = geocode_gsi(first_place_name)
-        
-        # それでもダメならデフォルト値
-        if not start_coords:
-             start_coords = (35.6812, 139.7671)
-
+             if start_coords[0] == 0.0 and start_coords[1] == 0.0: start_coords = None
+        if not start_coords: start_coords = geocode_gsi(first_place_name)
+        if not start_coords: start_coords = (35.6812, 139.7671)
         m = folium.Map(location=start_coords, zoom_start=10)
     except (IndexError, KeyError):
         m = folium.Map(location=[35.6812, 139.7671], zoom_start=10)
-
     heatmap_data = []
     for travel in travels_data:
         file_num, places, color = travel["file_num"], travel["places"], travel["color"]
         route_group = folium.FeatureGroup(name=f"旅行記ルート: {file_num}", show=True)
         locations = []
-
         for place_data in places:
             coords = (place_data['latitude'], place_data['longitude'])
             emotion_score = place_data.get('emotion_score', 0.5)
@@ -202,20 +169,15 @@ def map_emotion_and_routes(travels_data, output_html):
                 popup_html += f"<b>推定理由:</b><br>{place_data['reasoning']}<br>"
             popup_html += f"<hr style='margin: 3px 0;'>"
             popup_html += f"<b>体験:</b><br>{place_data['experience']}"
-
             folium.Marker(
-                location=coords,
-                popup=folium.Popup(popup_html, max_width=350),
-                tooltip=f"{place_data['place']} ({file_num})",
-                icon=folium.Icon(color=color, icon="info-sign")
+                location=coords, popup=folium.Popup(popup_html, max_width=350),
+                tooltip=f"{place_data['place']} ({file_num})", icon=folium.Icon(color=color, icon="info-sign")
             ).add_to(route_group)
             locations.append(coords)
             heatmap_data.append([coords[0], coords[1], emotion_score])
-        
         if len(locations) > 1:
             folium.PolyLine(locations, color=color, weight=5, opacity=0.7).add_to(route_group)
         route_group.add_to(m)
-
     if heatmap_data:
         heatmap_layer = folium.FeatureGroup(name="感情ヒートマップ", show=False)
         HeatMap(heatmap_data).add_to(heatmap_layer)
@@ -224,10 +186,36 @@ def map_emotion_and_routes(travels_data, output_html):
     m.save(output_html)
     print(f"\n🌐 感情分析付きの地図を {output_html} に保存しました。")
 
+
+### ★★★ ここからが修正箇所です ★★★
 def main():
     """メイン処理"""
-    file_nums_str = input('分析を行うファイルの番号をカンマ区切りで入力してください（例: 1,5,10）：')
-    file_nums = [num.strip() for num in file_nums_str.split(',')]
+    # .txtファイルのパスをユーザーから受け取る
+    input_file_path = input('ファイル番号が記載された.txtファイルのパスを入力してください: ')
+
+    try:
+        # ファイルを読み込んでファイル番号のリストを作成する
+        with open(input_file_path, 'r', encoding='utf-8') as f:
+            content = f.read()
+        
+        # 改行や空白に対応しつつ、カンマで分割してリスト化
+        file_nums_raw = content.strip().split(',')
+        # 空の要素があれば除去する
+        file_nums = [num.strip() for num in file_nums_raw if num.strip()] 
+        
+        if not file_nums:
+            print("[ERROR] 入力ファイルに有効なファイル番号が含まれていません。")
+            return
+
+        print(f"INFO: ファイルから {len(file_nums)} 件のファイル番号を読み込みました: {file_nums}")
+
+    except FileNotFoundError:
+        print(f"[ERROR] 入力ファイルが見つかりません: {input_file_path}")
+        return # ファイルがなければ処理を終了
+    except Exception as e:
+        print(f"[ERROR] ファイルの読み込み中にエラーが発生しました: {e}")
+        return # その他のエラーでも終了
+
     all_travels_data = []
     for i, file_num in enumerate(file_nums):
         path_journal = f'{directory}{file_num}.tra.json'
@@ -250,19 +238,10 @@ def main():
         places_with_coords = []
         for place_data in extracted_places:
             place_name = place_data['place']
-            
-            ### ★★★ 優先度変更 (2/2) ★★★
-            # 1. Geopy
             coords = geocode_place(place_name, region_hint)
-            
-            # 2. GPTの推定
             if not coords:
                 coords = (place_data['latitude'], place_data['longitude'])
-                # GPTの座標が(0,0)などの無効値ならNoneに戻す
-                if coords[0] == 0.0 and coords[1] == 0.0:
-                    coords = None
-            
-            # 3. 国土地理院API
+                if coords[0] == 0.0 and coords[1] == 0.0: coords = None
             if not coords:
                 coords = geocode_gsi(place_name)
 
@@ -298,6 +277,7 @@ def main():
         map_emotion_and_routes(all_travels_data, output_filename)
     else:
         print("\n地図を生成するためのデータがありませんでした。")
+
 
 if __name__ == '__main__':
     main()
