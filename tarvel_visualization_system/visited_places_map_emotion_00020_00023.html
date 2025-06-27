@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_89535765a8f563f4784193f9ae7bddd7 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+
+            <style>html, body {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            </style>
+
+            <style>#map {
+                position:absolute;
+                top:0;
+                bottom:0;
+                right:0;
+                left:0;
+                }
+            </style>
+
+            <script>
+                L_NO_TOUCH = false;
+                L_DISABLE_3D = false;
+            </script>
+
+        
+    <script src="https://cdn.jsdelivr.net/gh/python-visualization/folium@main/folium/templates/leaflet_heat.min.js"></script>
+</head>
+<body>
+    
+    
+            <div class="folium-map" id="map_89535765a8f563f4784193f9ae7bddd7" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_89535765a8f563f4784193f9ae7bddd7 = L.map(
+                "map_89535765a8f563f4784193f9ae7bddd7",
+                {
+                    center: [35.2486461, 136.0825575],
+                    crs: L.CRS.EPSG3857,
+                    ...{
+  "zoom": 10,
+  "zoomControl": true,
+  "preferCanvas": false,
+}
+
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_d98b2cd8e7caad0b3879b7c3d53a0f43 = L.tileLayer(
+                "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {
+  "minZoom": 0,
+  "maxZoom": 19,
+  "maxNativeZoom": 19,
+  "noWrap": false,
+  "attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors",
+  "subdomains": "abc",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_d98b2cd8e7caad0b3879b7c3d53a0f43.addTo(map_89535765a8f563f4784193f9ae7bddd7);
+        
+    
+            var feature_group_cc9f74b60a99a0bf7d2538e1b9c18c0b = L.featureGroup(
+                {
+}
+            );
+        
+    
+            var marker_5b15ed02332146de245a3c13057546b9 = L.marker(
+                [35.2486461, 136.0825575],
+                {
+}
+            ).addTo(feature_group_cc9f74b60a99a0bf7d2538e1b9c18c0b);
+        
+    
+            var icon_315a7b84903cea540a073cff66a2afc2 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_6637a825f06029fd2a9031efd7289e37 = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_b5266f983c7b16e9fa6150e9d6e75b68 = $(`<div id="html_b5266f983c7b16e9fa6150e9d6e75b68" style="width: 100.0%; height: 100.0%;"><b>琵琶湖</b> (旅行記: 00020)<br><b>感情スコア: 0.90</b><br><hr>琵琶湖でボートを漕ぎながら美しい風景を楽しんだ。</div>`)[0];
+                popup_6637a825f06029fd2a9031efd7289e37.setContent(html_b5266f983c7b16e9fa6150e9d6e75b68);
+            
+        
+
+        marker_5b15ed02332146de245a3c13057546b9.bindPopup(popup_6637a825f06029fd2a9031efd7289e37)
+        ;
+
+        
+    
+    
+            marker_5b15ed02332146de245a3c13057546b9.bindTooltip(
+                `<div>
+                     琵琶湖 (00020)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_5b15ed02332146de245a3c13057546b9.setIcon(icon_315a7b84903cea540a073cff66a2afc2);
+            
+    
+            var marker_60e2a49e87a7b8806bc2ebdb473eb1ad = L.marker(
+                [35.2771013, 136.2517204],
+                {
+}
+            ).addTo(feature_group_cc9f74b60a99a0bf7d2538e1b9c18c0b);
+        
+    
+            var icon_36633e07ab30206219009490e4097b58 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_879072a226dffe907bc4a97c2f157f4a = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_6490464de0015e710ae677d1e649273b = $(`<div id="html_6490464de0015e710ae677d1e649273b" style="width: 100.0%; height: 100.0%;"><b>彦根城</b> (旅行記: 00020)<br><b>感情スコア: 0.50</b><br><hr>彦根城を見学し、歴史について学んだ。</div>`)[0];
+                popup_879072a226dffe907bc4a97c2f157f4a.setContent(html_6490464de0015e710ae677d1e649273b);
+            
+        
+
+        marker_60e2a49e87a7b8806bc2ebdb473eb1ad.bindPopup(popup_879072a226dffe907bc4a97c2f157f4a)
+        ;
+
+        
+    
+    
+            marker_60e2a49e87a7b8806bc2ebdb473eb1ad.bindTooltip(
+                `<div>
+                     彦根城 (00020)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_60e2a49e87a7b8806bc2ebdb473eb1ad.setIcon(icon_36633e07ab30206219009490e4097b58);
+            
+    
+            var marker_5a8ae4af367bc8d50f6db2c84ecb9867 = L.marker(
+                [35.1286803, 136.0979275],
+                {
+}
+            ).addTo(feature_group_cc9f74b60a99a0bf7d2538e1b9c18c0b);
+        
+    
+            var icon_c81bc25d7c4739acd9a748aa7a609117 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_7e046d8c28f687a3f21c964e43ebc673 = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_d137d0dd644b6ff9695dd4cd466f2e26 = $(`<div id="html_d137d0dd644b6ff9695dd4cd466f2e26" style="width: 100.0%; height: 100.0%;"><b>近江八幡</b> (旅行記: 00020)<br><b>感情スコア: 0.70</b><br><hr>近江八幡の古い町並みを散策し、地元の特産品を購入した。</div>`)[0];
+                popup_7e046d8c28f687a3f21c964e43ebc673.setContent(html_d137d0dd644b6ff9695dd4cd466f2e26);
+            
+        
+
+        marker_5a8ae4af367bc8d50f6db2c84ecb9867.bindPopup(popup_7e046d8c28f687a3f21c964e43ebc673)
+        ;
+
+        
+    
+    
+            marker_5a8ae4af367bc8d50f6db2c84ecb9867.bindTooltip(
+                `<div>
+                     近江八幡 (00020)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_5a8ae4af367bc8d50f6db2c84ecb9867.setIcon(icon_c81bc25d7c4739acd9a748aa7a609117);
+            
+    
+            var marker_6d15cc39b1825f537392c067c3d644b1 = L.marker(
+                [35.4857724, 136.294057],
+                {
+}
+            ).addTo(feature_group_cc9f74b60a99a0bf7d2538e1b9c18c0b);
+        
+    
+            var icon_cb32ba029f3dbabab459df6b63fdcc16 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_fcad83ada840499c6eac03c42a10a8e9 = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_c1db5a61e96762dda52ad0fdfa9cc066 = $(`<div id="html_c1db5a61e96762dda52ad0fdfa9cc066" style="width: 100.0%; height: 100.0%;"><b>長浜市</b> (旅行記: 00020)<br><b>感情スコア: 0.80</b><br><hr>長浜市で伝統的な工芸品を見学し、地元の食事を楽しんだ。</div>`)[0];
+                popup_fcad83ada840499c6eac03c42a10a8e9.setContent(html_c1db5a61e96762dda52ad0fdfa9cc066);
+            
+        
+
+        marker_6d15cc39b1825f537392c067c3d644b1.bindPopup(popup_fcad83ada840499c6eac03c42a10a8e9)
+        ;
+
+        
+    
+    
+            marker_6d15cc39b1825f537392c067c3d644b1.bindTooltip(
+                `<div>
+                     長浜市 (00020)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_6d15cc39b1825f537392c067c3d644b1.setIcon(icon_cb32ba029f3dbabab459df6b63fdcc16);
+            
+    
+            var poly_line_34be6784337aff0d6e8226a47cfae365 = L.polyline(
+                [[35.2486461, 136.0825575], [35.2771013, 136.2517204], [35.1286803, 136.0979275], [35.4857724, 136.294057]],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "blue", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.7, "smoothFactor": 1.0, "stroke": true, "weight": 5}
+            ).addTo(feature_group_cc9f74b60a99a0bf7d2538e1b9c18c0b);
+        
+    
+            feature_group_cc9f74b60a99a0bf7d2538e1b9c18c0b.addTo(map_89535765a8f563f4784193f9ae7bddd7);
+        
+    
+            var feature_group_c66f60bd313c40c27c95d0140efc8ef9 = L.featureGroup(
+                {
+}
+            );
+        
+    
+            var marker_ab6729947be9884d1e05cd121950c118 = L.marker(
+                [34.994303, 135.7844389],
+                {
+}
+            ).addTo(feature_group_c66f60bd313c40c27c95d0140efc8ef9);
+        
+    
+            var icon_1f96e27088805f45356d8656f01c4c79 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "red",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_77cc36253ac7174d5004ed48ca8c2695 = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_2ebb3ebfeb7c235caa4bef62884b063d = $(`<div id="html_2ebb3ebfeb7c235caa4bef62884b063d" style="width: 100.0%; height: 100.0%;"><b>清水寺</b> (旅行記: 00023)<br><b>感情スコア: 0.70</b><br><hr>清水寺の舞台から京都市内を一望しました。</div>`)[0];
+                popup_77cc36253ac7174d5004ed48ca8c2695.setContent(html_2ebb3ebfeb7c235caa4bef62884b063d);
+            
+        
+
+        marker_ab6729947be9884d1e05cd121950c118.bindPopup(popup_77cc36253ac7174d5004ed48ca8c2695)
+        ;
+
+        
+    
+    
+            marker_ab6729947be9884d1e05cd121950c118.bindTooltip(
+                `<div>
+                     清水寺 (00023)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_ab6729947be9884d1e05cd121950c118.setIcon(icon_1f96e27088805f45356d8656f01c4c79);
+            
+    
+            var marker_5c0bb96570874ab2787fa9f35f68020e = L.marker(
+                [34.9675192, 135.7797101],
+                {
+}
+            ).addTo(feature_group_c66f60bd313c40c27c95d0140efc8ef9);
+        
+    
+            var icon_ad93a1dff50c24582d8d0c3033da9643 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "red",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_e0fefc67184582648e64864874518f09 = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_8e7d5ac29d99db98f0bf97d4b9eb0264 = $(`<div id="html_8e7d5ac29d99db98f0bf97d4b9eb0264" style="width: 100.0%; height: 100.0%;"><b>伏見稲荷大社</b> (旅行記: 00023)<br><b>感情スコア: 0.50</b><br><hr>千本鳥居をくぐりながら、稲荷山を散策しました。</div>`)[0];
+                popup_e0fefc67184582648e64864874518f09.setContent(html_8e7d5ac29d99db98f0bf97d4b9eb0264);
+            
+        
+
+        marker_5c0bb96570874ab2787fa9f35f68020e.bindPopup(popup_e0fefc67184582648e64864874518f09)
+        ;
+
+        
+    
+    
+            marker_5c0bb96570874ab2787fa9f35f68020e.bindTooltip(
+                `<div>
+                     伏見稲荷大社 (00023)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_5c0bb96570874ab2787fa9f35f68020e.setIcon(icon_ad93a1dff50c24582d8d0c3033da9643);
+            
+    
+            var marker_42c0392f6a8558673ccaff945ee1373e = L.marker(
+                [35.0103098, 135.6815809],
+                {
+}
+            ).addTo(feature_group_c66f60bd313c40c27c95d0140efc8ef9);
+        
+    
+            var icon_f6ecb5b48cf18295b217a9629cb71d0a = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "red",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_f309095916a3fec85eee5f21e52ff0b0 = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_497b8d308af6080e9e030fcfb1487fc7 = $(`<div id="html_497b8d308af6080e9e030fcfb1487fc7" style="width: 100.0%; height: 100.0%;"><b>嵐山</b> (旅行記: 00023)<br><b>感情スコア: 0.50</b><br><hr>嵐山で竹林の小径を歩きました。</div>`)[0];
+                popup_f309095916a3fec85eee5f21e52ff0b0.setContent(html_497b8d308af6080e9e030fcfb1487fc7);
+            
+        
+
+        marker_42c0392f6a8558673ccaff945ee1373e.bindPopup(popup_f309095916a3fec85eee5f21e52ff0b0)
+        ;
+
+        
+    
+    
+            marker_42c0392f6a8558673ccaff945ee1373e.bindTooltip(
+                `<div>
+                     嵐山 (00023)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_42c0392f6a8558673ccaff945ee1373e.setIcon(icon_f6ecb5b48cf18295b217a9629cb71d0a);
+            
+    
+            var marker_4ee9f941656f66944922433ecef054d6 = L.marker(
+                [35.0395293, 135.7295373],
+                {
+}
+            ).addTo(feature_group_c66f60bd313c40c27c95d0140efc8ef9);
+        
+    
+            var icon_032cae0bdf3550ab39cefbd118c90c98 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "red",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_a0f9aa656edef747a4403f4bdad4fd8a = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_4ac4978fe8ebb150d77fa7c24597cafc = $(`<div id="html_4ac4978fe8ebb150d77fa7c24597cafc" style="width: 100.0%; height: 100.0%;"><b>金閣寺</b> (旅行記: 00023)<br><b>感情スコア: 0.70</b><br><hr>金閣寺の庭園を散策し、池に映る金閣を眺めました。</div>`)[0];
+                popup_a0f9aa656edef747a4403f4bdad4fd8a.setContent(html_4ac4978fe8ebb150d77fa7c24597cafc);
+            
+        
+
+        marker_4ee9f941656f66944922433ecef054d6.bindPopup(popup_a0f9aa656edef747a4403f4bdad4fd8a)
+        ;
+
+        
+    
+    
+            marker_4ee9f941656f66944922433ecef054d6.bindTooltip(
+                `<div>
+                     金閣寺 (00023)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_4ee9f941656f66944922433ecef054d6.setIcon(icon_032cae0bdf3550ab39cefbd118c90c98);
+            
+    
+            var poly_line_8b0bc33e65fb6ca9bee16ee136980bf4 = L.polyline(
+                [[34.994303, 135.7844389], [34.9675192, 135.7797101], [35.0103098, 135.6815809], [35.0395293, 135.7295373]],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "red", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.7, "smoothFactor": 1.0, "stroke": true, "weight": 5}
+            ).addTo(feature_group_c66f60bd313c40c27c95d0140efc8ef9);
+        
+    
+            feature_group_c66f60bd313c40c27c95d0140efc8ef9.addTo(map_89535765a8f563f4784193f9ae7bddd7);
+        
+    
+            var feature_group_687f8061f8e9ae00b28ffe50e5e9cbee = L.featureGroup(
+                {
+}
+            );
+        
+    
+            var heat_map_dd0255bd5eff3f382537dfe0285c3ac3 = L.heatLayer(
+                [[35.2486461, 136.0825575, 0.9], [35.2771013, 136.2517204, 0.5], [35.1286803, 136.0979275, 0.7], [35.4857724, 136.294057, 0.8], [34.994303, 135.7844389, 0.7], [34.9675192, 135.7797101, 0.5], [35.0103098, 135.6815809, 0.5], [35.0395293, 135.7295373, 0.7]],
+                {
+  "minOpacity": 0.5,
+  "maxZoom": 18,
+  "radius": 25,
+  "blur": 15,
+}
+            );
+        
+    
+            heat_map_dd0255bd5eff3f382537dfe0285c3ac3.addTo(feature_group_687f8061f8e9ae00b28ffe50e5e9cbee);
+        
+    
+            var layer_control_4f74017a10b4be48f898c6fb44d1c1d1_layers = {
+                base_layers : {
+                    "openstreetmap" : tile_layer_d98b2cd8e7caad0b3879b7c3d53a0f43,
+                },
+                overlays :  {
+                    "\u65c5\u884c\u8a18\u30eb\u30fc\u30c8: 00020" : feature_group_cc9f74b60a99a0bf7d2538e1b9c18c0b,
+                    "\u65c5\u884c\u8a18\u30eb\u30fc\u30c8: 00023" : feature_group_c66f60bd313c40c27c95d0140efc8ef9,
+                    "\u611f\u60c5\u30d2\u30fc\u30c8\u30de\u30c3\u30d7" : feature_group_687f8061f8e9ae00b28ffe50e5e9cbee,
+                },
+            };
+            let layer_control_4f74017a10b4be48f898c6fb44d1c1d1 = L.control.layers(
+                layer_control_4f74017a10b4be48f898c6fb44d1c1d1_layers.base_layers,
+                layer_control_4f74017a10b4be48f898c6fb44d1c1d1_layers.overlays,
+                {
+  "position": "topright",
+  "collapsed": true,
+  "autoZIndex": true,
+}
+            ).addTo(map_89535765a8f563f4784193f9ae7bddd7);
+
+        
+</script>
+</html>
