@@ -31,7 +31,7 @@ suffix = '```'
 
 geolocator = Nominatim(user_agent="travel-map-emotion")
 
-# --- 座標取得・テキスト抽出・感情分析の各関数 (これらの関数に変更はありません) ---
+# --- 座標取得・テキスト抽出・感情分析の各関数 ---
 def geocode_gsi(name):
     """【最終手段】国土地理院APIを使って地名の緯度経度を取得する"""
     try:
@@ -67,14 +67,37 @@ def geocode_place(name, region_hint):
     print(f"❌ Geopy Failed: {name}")
     return None
 
+
+### ★★★ ここが修正箇所です ★★★
 def extract_places(texts, region_hint):
     """GPTを使って旅行記から地名と体験、フォールバック用の座標を抽出する"""
-    print("📌 訪問地抽出のプロンプトを精度重視のバージョンで実行します...")
+    print("📌 訪問地抽出のプロンプトを[出力例付き]の完全なバージョンで実行します...")
     prompt = f"""
     以下の旅行記のテキストから、訪れた場所の情報を抽出してください。
     出力には "place"（地名）、"latitude"（緯度）、"longitude"（経度）、"experience"（その場所での経験）、"reasoning"（その座標だと推定した理由）を必ず含めてください。
     緯度経度は、日本の「{region_hint}」周辺の地理情報と、テキスト内の文脈（例：「〇〇駅から徒歩5分」「△△の隣」など）を最大限考慮して、非常に高い精度で推定してください。
+
     出力は**絶対にJSON形式のリスト**として返してください。
+
+    例:
+    [
+        {{
+            "place": "草津温泉バスターミナル",
+            "latitude": 36.6222,
+            "longitude": 138.5964,
+            "experience": "草津温泉バスターミナルに到着しました。",
+            "reasoning": "テキストに「草津温泉バスターミナルに到着」と明記されており、その名称でジオコーディングした結果です。"
+        }},
+        {{
+            "place": "湯畑",
+            "latitude": 36.6214,
+            "longitude": 138.5968,
+            "experience": "湯畑を散策しました。",
+            "reasoning": "草津温泉の中心的な観光スポットであり、旅行記の文脈から草津温泉への訪問が明らかなため、湯畑の座標を指定しました。"
+        }}
+    ]
+
+    テキスト: {texts}
     """
     response = openai.ChatCompletion.create(
         model=MODEL,
@@ -99,6 +122,7 @@ def extract_places(texts, region_hint):
         print(f"[ERROR] OpenAIの応答解析に失敗しました: {e}"); return []
 
 def get_visit_hint(visited_places_text):
+    # (この関数の実装は変更ありません)
     if not visited_places_text.strip(): return "日本"
     messages = [{"role": "system", "content": "都道府県名を答えるときは，県名のみを答えてください．"},
                 {"role": "user", "content": f"以下の旅行記データから筆者が訪れたと考えられる都道府県を1つだけ答えてください．\n\n{visited_places_text}"}]
@@ -109,6 +133,7 @@ def get_visit_hint(visited_places_text):
         print(f"エラーが発生しました: {e}"); return "日本"
 
 def analyze_emotion(text):
+    # (この関数の実装は変更ありません)
     if not text or not text.strip(): return 0.5
     print(f"🧠 Analyzing emotion for: '{text[:40]}...'")
     prompt = f"""
@@ -186,35 +211,21 @@ def map_emotion_and_routes(travels_data, output_html):
     m.save(output_html)
     print(f"\n🌐 感情分析付きの地図を {output_html} に保存しました。")
 
-
-### ★★★ ここからが修正箇所です ★★★
 def main():
-    """メイン処理"""
-    # .txtファイルのパスをユーザーから受け取る
+    # (この関数の実装は変更ありません)
     input_file_path = input('ファイル番号が記載された.txtファイルのパスを入力してください: ')
-
     try:
-        # ファイルを読み込んでファイル番号のリストを作成する
         with open(input_file_path, 'r', encoding='utf-8') as f:
             content = f.read()
-        
-        # 改行や空白に対応しつつ、カンマで分割してリスト化
         file_nums_raw = content.strip().split(',')
-        # 空の要素があれば除去する
         file_nums = [num.strip() for num in file_nums_raw if num.strip()] 
-        
         if not file_nums:
-            print("[ERROR] 入力ファイルに有効なファイル番号が含まれていません。")
-            return
-
+            print("[ERROR] 入力ファイルに有効なファイル番号が含まれていません。"); return
         print(f"INFO: ファイルから {len(file_nums)} 件のファイル番号を読み込みました: {file_nums}")
-
     except FileNotFoundError:
-        print(f"[ERROR] 入力ファイルが見つかりません: {input_file_path}")
-        return # ファイルがなければ処理を終了
+        print(f"[ERROR] 入力ファイルが見つかりません: {input_file_path}"); return
     except Exception as e:
-        print(f"[ERROR] ファイルの読み込み中にエラーが発生しました: {e}")
-        return # その他のエラーでも終了
+        print(f"[ERROR] ファイルの読み込み中にエラーが発生しました: {e}"); return
 
     all_travels_data = []
     for i, file_num in enumerate(file_nums):
@@ -244,7 +255,6 @@ def main():
                 if coords[0] == 0.0 and coords[1] == 0.0: coords = None
             if not coords:
                 coords = geocode_gsi(place_name)
-
             if coords:
                 place_data['latitude'] = coords[0]
                 place_data['longitude'] = coords[1]
@@ -277,7 +287,6 @@ def main():
         map_emotion_and_routes(all_travels_data, output_filename)
     else:
         print("\n地図を生成するためのデータがありませんでした。")
-
 
 if __name__ == '__main__':
     main()
