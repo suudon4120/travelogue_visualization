@@ -41,11 +41,44 @@ ACTION_TAGS = [
     "娯楽(景色鑑賞)", "娯楽(名所観光)", "娯楽(休養・くつろぎ)", "その他(仕事)", 
     "その他(介護・看護)", "その他(育児)", "その他(通院・療養)"
 ]
-# =======================================
+
+### ★★★ 機能追加: タグとアイコン画像のマッピング ★★★
+# 使用したい画像ファイル名を指定します。ファイルはスクリプトと同じ場所に置いてください。
+TAG_TO_IMAGE = {
+    # 食事関連
+    "食事(飲酒あり)": "images/food_alcohol.png",
+    "食事(飲酒なし・不明)": "images/food_no_alcohol.png",
+    "軽食(カフェなど)": "images/cafe.png",
+    # 移動関連
+    "バス": "images/bus.png",
+    "徒歩": "images/walk.png",
+    "自動車(運転)": "images/car.png",
+    "自動車(同乗)": "images/car.png",
+    "タクシー": "images/taxi.png",
+    "自転車(電動)": "images/ebike.png",
+    "自転車(非電動)": "images/bike.png",
+    "バイク": "images/motorbike.png",
+    # 行動関連
+    "買い物(お土産)": "images/gift.png",
+    "買い物(日用品)": "images/shopping.png",
+    "娯楽(名所観光)": "images/sightseeing.png",
+    "娯楽(景色鑑賞)": "images/sightseeing.png",
+    "娯楽(休養・くつろぎ)": "images/relax.png",
+}
+
+# 複数タグがある場合の優先順位リスト (上位のタグほど優先してアイコンが表示される)
+TAG_PRIORITY = [
+    "食事(飲酒あり)", "食事(飲酒なし・不明)", "軽食(カフェなど)", "買い物(お土産)", "娯楽(名所観光)",
+    "バス", "タクシー", "自動車(運転)", "自動車(同乗)", "徒歩",
+]
+
+# デフォルトのアイコン
+DEFAULT_ICON_IMAGE = "images/default.png" # デフォルト用の画像も指定可能
+# ========================================================
 
 geolocator = Nominatim(user_agent="travel-map-final")
 
-# --- 座標取得・テキスト抽出関数群 (変更なし) ---
+# --- 座標取得・テキスト抽出・分析関数群 (これらの関数に変更はありません) ---
 def geocode_gsi(name):
     """【最終手段】国土地理院APIを使って地名の緯度経度を取得する"""
     try:
@@ -108,8 +141,7 @@ def get_visit_hint(visited_places_text):
         response = openai.ChatCompletion.create(model='gpt-3.5-turbo', messages=messages, temperature=0.2)
         return response.choices[0].message.content.strip()
     except: return "日本"
-
-### ★★★ 機能変更: 感情分析とタグ抽出をこの関数に統合 ★★★
+    
 def analyze_experience(text, move_tags_list, action_tags_list):
     """1回のAPIコールで感情スコアとタグを同時に抽出する"""
     if not text or not text.strip():
@@ -161,16 +193,15 @@ def analyze_experience(text, move_tags_list, action_tags_list):
         action_tags = result.get("action_tags", [])
         all_tags = move_tags + action_tags
 
-        print(f"✅ Analysis successful. Score: {score}, Tags: {all_tags}")
         return {"emotion_score": score, "tags": all_tags}
         
     except Exception as e:
         print(f"[ERROR] 統合分析中にエラーが発生しました: {e}")
         return {"emotion_score": 0.5, "tags": []}
 
-# --- 地図描画関数 (変更なし) ---
+### ★★★ 機能変更: マップ描画関数にカスタムアイコンのロジックを追加 ★★★
 def map_emotion_and_routes(travels_data, output_html):
-    # (この関数の実装は変更ありません)
+    """感情ヒートマップと訪問経路をレイヤー切り替え可能な地図として生成する（タグに応じたアイコン表示）"""
     if not travels_data: print("[ERROR] 地図に描画するデータがありません。"); return
     try:
         first_travel = travels_data[0]['places'][0]
@@ -186,6 +217,28 @@ def map_emotion_and_routes(travels_data, output_html):
         locations = []
         for place_data in places:
             coords = (place_data['latitude'], place_data['longitude'])
+            
+            # --- アイコンを決定するロジック ---
+            icon_to_use = None
+            place_tags_set = set(place_data.get('tags', []))
+
+            # 優先順位リストに従って、最初に見つかったタグのアイコンを使用
+            for tag in TAG_PRIORITY:
+                if tag in place_tags_set and tag in TAG_TO_IMAGE:
+                    image_path = TAG_TO_IMAGE[tag]
+                    if os.path.exists(image_path):
+                        icon_to_use = folium.features.CustomIcon(image_path, icon_size=(35, 35))
+                        break
+            
+            # 対応する画像がなければ、デフォルトのアイコンを使用
+            if icon_to_use is None:
+                if os.path.exists(DEFAULT_ICON_IMAGE):
+                    icon_to_use = folium.features.CustomIcon(DEFAULT_ICON_IMAGE, icon_size=(30, 30))
+                else: # デフォルト画像もない場合は、Folium標準のピン
+                    icon_to_use = folium.Icon(color="gray", icon="question-sign")
+            # --- アイコン決定ロジックここまで ---
+            
+            # ポップアップHTMLの組み立て
             popup_html = f"<b>{place_data['place']}</b> (旅行記: {file_num})<br>"
             popup_html += f"<b>感情スコア: {place_data.get('emotion_score', 0.5):.2f}</b><br>"
             tags = place_data.get('tags', [])
@@ -205,7 +258,7 @@ def map_emotion_and_routes(travels_data, output_html):
 
             folium.Marker(
                 location=coords, popup=folium.Popup(popup_html, max_width=350),
-                tooltip=f"{place_data['place']} ({file_num})", icon=folium.Icon(color=color, icon="info-sign")
+                tooltip=f"{place_data['place']} ({file_num})", icon=icon_to_use
             ).add_to(route_group)
             
             locations.append(coords)
@@ -221,9 +274,9 @@ def map_emotion_and_routes(travels_data, output_html):
         heatmap_layer.add_to(m)
     folium.LayerControl().add_to(m)
     m.save(output_html)
-    print(f"\n🌐 感情・タグ分析付きの地図を {output_html} に保存しました。")
+    print(f"\n🌐 感情・タグ・カスタムアイコン付きの地図を {output_html} に保存しました。")
 
-### ★★★ 機能変更: メイン処理を新しい統合関数を使うように修正 ★★★
+# --- main関数 (変更なし) ---
 def main():
     """メイン処理"""
     input_file_path = input('ファイル番号が記載された.txtファイルのパスを入力してください: ')
@@ -269,18 +322,14 @@ def main():
             else:
                 print(f"[!] 全てのジオコーディングに失敗しました: {place_name}")
 
-        # 場所ごとにまとめたexperienceから感情とタグを一度に抽出
         grouped_experiences = defaultdict(list)
         for p in places_with_coords: grouped_experiences[p['place']].append(p['experience'])
         
         place_analysis_results = {}
         for place, experiences in grouped_experiences.items():
-            combined_experience = " ".join(experiences)
-            # 新しい統合関数を呼び出す
-            analysis_result = analyze_experience(combined_experience, MOVE_TAGS, ACTION_TAGS)
+            analysis_result = analyze_experience(" ".join(experiences), MOVE_TAGS, ACTION_TAGS)
             place_analysis_results[place] = analysis_result
 
-        # 感情スコアとタグを元のデータに付与
         for p in places_with_coords:
             analysis = place_analysis_results.get(p['place'], {"emotion_score": 0.5, "tags": []})
             p['emotion_score'] = analysis['emotion_score']
@@ -301,6 +350,7 @@ def main():
         map_emotion_and_routes(all_travels_data, output_filename)
     else:
         print("\n地図を生成するためのデータがありませんでした。")
+
 
 if __name__ == '__main__':
     main()
