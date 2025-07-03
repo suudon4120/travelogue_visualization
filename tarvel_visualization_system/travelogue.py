@@ -10,6 +10,7 @@ import time
 import requests
 import urllib.parse
 from datetime import datetime
+import base64 ### 機能追加 ###
 
 # .envファイルから環境変数を読み込む
 load_dotenv()
@@ -29,25 +30,24 @@ prefix = '```json'
 suffix = '```'
 # ==========================
 
-# --- タグリストの定義 ---
+# --- タグリストの定義 (変更なし) ---
 MOVE_TAGS = [
-    "徒歩", "車椅子", "自転車(電動)", "自転車(非電動)", "バイク", "バス", "タクシー", 
+    "徒歩", "車椅子", "自転車(電動)", "自転車(非電動)", "バイク", "バス", "タクシー",
     "自動車(運転)", "自動車(同乗)"
 ]
 ACTION_TAGS = [
-    "食事(飲酒あり)", "食事(飲酒なし・不明)", "軽食(カフェなど)", "買い物(日用品)", 
-    "買い物(お土産)", "ジョギング", "ウォーキング", "ハイキング", 
-    "散歩", "スポーツ", "レジャー", "ドライブ", 
-    "景色鑑賞", "名所観光", "休養・くつろぎ", "仕事", 
+    "食事(飲酒あり)", "食事(飲酒なし・不明)", "軽食(カフェなど)", "買い物(日用品)",
+    "買い物(お土産)", "ジョギング", "ウォーキング", "ハイキング",
+    "散歩", "スポーツ", "レジャー", "ドライブ",
+    "景色鑑賞", "名所観光", "休養・くつろぎ", "仕事",
     "介護・看護", "育児", "通院・療養"
 ]
 
-### ★★★ 機能追加: タグとアイコン画像のマッピング ★★★
-# 使用したい画像ファイル名を指定します。ファイルはスクリプトと同じ場所に置いてください。
+# --- アイコン画像関連の設定 (変更なし) ---
 TAG_TO_IMAGE = {
     # 移動関連
     "徒歩": "images/icon_01_徒歩_stop.png",
-    "車椅子": "icon_02_車椅子_stop.png",
+    "車椅子": "images/icon_02_車椅子_stop.png",
     "自転車(電動)": "images/icon_03_自転車(電動)_stop.png",
     "自転車(非電動)": "images/icon_04_自転車(非電動)_stop.png",
     "バイク": "images/icon_05_バイク_stop.png",
@@ -78,20 +78,67 @@ TAG_TO_IMAGE = {
     "育児": "images/icon_27_育児_stop.png",
     "通院・療養": "images/icon_28_通院・療養_stop.png"
 }
-
-# 複数タグがある場合の優先順位リスト (上位のタグほど優先してアイコンが表示される)
 TAG_PRIORITY = [
     "食事(飲酒あり)", "食事(飲酒なし・不明)", "軽食(カフェなど)", "買い物(お土産)", "名所観光",
     "バス", "タクシー", "自動車(運転)", "自動車(同乗)", "徒歩",
 ]
+DEFAULT_ICON_IMAGE = "images/default.png"
 
-# デフォルトのアイコン
-DEFAULT_ICON_IMAGE = "images/default.png" # デフォルト用の画像も指定可能
+### ★★★ 機能追加: タグとGIF画像のマッピング ★★★
+# 使用したいGIFファイル名を指定します。ファイルは `gifs` フォルダに置いてください。
+TAG_TO_GIF = {
+    # 移動関連
+    "徒歩": "gifs/anim_icon_01_徒歩.gif",
+    "車椅子": "gifs/anim_icon_02_車椅子.gif",
+    "自転車(電動)": "gifs/anim_icon_03_自転車(電動).gif",
+    "自転車(非電動)": "gifs/anim_icon_04_自転車(非電動).gif",
+    "バイク": "gifs/anim_icon_05_バイク.gif",
+    "バス": "gifs/anim_icon_06_バス.gif",
+    "タクシー": "gifs/anim_icon_07_タクシー.gif",
+    "自動車(運転)": "gifs/anim_icon_08_自動車(運転).gif",
+    "自動車(同乗)": "gifs/anim_icon_09_自動車(同乗).gif",
+    # 食事関連
+    "食事(飲酒あり)": "gifs/anim_icon_10_飲酒あり.gif",
+    "食事(飲酒なし・不明)": "gifs/anim_icon_11_飲酒なし・不明.gif",
+    "軽食(カフェなど)": "gifs/anim_icon_12_軽食(カフェなど).gif",
+    # 行動関連
+    "買い物(日用品)": "gifs/anim_icon_13_日用品.gif",
+    "買い物(お土産)": "gifs/anim_icon_14_お土産.gif",
+    "ジョギング": "gifs/anim_icon_15_ジョギング.gif",
+    "ウォーキング": "gifs/anim_icon_16_ウォーキング.gif",
+    "ハイキング": "gifs/anim_icon_17_ハイキング.gif",
+    "散歩": "gifs/anim_icon_18_散歩.gif",
+    "スポーツ": "gifs/anim_icon_19_スポーツ.gif",
+    "レジャー": "gifs/anim_icon_20_レジャー.gif",
+    "ドライブ": "gifs/anim_icon_21_ドライブ.gif",
+    "景色鑑賞": "gifs/anim_icon_22_景色鑑賞.gif",
+    "名所観光": "gifs/anim_icon_23_名所観光.gif",
+    "休養・くつろぎ": "gifs/anim_icon_24_休養・くつろぎ.gif",
+    # その他
+    "仕事": "gifs/anim_icon_25_仕事.gif",
+    "介護・看護": "gifs/anim_icon_26_介護・看護.gif",
+    "育児": "gifs/anim_icon_27_育児.gif",
+    "通院・療養": "gifs/anim_icon_28_通院・療養.gif"
+}
 # ========================================================
 
 geolocator = Nominatim(user_agent="travel-map-final")
 
+### ★★★ 機能追加: 画像をBase64にエンコードするヘルパー関数 ★★★
+def get_image_as_base64(file_path):
+    """画像ファイルを読み込み、HTML埋め込み用のBase64文字列を返す"""
+    try:
+        with open(file_path, "rb") as f:
+            encoded_string = base64.b64encode(f.read()).decode("utf-8")
+        # ファイル拡張子に応じてMIMEタイプを決定 (ここではgifに固定)
+        return f"data:image/gif;base64,{encoded_string}"
+    except FileNotFoundError:
+        print(f"[WARNING] 画像ファイルが見つかりません: {file_path}")
+        return None
+# ========================================================
+
 # --- 座標取得・テキスト抽出・分析関数群 (これらの関数に変更はありません) ---
+# (geocode_gsi, geocode_place, extract_places, get_visit_hint, analyze_experience のコードは省略)
 def geocode_gsi(name):
     """【最終手段】国土地理院APIを使って地名の緯度経度を取得する"""
     try:
@@ -212,9 +259,10 @@ def analyze_experience(text, move_tags_list, action_tags_list):
         print(f"[ERROR] 統合分析中にエラーが発生しました: {e}")
         return {"emotion_score": 0.5, "tags": []}
 
-### ★★★ 機能変更: マップ描画関数にカスタムアイコンのロジックを追加 ★★★
+
+### ★★★ 機能変更: マップ描画関数にGIF埋め込みロジックを追加 ★★★
 def map_emotion_and_routes(travels_data, output_html):
-    """感情ヒートマップと訪問経路をレイヤー切り替え可能な地図として生成する（タグに応じたアイコン表示）"""
+    """感情ヒートマップと訪問経路をレイヤー切り替え可能な地図として生成する（タグに応じたアイコン・GIF表示）"""
     if not travels_data: print("[ERROR] 地図に描画するデータがありません。"); return
     try:
         first_travel = travels_data[0]['places'][0]
@@ -230,31 +278,26 @@ def map_emotion_and_routes(travels_data, output_html):
         locations = []
         for place_data in places:
             coords = (place_data['latitude'], place_data['longitude'])
+            tags = place_data.get('tags', [])
             
             # --- アイコンを決定するロジック ---
             icon_to_use = None
-            place_tags_set = set(place_data.get('tags', []))
-
-            # 優先順位リストに従って、最初に見つかったタグのアイコンを使用
+            place_tags_set = set(tags)
             for tag in TAG_PRIORITY:
                 if tag in place_tags_set and tag in TAG_TO_IMAGE:
                     image_path = TAG_TO_IMAGE[tag]
                     if os.path.exists(image_path):
                         icon_to_use = folium.features.CustomIcon(image_path, icon_size=(35, 35))
                         break
-            
-            # 対応する画像がなければ、デフォルトのアイコンを使用
             if icon_to_use is None:
                 if os.path.exists(DEFAULT_ICON_IMAGE):
                     icon_to_use = folium.features.CustomIcon(DEFAULT_ICON_IMAGE, icon_size=(30, 30))
-                else: # デフォルト画像もない場合は、Folium標準のピン
+                else:
                     icon_to_use = folium.Icon(color="gray", icon="question-sign")
-            # --- アイコン決定ロジックここまで ---
             
-            # ポップアップHTMLの組み立て
+            # --- ポップアップHTMLの組み立て ---
             popup_html = f"<b>{place_data['place']}</b> (旅行記: {file_num})<br>"
             popup_html += f"<b>感情スコア: {place_data.get('emotion_score', 0.5):.2f}</b><br>"
-            tags = place_data.get('tags', [])
             if tags:
                 popup_html += f"<hr style='margin: 3px 0;'>"
                 popup_html += "<b>タグ:</b><br>"
@@ -263,6 +306,21 @@ def map_emotion_and_routes(travels_data, output_html):
                     tag_style = "display:inline-block; background-color:#E0E0E0; color:#333; padding:2px 6px; margin:2px; border-radius:4px; font-size:12px;"
                     tag_html += f"<span style='{tag_style}'>{tag}</span>"
                 popup_html += tag_html
+            
+            # --- GIF画像をポップアップに埋め込む ---
+            gif_html = ""
+            for tag in tags:
+                if tag in TAG_TO_GIF:
+                    gif_path = TAG_TO_GIF[tag]
+                    base64_gif = get_image_as_base64(gif_path)
+                    if base64_gif:
+                        if not gif_html: # 最初のGIFの前にヘッダーを追加
+                            gif_html += f"<hr style='margin: 3px 0;'>"
+                            gif_html += "<b>関連画像:</b><br>"
+                        gif_html += f'<img src="{base64_gif}" alt="{tag}" style="max-width: 95%; height: auto; margin-top: 5px; border-radius: 4px;">'
+            popup_html += gif_html
+            # --- GIF埋め込みここまで ---
+
             if 'reasoning' in place_data and place_data['reasoning']:
                 popup_html += f"<hr style='margin: 3px 0;'>"
                 popup_html += f"<b>推定理由:</b><br>{place_data['reasoning']}<br>"
@@ -287,7 +345,7 @@ def map_emotion_and_routes(travels_data, output_html):
         heatmap_layer.add_to(m)
     folium.LayerControl().add_to(m)
     m.save(output_html)
-    print(f"\n🌐 感情・タグ・カスタムアイコン付きの地図を {output_html} に保存しました。")
+    print(f"\n🌐 感情・タグ・カスタムアイコン・GIF付きの地図を {output_html} に保存しました。")
 
 # --- main関数 (変更なし) ---
 def main():
