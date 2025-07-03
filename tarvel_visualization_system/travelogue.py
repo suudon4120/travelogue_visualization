@@ -62,26 +62,26 @@ TAG_TO_IMAGE = {
     # 行動関連
     "買い物(日用品)": "images/icon_13_日用品_stop.png",
     "買い物(お土産)": "images/icon_14_お土産_stop.png",
-    "ジョギング": "icon_15_ジョギング_stop.png",
-    "ウォーキング": "icon_16_ウォーキング_stop.png",
-    "ハイキング": "icon_17_ハイキング_stop.png",
-    "散歩": "icon_18_散歩_stop.png",
-    "スポーツ": "icon_19_スポーツ_stop.png",
-    "レジャー": "icon_20_レジャー_stop.png",
-    "ドライブ": "icon_21_ドライブ_stop.png",
-    "景色鑑賞": "icon_22_景色鑑賞_stop.png",
-    "名所観光": "icon_23_名所観光_stop.png",
-    "休養・くつろぎ": "icon_24_休養・くつろぎ_stop.png",
+    "ジョギング": "images/icon_15_ジョギング_stop.png",
+    "ウォーキング": "images/icon_16_ウォーキング_stop.png",
+    "ハイキング": "images/icon_17_ハイキング_stop.png",
+    "散歩": "images/icon_18_散歩_stop.png",
+    "スポーツ": "images/icon_19_スポーツ_stop.png",
+    "レジャー": "images/icon_20_レジャー_stop.png",
+    "ドライブ": "images/icon_21_ドライブ_stop.png",
+    "景色鑑賞": "images/icon_22_景色鑑賞_stop.png",
+    "名所観光": "images/icon_23_名所観光_stop.png",
+    "休養・くつろぎ": "images/icon_24_休養・くつろぎ_stop.png",
     # その他
-    "仕事": "icon_25_仕事_stop.png",
-    "介護・看護": "icon_26_介護・看護_stop.png",
-    "育児": "icon_27_育児_stop.png",
-    "通院・療養": "icon_28_通院・療養_stop.png"
+    "仕事": "images/icon_25_仕事_stop.png",
+    "介護・看護": "images/icon_26_介護・看護_stop.png",
+    "育児": "images/icon_27_育児_stop.png",
+    "通院・療養": "images/icon_28_通院・療養_stop.png"
 }
 
 # 複数タグがある場合の優先順位リスト (上位のタグほど優先してアイコンが表示される)
 TAG_PRIORITY = [
-    "食事(飲酒あり)", "食事(飲酒なし・不明)", "軽食(カフェなど)", "買い物(お土産", "名所観光",
+    "食事(飲酒あり)", "食事(飲酒なし・不明)", "軽食(カフェなど)", "買い物(お土産)", "名所観光",
     "バス", "タクシー", "自動車(運転)", "自動車(同乗)", "徒歩",
 ]
 
