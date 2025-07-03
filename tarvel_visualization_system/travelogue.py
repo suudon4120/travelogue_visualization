@@ -37,7 +37,7 @@ MOVE_TAGS = [
 ACTION_TAGS = [
     "食事(飲酒あり)", "食事(飲酒なし・不明)", "軽食(カフェなど)", "買い物(日用品)", 
     "買い物(お土産)", "ジョギング", "ウォーキング", "ハイキング", 
-    "散歩", "スポーツ", "レジャー", "ドライブ)", 
+    "散歩", "スポーツ", "レジャー", "ドライブ", 
     "景色鑑賞", "名所観光", "休養・くつろぎ", "仕事", 
     "介護・看護", "育児", "通院・療養"
 ]
@@ -149,7 +149,7 @@ def extract_places(texts, region_hint):
 
 def get_visit_hint(visited_places_text):
     if not visited_places_text.strip(): return "日本"
-    messages = [{"role": "system", "content": "都道府県名を答えるときは，県名のみを答えてください．"}, {"role": "user", "content": f"以下の旅行記データから筆者が訪れたと考えられる都道府県を1つだけ答えてください．\n\n{visited_places_text}"}]
+    messages = [{"role": "system", "content": "都道府県名を答えるときは，県名のみを答えてください．"}, {"role": "user", "content": f"以下の旅行記データから筆者が訪れたと考えられる都道府県を1つだけ答えてください．ただし，特定の語句に拘らずに旅行記全体から総合的に判断してください．\n\n{visited_places_text}"}]
     try:
         response = openai.ChatCompletion.create(model='gpt-3.5-turbo', messages=messages, temperature=0.2)
         return response.choices[0].message.content.strip()
