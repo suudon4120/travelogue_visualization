@@ -45,25 +45,38 @@ ACTION_TAGS = [
 ### ★★★ 機能追加: タグとアイコン画像のマッピング ★★★
 # 使用したい画像ファイル名を指定します。ファイルはスクリプトと同じ場所に置いてください。
 TAG_TO_IMAGE = {
-    # 食事関連
-    "食事(飲酒あり)": "images/food_alcohol.png",
-    "食事(飲酒なし・不明)": "images/food_no_alcohol.png",
-    "軽食(カフェなど)": "images/cafe.png",
     # 移動関連
-    "バス": "images/bus.png",
-    "徒歩": "images/walk.png",
-    "自動車(運転)": "images/car.png",
-    "自動車(同乗)": "images/car.png",
-    "タクシー": "images/taxi.png",
-    "自転車(電動)": "images/ebike.png",
-    "自転車(非電動)": "images/bike.png",
-    "バイク": "images/motorbike.png",
+    "徒歩": "images/icon_01_徒歩_stop.png",
+    "車椅子": "icon_02_車椅子_stop.png",
+    "自転車(電動)": "images/icon_03_自転車(電動)_stop.png",
+    "自転車(非電動)": "images/icon_04_自転車(非電動)_stop.png",
+    "バイク": "images/icon_05_バイク_stop.png",
+    "バス": "images/icon_06_バス_stop.png",
+    "タクシー": "images/icon_07_タクシー_stop.png",
+    "自動車(運転)": "images/icon_08_自動車(運転)_stop.png",
+    "自動車(同乗)": "images/icon_09_自動車(同乗)_stop.png",
+    # 食事関連
+    "食事(飲酒あり)": "images/icon_10_飲酒あり_stop.png",
+    "食事(飲酒なし・不明)": "images/icon_11_飲酒なし・不明_stop.png",
+    "軽食(カフェなど)": "images/icon_12_軽食(カフェなど)_stop.png",
     # 行動関連
-    "買い物(お土産)": "images/gift.png",
-    "買い物(日用品)": "images/shopping.png",
-    "娯楽(名所観光)": "images/sightseeing.png",
-    "娯楽(景色鑑賞)": "images/sightseeing.png",
-    "娯楽(休養・くつろぎ)": "images/relax.png",
+    "買い物(日用品)": "images/icon_13_日用品_stop.png",
+    "買い物(お土産)": "images/icon_14_お土産_stop.png",
+    "ジョギング": "icon_15_ジョギング_stop.png",
+    "ウォーキング": "icon_16_ウォーキング_stop.png",
+    "ハイキング": "icon_17_ハイキング_stop.png",
+    "散歩": "icon_18_散歩_stop.png",
+    "スポーツ": "icon_19_スポーツ_stop.png",
+    "レジャー": "icon_20_レジャー_stop.png",
+    "ドライブ": "icon_21_ドライブ_stop.png",
+    "景色鑑賞": "icon_22_景色鑑賞_stop.png",
+    "名所観光": "icon_23_名所観光_stop.png",
+    "休養・くつろぎ": "icon_24_休養・くつろぎ_stop.png",
+    #その他
+    "仕事": "icon_25_仕事_stop.png",
+    "介護・看護": "icon_26_介護・看護_stop.png",
+    "育児": "icon_27_育児_stop.png",
+    "通院・療養": "icon_28_通院・療養_stop.png"
 }
 
 # 複数タグがある場合の優先順位リスト (上位のタグほど優先してアイコンが表示される)
