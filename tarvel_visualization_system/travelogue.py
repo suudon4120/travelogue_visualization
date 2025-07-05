@@ -10,8 +10,9 @@ import time
 import requests
 import urllib.parse
 from datetime import datetime
-import base64 ### 機能追加 ###
-
+import base64
+from branca.element import MacroElement
+from jinja2 import Template ### ★★★ 機能追加 ★★★
 # .envファイルから環境変数を読み込む
 load_dotenv()
 API_KEY = os.getenv('OPENAI_API_KEY')
@@ -129,7 +130,78 @@ TAG_TO_GIF = {
 
 geolocator = Nominatim(user_agent="travel-map-final")
 
-### ★★★ 機能追加: 画像をBase64にエンコードするヘルパー関数 ★★★
+### ★★★ 機能変更: 表示・非表示ボタンを1つに統合したクラス ★★★
+class LayerToggleButtons(MacroElement):
+    _template = Template("""
+        {% macro script(this, kwargs) %}
+            var toggleControl = L.Control.extend({
+                onAdd: function(map) {
+                    var container = L.DomUtil.create('div', 'leaflet-bar leaflet-control');
+                    // ボタンを縦に並べるためのスタイル
+                    container.style.display = 'flex';
+                    container.style.flexDirection = 'column';
+                    container.style.gap = '3px'; // ボタン間の隙間
+
+                    // --- 全ルート表示ボタン ---
+                    var showButton = L.DomUtil.create('div', 'leaflet-control-button', container);
+                    showButton.style.backgroundColor = 'white';
+                    showButton.style.padding = '5px';
+                    showButton.style.border = '2px solid #ccc';
+                    showButton.style.borderRadius = '5px';
+                    showButton.style.cursor = 'pointer';
+                    showButton.innerHTML = '全ルート表示';
+                    
+                    showButton.onclick = function(e) {
+                        e.stopPropagation();
+                        var checkboxes = document.querySelectorAll('.leaflet-control-layers-overlays .leaflet-control-layers-selector');
+                        var labels = document.querySelectorAll('.leaflet-control-layers-overlays span');
+                        for (var i = 0; i < labels.length; i++) {
+                            if (labels[i].textContent.trim().startsWith('旅行記ルート')) {
+                                // もしチェックが外れていれば、クリックする
+                                if (checkboxes[i] && !checkboxes[i].checked) {
+                                    checkboxes[i].click();
+                                }
+                            }
+                        }
+                    };
+
+                    // --- 全ルート非表示ボタン ---
+                    var hideButton = L.DomUtil.create('div', 'leaflet-control-button', container);
+                    hideButton.style.backgroundColor = 'white';
+                    hideButton.style.padding = '5px';
+                    hideButton.style.border = '2px solid #ccc';
+                    hideButton.style.borderRadius = '5px';
+                    hideButton.style.cursor = 'pointer';
+                    hideButton.innerHTML = '全ルート非表示';
+
+                    hideButton.onclick = function(e) {
+                        e.stopPropagation();
+                        var checkboxes = document.querySelectorAll('.leaflet-control-layers-overlays .leaflet-control-layers-selector');
+                        var labels = document.querySelectorAll('.leaflet-control-layers-overlays span');
+                        for (var i = 0; i < labels.length; i++) {
+                            if (labels[i].textContent.trim().startsWith('旅行記ルート')) {
+                                // もしチェックが入っていれば、クリックする
+                                if (checkboxes[i] && checkboxes[i].checked) {
+                                    checkboxes[i].click();
+                                }
+                            }
+                        }
+                    };
+                    
+                    return container;
+                }
+            });
+            var parent_map = {{ this._parent.get_name() }};
+            parent_map.addControl(new toggleControl({ position: 'topright' }));
+        {% endmacro %}
+    """)
+
+    def __init__(self):
+        super(LayerToggleButtons, self).__init__()
+        self._name = 'LayerToggleButtons'
+
+# --- 座標取得・テキスト抽出・分析関数群 (これらの関数に変更はありません) ---
+# (geocode_gsi, geocode_place, extract_places, get_visit_hint, analyze_experience, get_image_as_base64 のコードは省略)
 def get_image_as_base64(file_path):
     """画像ファイルを読み込み、HTML埋め込み用のBase64文字列を返す"""
     try:
@@ -140,10 +212,6 @@ def get_image_as_base64(file_path):
     except FileNotFoundError:
         print(f"[WARNING] 画像ファイルが見つかりません: {file_path}")
         return None
-# ========================================================
-
-# --- 座標取得・テキスト抽出・分析関数群 (これらの関数に変更はありません) ---
-# (geocode_gsi, geocode_place, extract_places, get_visit_hint, analyze_experience のコードは省略)
 def geocode_gsi(name):
     """【最終手段】国土地理院APIを使って地名の緯度経度を取得する"""
     try:
@@ -265,9 +333,8 @@ def analyze_experience(text, move_tags_list, action_tags_list):
         return {"emotion_score": 0.5, "tags": []}
 
 
-### ★★★ 機能変更: マップ描画関数にGIF埋め込みロジックを追加 ★★★
 def map_emotion_and_routes(travels_data, output_html):
-    """感情ヒートマップと訪問経路をレイヤー切り替え可能な地図として生成する（タグに応じたアイコン・GIF表示）"""
+    """感情ヒートマップと訪問経路をレイヤー切り替え可能な地図として生成する"""
     if not travels_data: print("[ERROR] 地図に描画するデータがありません。"); return
     try:
         first_travel = travels_data[0]['places'][0]
@@ -285,7 +352,6 @@ def map_emotion_and_routes(travels_data, output_html):
             coords = (place_data['latitude'], place_data['longitude'])
             tags = place_data.get('tags', [])
             
-            # --- アイコンを決定するロジック ---
             icon_to_use = None
             place_tags_set = set(tags)
             for tag in TAG_PRIORITY:
@@ -300,7 +366,6 @@ def map_emotion_and_routes(travels_data, output_html):
                 else:
                     icon_to_use = folium.Icon(color="gray", icon="question-sign")
             
-            # --- ポップアップHTMLの組み立て ---
             popup_html = f"<b>{place_data['place']}</b> (旅行記: {file_num})<br>"
             popup_html += f"<b>感情スコア: {place_data.get('emotion_score', 0.5):.2f}</b><br>"
             if tags:
@@ -312,19 +377,17 @@ def map_emotion_and_routes(travels_data, output_html):
                     tag_html += f"<span style='{tag_style}'>{tag}</span>"
                 popup_html += tag_html
             
-            # --- GIF画像をポップアップに埋め込む ---
             gif_html = ""
             for tag in tags:
                 if tag in TAG_TO_GIF:
                     gif_path = TAG_TO_GIF[tag]
                     base64_gif = get_image_as_base64(gif_path)
                     if base64_gif:
-                        if not gif_html: # 最初のGIFの前にヘッダーを追加
+                        if not gif_html:
                             gif_html += f"<hr style='margin: 3px 0;'>"
                             gif_html += "<b>関連画像:</b><br>"
                         gif_html += f'<img src="{base64_gif}" alt="{tag}" style="max-width: 70%; height: auto; margin-top: 5px; border-radius: 4px;">'
             popup_html += gif_html
-            # --- GIF埋め込みここまで ---
 
             if 'reasoning' in place_data and place_data['reasoning']:
                 popup_html += f"<hr style='margin: 3px 0;'>"
@@ -348,7 +411,11 @@ def map_emotion_and_routes(travels_data, output_html):
         heatmap_layer = folium.FeatureGroup(name="感情ヒートマップ", show=False)
         HeatMap(heatmap_data).add_to(heatmap_layer)
         heatmap_layer.add_to(m)
+
+    # レイヤーコントロールと全非表示ボタンを地図に追加
     folium.LayerControl().add_to(m)
+    m.add_child(LayerToggleButtons())
+    
     m.save(output_html)
     print(f"\n🌐 感情・タグ・カスタムアイコン・GIF付きの地図を {output_html} に保存しました。")
 
