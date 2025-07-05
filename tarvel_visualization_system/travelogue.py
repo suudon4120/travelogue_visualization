@@ -79,8 +79,13 @@ TAG_TO_IMAGE = {
     "通院・療養": "images/icon_28_通院・療養_stop.png"
 }
 TAG_PRIORITY = [
+    # 既存の優先タグ
     "食事(飲酒あり)", "食事(飲酒なし・不明)", "軽食(カフェなど)", "買い物(お土産)", "名所観光",
     "バス", "タクシー", "自動車(運転)", "自動車(同乗)", "徒歩",
+    # 以下、追加されたタグ
+    "買い物(日用品)", "ジョギング", "ウォーキング", "ハイキング", "散歩", 
+    "スポーツ", "レジャー", "ドライブ", "景色鑑賞", "休養・くつろぎ", 
+    "仕事", "介護・看護", "育児", "通院・療養"
 ]
 DEFAULT_ICON_IMAGE = "images/default.png"
 
@@ -317,7 +322,7 @@ def map_emotion_and_routes(travels_data, output_html):
                         if not gif_html: # 最初のGIFの前にヘッダーを追加
                             gif_html += f"<hr style='margin: 3px 0;'>"
                             gif_html += "<b>関連画像:</b><br>"
-                        gif_html += f'<img src="{base64_gif}" alt="{tag}" style="max-width: 95%; height: auto; margin-top: 5px; border-radius: 4px;">'
+                        gif_html += f'<img src="{base64_gif}" alt="{tag}" style="max-width: 70%; height: auto; margin-top: 5px; border-radius: 4px;">'
             popup_html += gif_html
             # --- GIF埋め込みここまで ---
 
