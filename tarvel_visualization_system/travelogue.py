@@ -12,7 +12,8 @@ import urllib.parse
 from datetime import datetime
 import base64
 from branca.element import MacroElement
-from jinja2 import Template ### ★★★ 機能追加 ★★★
+from jinja2 import Template
+
 # .envファイルから環境変数を読み込む
 load_dotenv()
 API_KEY = os.getenv('OPENAI_API_KEY')
@@ -24,14 +25,14 @@ openai.api_key = API_KEY
 directory = "../../2022-地球の歩き方旅行記データセット/data_arukikata/data/domestic/with_schedules/"
 base_name = "visited_places_map_emotion_"
 extension = ".html"
+CACHE_DIR = "results_cache" ### ★★★ 機能追加: キャッシュ用ディレクトリ ★★★
 COLORS = ['blue', 'red', 'green', 'purple', 'orange', 'darkred', 'lightred', 'beige', 'darkblue', 'darkgreen', 'cadetblue', 'lightgray']
 WAIT_TIME = 1
 MODEL = "gpt-4o"
 prefix = '```json'
 suffix = '```'
-# ==========================
 
-# --- タグリストの定義 (変更なし) ---
+# --- タグリストの定義 ---
 MOVE_TAGS = [
     "徒歩", "車椅子", "自転車(電動)", "自転車(非電動)", "バイク", "バス", "タクシー",
     "自動車(運転)", "自動車(同乗)"
@@ -44,7 +45,7 @@ ACTION_TAGS = [
     "介護・看護", "育児", "通院・療養"
 ]
 
-# --- アイコン画像関連の設定 (変更なし) ---
+# --- アイコン画像関連の設定 ---
 TAG_TO_IMAGE = {
     # 移動関連
     "徒歩": "images/icon_01_徒歩_stop.png",
@@ -80,18 +81,13 @@ TAG_TO_IMAGE = {
     "通院・療養": "images/icon_28_通院・療養_stop.png"
 }
 TAG_PRIORITY = [
-    # 既存の優先タグ
     "食事(飲酒あり)", "食事(飲酒なし・不明)", "軽食(カフェなど)", "買い物(お土産)", "名所観光",
     "バス", "タクシー", "自動車(運転)", "自動車(同乗)", "徒歩",
-    # 以下、追加されたタグ
     "買い物(日用品)", "ジョギング", "ウォーキング", "ハイキング", "散歩", 
     "スポーツ", "レジャー", "ドライブ", "景色鑑賞", "休養・くつろぎ", 
     "仕事", "介護・看護", "育児", "通院・療養"
 ]
 DEFAULT_ICON_IMAGE = "images/default.png"
-
-### ★★★ 機能追加: タグとGIF画像のマッピング ★★★
-# 使用したいGIFファイル名を指定します。ファイルは `gifs` フォルダに置いてください。
 TAG_TO_GIF = {
     # 移動関連
     "徒歩": "gifs/anim_icon_01_徒歩.gif",
@@ -130,7 +126,7 @@ TAG_TO_GIF = {
 
 geolocator = Nominatim(user_agent="travel-map-final")
 
-### ★★★ 機能変更: 表示・非表示ボタンを1つに統合したクラス ★★★
+### ★★★表示・非表示ボタンを1つに統合したクラス ★★★
 class LayerToggleButtons(MacroElement):
     _template = Template("""
         {% macro script(this, kwargs) %}
@@ -200,7 +196,7 @@ class LayerToggleButtons(MacroElement):
         super(LayerToggleButtons, self).__init__()
         self._name = 'LayerToggleButtons'
 
-# --- 座標取得・テキスト抽出・分析関数群 (これらの関数に変更はありません) ---
+# --- 座標取得・テキスト抽出・分析関数群 ---
 # (geocode_gsi, geocode_place, extract_places, get_visit_hint, analyze_experience, get_image_as_base64 のコードは省略)
 def get_image_as_base64(file_path):
     """画像ファイルを読み込み、HTML埋め込み用のBase64文字列を返す"""
@@ -213,7 +209,7 @@ def get_image_as_base64(file_path):
         print(f"[WARNING] 画像ファイルが見つかりません: {file_path}")
         return None
 def geocode_gsi(name):
-    """【最終手段】国土地理院APIを使って地名の緯度経度を取得する"""
+    """国土地理院APIを使って地名の緯度経度を取得する"""
     try:
         query = urllib.parse.quote(name)
         url = f"https://msearch.gsi.go.jp/address-search/AddressSearch?q={query}"
@@ -228,7 +224,7 @@ def geocode_gsi(name):
     except: return None
 
 def geocode_place(name, region_hint):
-    """【最優先】Geopyを使って地名の緯度経度を取得する"""
+    """Geopyを使って地名の緯度経度を取得する"""
     try:
         query = f"{name}, {region_hint}"
         print(f"🗺️ Geocoding (Geopy): '{query}'...")
@@ -419,9 +415,14 @@ def map_emotion_and_routes(travels_data, output_html):
     m.save(output_html)
     print(f"\n🌐 感情・タグ・カスタムアイコン・GIF付きの地図を {output_html} に保存しました。")
 
-# --- main関数 (変更なし) ---
+### ★★★ ここからが修正箇所です ★★★
 def main():
     """メイン処理"""
+    # キャッシュディレクトリがなければ作成
+    if not os.path.exists(CACHE_DIR):
+        os.makedirs(CACHE_DIR)
+        print(f"INFO: キャッシュディレクトリを作成しました: {CACHE_DIR}")
+
     input_file_path = input('ファイル番号が記載された.txtファイルのパスを入力してください: ')
     try:
         with open(input_file_path, 'r', encoding='utf-8') as f: content = f.read()
@@ -433,66 +434,105 @@ def main():
     except Exception as e: print(f"[ERROR] ファイルの読み込み中にエラーが発生しました: {e}"); return
 
     all_travels_data = []
-    for i, file_num in enumerate(file_nums):
-        path_journal = f'{directory}{file_num}.tra.json'
-        print(f"\n{'='*20} [{file_num}] の処理を開始 {'='*20}")
-        if not os.path.exists(path_journal): print(f"[WARNING] ファイルが見つかりません: {path_journal}"); continue
-        try:
-            with open(path_journal, "r", encoding="utf-8") as f: travel_data = json.load(f)
-        except: print(f"[ERROR] JSON読み込み失敗"); continue
-        texts = [];
-        for entry in travel_data: texts.extend(entry['text'])
-        full_text = " ".join(texts)
-        if not full_text.strip(): print(f"[WARNING] 旅行記 {file_num} にはテキストデータがありません。"); continue
-        
-        region_hint = get_visit_hint(full_text)
-        extracted_places = extract_places(full_text, region_hint)
-        if not extracted_places: print(f"[WARNING] 旅行記 {file_num} から訪問地を抽出できませんでした。"); continue
+    # 安全な停止（Graceful Shutdown）のためにループ全体をtry...exceptで囲む
+    try:
+        for i, file_num in enumerate(file_nums):
+            # キャッシュファイルのパスを定義
+            cache_path = os.path.join(CACHE_DIR, f"{file_num}.json")
 
-        places_with_coords = []
-        for place_data in extracted_places:
-            place_name = place_data['place']
-            coords = geocode_place(place_name, region_hint)
-            if not coords:
-                coords = (place_data['latitude'], place_data['longitude'])
-                if coords[0] == 0.0 and coords[1] == 0.0: coords = None
-            if not coords:
-                coords = geocode_gsi(place_name)
-            if coords:
-                place_data['latitude'] = coords[0]
-                place_data['longitude'] = coords[1]
-                places_with_coords.append(place_data)
-            else:
-                print(f"[!] 全てのジオコーディングに失敗しました: {place_name}")
+            # 1. キャッシュの確認
+            if os.path.exists(cache_path):
+                print(f"\n✅ [{file_num}] のキャッシュが見つかりました。読み込みます。")
+                with open(cache_path, 'r', encoding='utf-8') as f:
+                    travel_result_data = json.load(f)
+                all_travels_data.append(travel_result_data)
+                continue # 次のファイルの処理へ
 
-        grouped_experiences = defaultdict(list)
-        for p in places_with_coords: grouped_experiences[p['place']].append(p['experience'])
-        
-        place_analysis_results = {}
-        for place, experiences in grouped_experiences.items():
-            analysis_result = analyze_experience(" ".join(experiences), MOVE_TAGS, ACTION_TAGS)
-            place_analysis_results[place] = analysis_result
+            # --- キャッシュがない場合、通常の処理を実行 ---
+            print(f"\n{'='*20} [{file_num}] の処理を開始 {'='*20}")
+            path_journal = f'{directory}{file_num}.tra.json'
+            
+            if not os.path.exists(path_journal): print(f"[WARNING] ファイルが見つかりません: {path_journal}"); continue
+            try:
+                with open(path_journal, "r", encoding="utf-8") as f: travel_data = json.load(f)
+            except: print(f"[ERROR] JSON読み込み失敗"); continue
+            texts = [];
+            for entry in travel_data: texts.extend(entry['text'])
+            full_text = " ".join(texts)
+            if not full_text.strip(): print(f"[WARNING] 旅行記 {file_num} にはテキストデータがありません。"); continue
+            
+            region_hint = get_visit_hint(full_text)
+            extracted_places = extract_places(full_text, region_hint)
+            if not extracted_places: print(f"[WARNING] 旅行記 {file_num} から訪問地を抽出できませんでした。"); continue
 
-        for p in places_with_coords:
-            analysis = place_analysis_results.get(p['place'], {"emotion_score": 0.5, "tags": []})
-            p['emotion_score'] = analysis['emotion_score']
-            p['tags'] = analysis['tags']
-        
-        print(f"📌 処理完了 ({file_num}): {len(places_with_coords)}件の訪問地を地図に追加します。")
-        all_travels_data.append({
-            "file_num": file_num, "places": places_with_coords,
-            "color": COLORS[i % len(COLORS)], "region_hint": region_hint 
-        })
+            places_with_coords = []
+            for place_data in extracted_places:
+                place_name = place_data['place']
+                coords = geocode_place(place_name, region_hint)
+                if not coords:
+                    coords = (place_data['latitude'], place_data['longitude'])
+                    if coords[0] == 0.0 and coords[1] == 0.0: coords = None
+                if not coords:
+                    coords = geocode_gsi(place_name)
+                if coords:
+                    place_data['latitude'] = coords[0]
+                    place_data['longitude'] = coords[1]
+                    places_with_coords.append(place_data)
+                else:
+                    print(f"[!] 全てのジオコーディングに失敗しました: {place_name}")
 
+            grouped_experiences = defaultdict(list)
+            for p in places_with_coords: grouped_experiences[p['place']].append(p['experience'])
+            
+            place_analysis_results = {}
+            for place, experiences in grouped_experiences.items():
+                analysis_result = analyze_experience(" ".join(experiences), MOVE_TAGS, ACTION_TAGS)
+                place_analysis_results[place] = analysis_result
+
+            for p in places_with_coords:
+                analysis = place_analysis_results.get(p['place'], {"emotion_score": 0.5, "tags": []})
+                p['emotion_score'] = analysis['emotion_score']
+                p['tags'] = analysis['tags']
+            
+            # 2. 処理結果を一つの変数にまとめる
+            final_travel_data = {
+                "file_num": file_num, "places": places_with_coords,
+                "color": COLORS[i % len(COLORS)], "region_hint": region_hint 
+            }
+            all_travels_data.append(final_travel_data)
+
+            # 3. 処理結果をキャッシュに保存
+            with open(cache_path, 'w', encoding='utf-8') as f:
+                json.dump(final_travel_data, f, ensure_ascii=False, indent=4)
+            print(f"✅ [{file_num}] の結果をキャッシュに保存しました。")
+            
+            print(f"📌 処理完了 ({file_num}): {len(places_with_coords)}件の訪問地を地図に追加します。")
+
+    except openai.AuthenticationError:
+        print("\n" + "="*50)
+        print("[FATAL ERROR] OpenAIの認証に失敗しました。")
+        print("APIキーが間違っているか、クレジットが不足している可能性があります。")
+        print("処理を中断し、現在までの結果で地図を生成します...")
+        print("="*50 + "\n")
+    except Exception as e:
+        print(f"\n[FATAL ERROR] 予期せぬエラーにより処理を中断します: {e}")
+        print("現在までの結果で地図を生成します...")
+
+    # --- ループ終了後、またはエラー発生後に地図を生成 ---
     if all_travels_data:
-        if len(file_nums) >= 4:
+        # ファイル名が長くなりすぎるのを防ぐ処理
+        if len(all_travels_data) >= 4:
             timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
             output_filename = f"{base_name}{timestamp}{extension}"
         else:
-            output_filename = f"{base_name}{'_'.join(file_nums)}{extension}"
+            # 処理済みのファイル番号だけを名前に使う
+            processed_file_nums = [str(t['file_num']) for t in all_travels_data]
+            output_filename = f"{base_name}{'_'.join(processed_file_nums)}{extension}"
+            
+        print(f"\n🗺️ {len(all_travels_data)}件の旅行記データで地図を生成します...")
         map_emotion_and_routes(all_travels_data, output_filename)
     else:
-        print("\n地図を生成するためのデータがありませんでした。")
+        print("\n地図を生成するための有効なデータがありませんでした。")
 
 
 if __name__ == '__main__':
