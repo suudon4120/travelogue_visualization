@@ -102,7 +102,7 @@ TAG_TO_GIF = {
     # 食事関連
     "食事(飲酒あり)": "gifs/anim_icon_10_飲酒あり.gif",
     "食事(飲酒なし・不明)": "gifs/anim_icon_11_飲酒なし・不明.gif",
-    "軽食(カフェなど)": "gifs/anim_icon_12_軽食(カフェなど).gif",
+    "軽食(カフェなど)": "gifs/anim_icon_12_軽食（カフェなど）.gif",
     # 行動関連
     "買い物(日用品)": "gifs/anim_icon_13_日用品.gif",
     "買い物(お土産)": "gifs/anim_icon_14_お土産.gif",
@@ -271,6 +271,7 @@ def get_visit_hint(visited_places_text):
         return response.choices[0].message.content.strip()
     except: return "日本"
     
+### ★★★ 機能変更 (1/2): exceptブロックを旧バージョン形式に修正 ★★★
 def analyze_experience(text, move_tags_list, action_tags_list):
     """1回のAPIコールで感情スコアとタグを同時に抽出する"""
     if not text or not text.strip():
@@ -323,7 +324,11 @@ def analyze_experience(text, move_tags_list, action_tags_list):
         all_tags = move_tags + action_tags
 
         return {"emotion_score": score, "tags": all_tags}
-        
+    
+    # 旧バージョン(v0.x)のopenaiライブラリ用のエラーハンドリング
+    except openai.error.AuthenticationError as e:
+        print(f"[FATAL ERROR] OpenAI認証エラー: {e}")
+        raise # エラーを再発生させ、mainのtry-exceptで捕捉する
     except Exception as e:
         print(f"[ERROR] 統合分析中にエラーが発生しました: {e}")
         return {"emotion_score": 0.5, "tags": []}
@@ -415,10 +420,9 @@ def map_emotion_and_routes(travels_data, output_html):
     m.save(output_html)
     print(f"\n🌐 感情・タグ・カスタムアイコン・GIF付きの地図を {output_html} に保存しました。")
 
-### ★★★ ここからが修正箇所です ★★★
+### ★★★ 機能変更 (2/2): exceptブロックを旧バージョン形式に修正 ★★★
 def main():
     """メイン処理"""
-    # キャッシュディレクトリがなければ作成
     if not os.path.exists(CACHE_DIR):
         os.makedirs(CACHE_DIR)
         print(f"INFO: キャッシュディレクトリを作成しました: {CACHE_DIR}")
@@ -434,21 +438,16 @@ def main():
     except Exception as e: print(f"[ERROR] ファイルの読み込み中にエラーが発生しました: {e}"); return
 
     all_travels_data = []
-    # 安全な停止（Graceful Shutdown）のためにループ全体をtry...exceptで囲む
     try:
         for i, file_num in enumerate(file_nums):
-            # キャッシュファイルのパスを定義
             cache_path = os.path.join(CACHE_DIR, f"{file_num}.json")
-
-            # 1. キャッシュの確認
             if os.path.exists(cache_path):
                 print(f"\n✅ [{file_num}] のキャッシュが見つかりました。読み込みます。")
                 with open(cache_path, 'r', encoding='utf-8') as f:
                     travel_result_data = json.load(f)
                 all_travels_data.append(travel_result_data)
-                continue # 次のファイルの処理へ
+                continue
 
-            # --- キャッシュがない場合、通常の処理を実行 ---
             print(f"\n{'='*20} [{file_num}] の処理を開始 {'='*20}")
             path_journal = f'{directory}{file_num}.tra.json'
             
@@ -494,23 +493,22 @@ def main():
                 p['emotion_score'] = analysis['emotion_score']
                 p['tags'] = analysis['tags']
             
-            # 2. 処理結果を一つの変数にまとめる
             final_travel_data = {
                 "file_num": file_num, "places": places_with_coords,
                 "color": COLORS[i % len(COLORS)], "region_hint": region_hint 
             }
             all_travels_data.append(final_travel_data)
 
-            # 3. 処理結果をキャッシュに保存
             with open(cache_path, 'w', encoding='utf-8') as f:
                 json.dump(final_travel_data, f, ensure_ascii=False, indent=4)
             print(f"✅ [{file_num}] の結果をキャッシュに保存しました。")
             
             print(f"📌 処理完了 ({file_num}): {len(places_with_coords)}件の訪問地を地図に追加します。")
 
-    except openai.AuthenticationError:
+    # 旧バージョン(v0.x)のopenaiライブラリ用のエラーハンドリング
+    except openai.error.AuthenticationError as e:
         print("\n" + "="*50)
-        print("[FATAL ERROR] OpenAIの認証に失敗しました。")
+        print(f"[FATAL ERROR] OpenAIの認証に失敗しました: {e}")
         print("APIキーが間違っているか、クレジットが不足している可能性があります。")
         print("処理を中断し、現在までの結果で地図を生成します...")
         print("="*50 + "\n")
@@ -518,14 +516,11 @@ def main():
         print(f"\n[FATAL ERROR] 予期せぬエラーにより処理を中断します: {e}")
         print("現在までの結果で地図を生成します...")
 
-    # --- ループ終了後、またはエラー発生後に地図を生成 ---
     if all_travels_data:
-        # ファイル名が長くなりすぎるのを防ぐ処理
         if len(all_travels_data) >= 4:
             timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
             output_filename = f"{base_name}{timestamp}{extension}"
         else:
-            # 処理済みのファイル番号だけを名前に使う
             processed_file_nums = [str(t['file_num']) for t in all_travels_data]
             output_filename = f"{base_name}{'_'.join(processed_file_nums)}{extension}"
             
