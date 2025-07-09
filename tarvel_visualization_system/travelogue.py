@@ -311,36 +311,31 @@ def get_visit_hint(visited_places_text):
         return response.choices[0].message.content.strip()
     except: return "日本"
     
-### ★★★ 機能変更 (1/2): exceptブロックを旧バージョン形式に修正 ★★★
-def analyze_experience(text, move_tags_list, action_tags_list):
-    """1回のAPIコールで感情スコアとタグを同時に抽出する"""
+### ★★★ 機能変更: analyze_experienceをanalyze_stop_detailsに書き換え ★★★
+def analyze_stop_details(text, action_tags_list):
+    """1回のAPIコールで感情スコアと「行動」タグを同時に抽出する"""
     if not text or not text.strip():
         return {"emotion_score": 0.5, "tags": []}
 
-    print(f"⚡️ Analyzing (Emotion + Tags) for: '{text[:40]}...'")
+    print(f"⚡️ Analyzing (Emotion + Action Tags) for: '{text[:40]}...'")
     
     prompt = f"""
-    以下のテキストは、旅行中のある場所での経験を記述したものです。
-    このテキストを分析し、以下の3つのタスクを同時に実行してください。
+    以下のテキストは、旅行中のある「滞在」場所での経験を記述したものです。
+    このテキストを分析し、以下の2つのタスクを同時に実行してください。
 
-    1.  **感情分析**: テキスト全体の感情を0.0（非常にネガティブ）から1.0（非常にポジティブ）の間の数値（スコア）で評価してください。ニュートラルな感情は0.5とします。
-    2.  **移動タグ抽出**: 提示された「移動手段」タグリストの中から、テキスト内容に最も関連性の高いタグをすべて選択してください。
-    3.  **行動タグ抽出**: 提示された「行動」タグリストの中から、テキスト内容に最も関連性の高いタグをすべて選択してください。
+    1.  **感情分析**: テキスト全体の感情を0.0（非常にネガティブ）から1.0（非常にポジティブ）の間の数値（スコア）で評価してください。
+    2.  **行動タグ抽出**: 提示された「行動」タグリストの中から、テキスト内容に最も関連性の高いタグをすべて選択してください。
 
-    関連性の高いタグが一つもなければ、空のリスト `[]` を返してください。
+    関連性の高いタグがなければ、空のリスト `[]` を返してください。
     出力は必ず、以下のキーを持つJSON形式で返してください。
     - `emotion_score`: 数値
-    - `move_tags`: 文字列のリスト
     - `action_tags`: 文字列のリスト
 
     例:
     {{
         "emotion_score": 0.85,
-        "move_tags": ["バス", "徒歩"],
         "action_tags": ["食事(飲酒なし・不明)", "景色鑑賞"]
     }}
-    ---
-    「移動手段」タグリスト: {move_tags_list}
     ---
     「行動」タグリスト: {action_tags_list}
     ---
@@ -350,7 +345,7 @@ def analyze_experience(text, move_tags_list, action_tags_list):
         response = openai.ChatCompletion.create(
             model="gpt-4o",
             messages=[
-                {"role": "system", "content": "あなたはテキストを多角的に分析し、指定されたJSON形式で感情スコアと複数種類のタグを正確に出力する専門家です。"},
+                {"role": "system", "content": "あなたはテキストを多角的に分析し、指定されたJSON形式で感情スコアと行動タグを正確に出力する専門家です。"},
                 {"role": "user", "content": prompt}
             ],
             temperature=0.1,
@@ -359,18 +354,15 @@ def analyze_experience(text, move_tags_list, action_tags_list):
         result = json.loads(response.choices[0].message.content)
         
         score = result.get("emotion_score", 0.5)
-        move_tags = result.get("move_tags", [])
         action_tags = result.get("action_tags", [])
-        all_tags = move_tags + action_tags
 
-        return {"emotion_score": score, "tags": all_tags}
-    
-    # 旧バージョン(v0.x)のopenaiライブラリ用のエラーハンドリング
+        return {"emotion_score": score, "tags": action_tags}
+        
     except openai.error.AuthenticationError as e:
         print(f"[FATAL ERROR] OpenAI認証エラー: {e}")
-        raise # エラーを再発生させ、mainのtry-exceptで捕捉する
+        raise
     except Exception as e:
-        print(f"[ERROR] 統合分析中にエラーが発生しました: {e}")
+        print(f"[ERROR] 滞在詳細の分析中にエラーが発生しました: {e}")
         return {"emotion_score": 0.5, "tags": []}
 
 
@@ -510,58 +502,43 @@ def map_emotion_and_routes(travels_data, output_html):
 
 def main():
     """メイン処理"""
-    # キャッシュディレクトリがなければ作成
     if not os.path.exists(CACHE_DIR):
         os.makedirs(CACHE_DIR)
-        print(f"INFO: キャッシュディレクトリを作成しました: {CACHE_DIR}")
-
     input_file_path = input('ファイル番号が記載された.txtファイルのパスを入力してください: ')
     try:
         with open(input_file_path, 'r', encoding='utf-8') as f: content = f.read()
-        file_nums_raw = content.strip().split(',')
-        file_nums = [num.strip() for num in file_nums_raw if num.strip()] 
-        if not file_nums: print("[ERROR] 入力ファイルに有効なファイル番号が含まれていません。"); return
-        print(f"INFO: ファイルから {len(file_nums)} 件のファイル番号を読み込みました。")
-    except FileNotFoundError: print(f"[ERROR] 入力ファイルが見つかりません: {input_file_path}"); return
-    except Exception as e: print(f"[ERROR] ファイルの読み込み中にエラーが発生しました: {e}"); return
+        file_nums = [num.strip() for num in content.strip().split(',') if num.strip()]
+    except Exception as e:
+        print(f"[ERROR] 入力ファイルの読み込みに失敗: {e}"); return
 
     all_travels_data = []
     try:
         for i, file_num in enumerate(file_nums):
             cache_path = os.path.join(CACHE_DIR, f"{file_num}.json")
             if os.path.exists(cache_path):
-                print(f"\n✅ [{file_num}] のキャッシュが見つかりました。読み込みます。")
+                print(f"\n✅ [{file_num}] のキャッシュを読み込みます。")
                 with open(cache_path, 'r', encoding='utf-8') as f:
-                    travel_result_data = json.load(f)
-                all_travels_data.append(travel_result_data)
+                    all_travels_data.append(json.load(f))
                 continue
 
             print(f"\n{'='*20} [{file_num}] の処理を開始 {'='*20}")
             path_journal = f'{directory}{file_num}.tra.json'
-            
             if not os.path.exists(path_journal): print(f"[WARNING] ファイルが見つかりません: {path_journal}"); continue
-            try:
-                with open(path_journal, "r", encoding="utf-8") as f: travel_data = json.load(f)
-            except: print(f"[ERROR] JSON読み込み失敗"); continue
-            texts = []
-            for entry in travel_data:
-                if 'text' in entry and isinstance(entry['text'], list):
-                    texts.extend(entry['text'])
-            full_text = " ".join(texts)
-
-            if not full_text.strip(): print(f"[WARNING] 旅行記 {file_num} にはテキストデータがありません。"); continue
+            
+            with open(path_journal, "r", encoding="utf-8") as f: travel_data = json.load(f)
+            texts = [entry['text'] for entry in travel_data if entry.get('text')]
+            full_text = " ".join(sum(texts, []))
+            if not full_text.strip(): print(f"[WARNING] テキストデータがありません。"); continue
             
             region_hint = get_visit_hint(full_text)
-            # ★★★ extract_events を使用 ★★★
             events = extract_events(full_text, region_hint)
-            if not events: print(f"[WARNING] 旅行記 {file_num} からイベントを抽出できませんでした。"); continue
+            if not events: print(f"[WARNING] イベントを抽出できませんでした。"); continue
 
-            # "stop"イベントのみを対象にジオコーディングと感情・タグ分析を行う
             stop_events_to_process = [e for e in events if e.get('type') == 'stop']
             
             for stop_event in stop_events_to_process:
                 place_name = stop_event.get('place')
-                if not place_name: continue # placeキーがない場合はスキップ
+                if not place_name: continue
 
                 coords = geocode_place(place_name, region_hint)
                 if not coords:
@@ -569,46 +546,52 @@ def main():
                     if coords[0] == 0.0 and coords[1] == 0.0: coords = None
                 if not coords:
                     coords = geocode_gsi(place_name)
-
+                
                 if coords:
                     stop_event['latitude'] = coords[0]
                     stop_event['longitude'] = coords[1]
                 else:
-                    print(f"[!] 全てのジオコーディングに失敗しました: {place_name}")
-                    # 座標が確定しないstopイベントは後続の処理で問題を起こす可能性があるため、
-                    # eventsリストから削除するか、'latitude'キーを削除する
+                    print(f"[!] ジオコーディング失敗: {place_name}")
                     if 'latitude' in stop_event: del stop_event['latitude']
 
+            # 場所ごとにまとめたexperienceから感情と行動タグを抽出
+            grouped_experiences = defaultdict(list)
+            for e in stop_events_to_process:
+                if e.get('place'): # placeキーがあるもののみ
+                    grouped_experiences[e['place']].append(e.get('experience', ''))
+            
+            place_analysis_results = {}
+            for place, experiences in grouped_experiences.items():
+                combined_experience = " ".join(experiences)
+                ### ★★★ ここが修正箇所です ★★★
+                # 正しい関数名 analyze_stop_details を使用する
+                analysis_result = analyze_stop_details(combined_experience, ACTION_TAGS)
+                place_analysis_results[place] = analysis_result
 
-                # 感情・タグ分析
-                experience_text = stop_event.get('experience', '')
-                analysis_result = analyze_experience(experience_text, MOVE_TAGS, ACTION_TAGS)
-                stop_event['emotion_score'] = analysis_result['emotion_score']
-                stop_event['tags'] = analysis_result['tags']
+            # 感情スコアとタグを元のstop_eventに付与
+            for stop_event in stop_events_to_process:
+                if stop_event.get('place') in place_analysis_results:
+                    analysis = place_analysis_results[stop_event['place']]
+                    stop_event['emotion_score'] = analysis['emotion_score']
+                    stop_event['tags'] = analysis['tags']
+                else: # 分析結果がない場合（ほぼあり得ないが安全のため）
+                    stop_event['emotion_score'] = 0.5
+                    stop_event['tags'] = []
             
             final_travel_data = {
-                "file_num": file_num,
-                "events": events, # ★★★ eventsリストを保存 ★★★
-                "color": COLORS[i % len(COLORS)],
-                "region_hint": region_hint 
+                "file_num": file_num, "events": events,
+                "color": COLORS[i % len(COLORS)], "region_hint": region_hint 
             }
             all_travels_data.append(final_travel_data)
 
             with open(cache_path, 'w', encoding='utf-8') as f:
                 json.dump(final_travel_data, f, ensure_ascii=False, indent=4)
             print(f"✅ [{file_num}] の結果をキャッシュに保存しました。")
-            
-            print(f"📌 処理完了 ({file_num})")
 
     except openai.error.AuthenticationError as e:
-        print("\n" + "="*50)
-        print(f"[FATAL ERROR] OpenAIの認証に失敗しました: {e}")
-        print("APIキーが間違っているか、クレジットが不足している可能性があります。")
-        print("処理を中断し、現在までの結果で地図を生成します...")
-        print("="*50 + "\n")
+        print(f"\n[FATAL ERROR] OpenAI認証エラー。処理を中断します。: {e}")
     except Exception as e:
-        print(f"\n[FATAL ERROR] 予期せぬエラーにより処理を中断します: {e}")
-        print("現在までの結果で地図を生成します...")
+        print(f"\n[FATAL ERROR] 予期せぬエラーで処理を中断します: {e}")
 
     if all_travels_data:
         if len(all_travels_data) >= 4:
@@ -618,7 +601,6 @@ def main():
             processed_file_nums = [str(t['file_num']) for t in all_travels_data]
             output_filename = f"{base_name}{'_'.join(processed_file_nums)}{extension}"
             
-        print(f"\n🗺️ {len(all_travels_data)}件の旅行記データで地図を生成します...")
         map_emotion_and_routes(all_travels_data, output_filename)
     else:
         print("\n地図を生成するための有効なデータがありませんでした。")
