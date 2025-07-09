@@ -5,6 +5,7 @@ import json
 import folium
 from folium.plugins import HeatMap
 from geopy.geocoders import Nominatim
+from geopy.distance import distance ### ★★★ 機能追加 ★★★
 from collections import defaultdict
 import time
 import requests
@@ -26,6 +27,7 @@ directory = "../../2022-地球の歩き方旅行記データセット/data_aruki
 base_name = "visited_places_map_emotion_"
 extension = ".html"
 CACHE_DIR = "results_cache" ### ★★★ 機能追加: キャッシュ用ディレクトリ ★★★
+MAX_DISTANCE_KM = 100  ### ★★★ 機能追加: 線を描画する最大距離(km) ★★★
 COLORS = ['blue', 'red', 'green', 'purple', 'orange', 'darkred', 'lightred', 'beige', 'darkblue', 'darkgreen', 'cadetblue', 'lightgray']
 WAIT_TIME = 1
 MODEL = "gpt-4o"
@@ -208,6 +210,7 @@ def get_image_as_base64(file_path):
     except FileNotFoundError:
         print(f"[WARNING] 画像ファイルが見つかりません: {file_path}")
         return None
+
 def geocode_gsi(name):
     """国土地理院APIを使って地名の緯度経度を取得する"""
     try:
@@ -366,16 +369,15 @@ def analyze_stop_details(text, action_tags_list):
         return {"emotion_score": 0.5, "tags": []}
 
 
-### ★★★ 機能変更: マップ描画関数に移動手段のピンを追加 ★★★
+### ★★★ 機能変更: 軌跡描画ロジックを修正 ★★★
 def map_emotion_and_routes(travels_data, output_html):
     """感情ヒートマップ、訪問地、移動手段をレイヤー化して地図を生成する"""
     if not travels_data: print("[ERROR] 地図に描画するデータがありません。"); return
     try:
-        # 最初の「滞在」イベントを地図の中心にする
-        first_stop = next((p for p in travels_data[0]['events'] if p.get('type') == 'stop'), None)
-        if first_stop:
+        first_stop = next((p for t in travels_data for p in t['events'] if p.get('type') == 'stop'), None)
+        if first_stop and 'latitude' in first_stop:
             start_coords = (first_stop['latitude'], first_stop['longitude'])
-        else: # 滞在イベントがなければ東京駅
+        else:
             start_coords = (35.6812, 139.7671)
         m = folium.Map(location=start_coords, zoom_start=10)
     except (IndexError, KeyError):
@@ -383,14 +385,13 @@ def map_emotion_and_routes(travels_data, output_html):
 
     heatmap_data = []
     for travel in travels_data:
-        file_num = travel["file_num"]
-        color = travel["color"]
-        events = travel["events"] # 全イベントのリスト
+        file_num, color, events = travel["file_num"], travel["color"], travel.get("events", [])
         
-        # --- 滞在(stop)イベントの処理 ---
-        stop_events = [e for e in events if e.get('type') == 'stop' and 'latitude' in e]
         route_group = folium.FeatureGroup(name=f"旅行記ルート: {file_num}", show=True)
-        locations = []
+        move_group = folium.FeatureGroup(name=f"移動手段: {file_num}", show=True)
+
+        stop_events = [e for e in events if e.get('type') == 'stop' and 'latitude' in e]
+        
         for stop_data in stop_events:
             coords = (stop_data['latitude'], stop_data['longitude'])
             tags = stop_data.get('tags', [])
@@ -429,7 +430,7 @@ def map_emotion_and_routes(travels_data, output_html):
                         if not gif_html:
                             gif_html += f"<hr style='margin: 3px 0;'>"
                             gif_html += "<b>関連画像:</b><br>"
-                        gif_html += f'<img src="{base64_gif}" alt="{tag}" style="max-width: 70%; height: auto; margin-top: 5px; border-radius: 4px;">'
+                        gif_html += f'<img src="{base64_gif}" alt="{tag}" style="max-width: 95%; height: auto; margin-top: 5px; border-radius: 4px;">'
             popup_html += gif_html
 
             if 'reasoning' in stop_data and stop_data['reasoning']:
@@ -443,49 +444,54 @@ def map_emotion_and_routes(travels_data, output_html):
                 tooltip=f"{stop_data['place']} ({file_num})", icon=icon_to_use
             ).add_to(route_group)
             
-            locations.append(coords)
             heatmap_data.append([coords[0], coords[1], stop_data.get('emotion_score', 0.5)])
         
-        if len(locations) > 1:
-            folium.PolyLine(locations, color=color, weight=5, opacity=0.7).add_to(route_group)
-        route_group.add_to(m)
-
-        # --- 移動(move)イベントの処理 ---
-        move_group = folium.FeatureGroup(name=f"移動手段: {file_num}", show=True, overlay=True)
-        # 連続する滞在イベントの間に移動ピンを置く
+        # --- 軌跡と移動手段の描画ロジック ---
         for i in range(len(stop_events) - 1):
             start_stop = stop_events[i]
             end_stop = stop_events[i+1]
             
-            # 2つのstopイベントの間のmoveイベントを探す
-            start_index = events.index(start_stop)
-            end_index = events.index(end_stop)
-            move_event = next((e for e in events[start_index:end_index] if e.get('type') == 'move'), None)
+            point1 = (start_stop['latitude'], start_stop['longitude'])
+            point2 = (end_stop['latitude'], end_stop['longitude'])
 
-            if move_event:
-                # 中間地点を計算
-                mid_lat = (start_stop['latitude'] + end_stop['latitude']) / 2
-                mid_lon = (start_stop['longitude'] + end_stop['longitude']) / 2
-                
-                move_means = move_event.get('means', '不明')
-                
-                # 移動手段のアイコンを決定
-                move_icon = None
-                if move_means in TAG_TO_IMAGE and os.path.exists(TAG_TO_IMAGE[move_means]):
-                    move_icon = folium.features.CustomIcon(TAG_TO_IMAGE[move_means], icon_size=(30, 30))
-                else: # 対応アイコンがなければデフォルト
-                    move_icon = folium.Icon(color='black', icon='arrow-right', prefix='fa')
-                
-                # ポップアップを作成
-                move_popup = f"<b>移動: {move_means}</b><br><hr>"
-                move_popup += move_event.get('experience', '記述なし')
+            # 2点間の距離を計算
+            dist = distance(point1, point2).km
+            
+            # 距離が上限値以下の場合のみ線を描画
+            if dist <= MAX_DISTANCE_KM:
+                folium.PolyLine([point1, point2], color=color, weight=5, opacity=0.7).add_to(route_group)
 
-                folium.Marker(
-                    location=[mid_lat, mid_lon],
-                    popup=move_popup,
-                    tooltip=f"移動: {move_means}",
-                    icon=move_icon
-                ).add_to(move_group)
+                # 移動イベントを探して中間ピンを配置
+                start_index_in_events = -1
+                for idx, event in enumerate(events):
+                    if event == start_stop:
+                        start_index_in_events = idx
+                        break
+                
+                if start_index_in_events != -1:
+                    move_event = next((e for e in events[start_index_in_events+1:] if e.get('type') == 'move'), None)
+                    if move_event:
+                        mid_lat = (point1[0] + point2[0]) / 2
+                        mid_lon = (point1[1] + point2[1]) / 2
+                        move_means = move_event.get('means', '不明')
+                        
+                        move_icon = None
+                        if move_means in TAG_TO_IMAGE and os.path.exists(TAG_TO_IMAGE[move_means]):
+                            move_icon = folium.features.CustomIcon(TAG_TO_IMAGE[move_means], icon_size=(30, 30))
+                        else:
+                            move_icon = folium.Icon(color='black', icon='arrow-right', prefix='fa')
+                        
+                        move_popup = f"<b>移動: {move_means}</b><br><hr>"
+                        move_popup += move_event.get('experience', '記述なし')
+
+                        folium.Marker(
+                            location=[mid_lat, mid_lon],
+                            popup=move_popup,
+                            tooltip=f"移動: {move_means}",
+                            icon=move_icon
+                        ).add_to(move_group)
+
+        route_group.add_to(m)
         move_group.add_to(m)
 
     if heatmap_data:
@@ -493,7 +499,6 @@ def map_emotion_and_routes(travels_data, output_html):
         HeatMap(heatmap_data).add_to(heatmap_layer)
         heatmap_layer.add_to(m)
 
-    # レイヤーコントロールと全非表示ボタンを地図に追加
     folium.LayerControl().add_to(m)
     m.add_child(LayerToggleButtons())
     
