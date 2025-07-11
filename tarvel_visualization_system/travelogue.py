@@ -128,62 +128,68 @@ TAG_TO_GIF = {
 
 geolocator = Nominatim(user_agent="travel-map-final")
 
-### ★★★表示・非表示ボタンを1つに統合したクラス ★★★
 class LayerToggleButtons(MacroElement):
     _template = Template("""
         {% macro script(this, kwargs) %}
             var toggleControl = L.Control.extend({
                 onAdd: function(map) {
                     var container = L.DomUtil.create('div', 'leaflet-bar leaflet-control');
-                    // ボタンを縦に並べるためのスタイル
                     container.style.display = 'flex';
                     container.style.flexDirection = 'column';
-                    container.style.gap = '3px'; // ボタン間の隙間
+                    container.style.gap = '3px';
 
-                    // --- 全ルート表示ボタン ---
-                    var showButton = L.DomUtil.create('div', 'leaflet-control-button', container);
+                    // --- 全表示ボタン ---
+                    var showButton = L.DomUtil.create('div', '', container);
                     showButton.style.backgroundColor = 'white';
                     showButton.style.padding = '5px';
                     showButton.style.border = '2px solid #ccc';
                     showButton.style.borderRadius = '5px';
                     showButton.style.cursor = 'pointer';
-                    showButton.innerHTML = '全ルート表示';
+                    showButton.innerHTML = '全表示'; // テキストをより汎用的に変更
                     
                     showButton.onclick = function(e) {
                         e.stopPropagation();
-                        var checkboxes = document.querySelectorAll('.leaflet-control-layers-overlays .leaflet-control-layers-selector');
-                        var labels = document.querySelectorAll('.leaflet-control-layers-overlays span');
-                        for (var i = 0; i < labels.length; i++) {
-                            if (labels[i].textContent.trim().startsWith('旅行記ルート')) {
-                                // もしチェックが外れていれば、クリックする
-                                if (checkboxes[i] && !checkboxes[i].checked) {
-                                    checkboxes[i].click();
+                        document.querySelectorAll('.leaflet-control-layers-overlays label').forEach(function(labelDiv) {
+                            const span = labelDiv.querySelector('span');
+                            const checkbox = labelDiv.querySelector('input[type="checkbox"]');
+                            if (span && checkbox) {
+                                const labelText = span.textContent.trim();
+                                // ★★★ 修正箇所 ★★★
+                                // 「旅行記ルート」または「移動手段」で始まるレイヤーを対象にする
+                                if (labelText.startsWith('旅行記ルート') || labelText.startsWith('移動手段')) {
+                                    if (!checkbox.checked) {
+                                        checkbox.click();
+                                    }
                                 }
                             }
-                        }
+                        });
                     };
 
-                    // --- 全ルート非表示ボタン ---
-                    var hideButton = L.DomUtil.create('div', 'leaflet-control-button', container);
+                    // --- 全非表示ボタン ---
+                    var hideButton = L.DomUtil.create('div', '', container);
                     hideButton.style.backgroundColor = 'white';
                     hideButton.style.padding = '5px';
                     hideButton.style.border = '2px solid #ccc';
                     hideButton.style.borderRadius = '5px';
                     hideButton.style.cursor = 'pointer';
-                    hideButton.innerHTML = '全ルート非表示';
+                    hideButton.innerHTML = '全非表示'; // テキストをより汎用的に変更
 
                     hideButton.onclick = function(e) {
                         e.stopPropagation();
-                        var checkboxes = document.querySelectorAll('.leaflet-control-layers-overlays .leaflet-control-layers-selector');
-                        var labels = document.querySelectorAll('.leaflet-control-layers-overlays span');
-                        for (var i = 0; i < labels.length; i++) {
-                            if (labels[i].textContent.trim().startsWith('旅行記ルート')) {
-                                // もしチェックが入っていれば、クリックする
-                                if (checkboxes[i] && checkboxes[i].checked) {
-                                    checkboxes[i].click();
+                        document.querySelectorAll('.leaflet-control-layers-overlays label').forEach(function(labelDiv) {
+                            const span = labelDiv.querySelector('span');
+                            const checkbox = labelDiv.querySelector('input[type="checkbox"]');
+                            if (span && checkbox) {
+                                const labelText = span.textContent.trim();
+                                // ★★★ 修正箇所 ★★★
+                                // 「旅行記ルート」または「移動手段」で始まるレイヤーを対象にする
+                                if (labelText.startsWith('旅行記ルート') || labelText.startsWith('移動手段')) {
+                                    if (checkbox.checked) {
+                                        checkbox.click();
+                                    }
                                 }
                             }
-                        }
+                        });
                     };
                     
                     return container;
@@ -199,7 +205,6 @@ class LayerToggleButtons(MacroElement):
         self._name = 'LayerToggleButtons'
 
 # --- 座標取得・テキスト抽出・分析関数群 ---
-# (geocode_gsi, geocode_place, extract_places, get_visit_hint, analyze_experience, get_image_as_base64 のコードは省略)
 def get_image_as_base64(file_path):
     """画像ファイルを読み込み、HTML埋め込み用のBase64文字列を返す"""
     try:
@@ -237,7 +242,6 @@ def geocode_place(name, region_hint):
             return location.latitude, location.longitude
     except: return None
 
-### ★★★ 機能変更: extract_placesをextract_eventsに改名し、プロンプトを刷新 ★★★
 def extract_events(texts, region_hint):
     """GPTを使って旅行記から「滞在」と「移動」のイベントを時系列で抽出する"""
     print("📌 イベント抽出（滞在・移動）のプロンプトを実行します...")
@@ -305,7 +309,6 @@ def extract_events(texts, region_hint):
         print(f"[ERROR] イベント抽出のJSON解析に失敗: {e}")
         return []
 
-
 def get_visit_hint(visited_places_text):
     if not visited_places_text.strip(): return "日本"
     messages = [{"role": "system", "content": "都道府県名を答えるときは，県名のみを答えてください．"}, {"role": "user", "content": f"以下の旅行記データから筆者が訪れたと考えられる都道府県を1つだけ答えてください．ただし，特定の語句に拘らずに旅行記全体から総合的に判断してください．\n\n{visited_places_text}"}]
@@ -314,30 +317,29 @@ def get_visit_hint(visited_places_text):
         return response.choices[0].message.content.strip()
     except: return "日本"
     
-### ★★★ 機能変更: analyze_experienceをanalyze_stop_detailsに書き換え ★★★
-def analyze_stop_details(text, action_tags_list):
-    """1回のAPIコールで感情スコアと「行動」タグを同時に抽出する"""
+def analyze_stop_emotions_by_tag(text, action_tags_list):
+    """
+    1回のAPIコールで、関連する行動タグを抽出し、タグごとの感情スコアを算出する
+    """
     if not text or not text.strip():
-        return {"emotion_score": 0.5, "tags": []}
+        return {}
 
-    print(f"⚡️ Analyzing (Emotion + Action Tags) for: '{text[:40]}...'")
+    print(f"⚡️ Analyzing (Per-Tag Emotions) for: '{text[:40]}...'")
     
     prompt = f"""
     以下のテキストは、旅行中のある「滞在」場所での経験を記述したものです。
-    このテキストを分析し、以下の2つのタスクを同時に実行してください。
+    このテキストを分析し、以下のステップを同時に実行してください。
 
-    1.  **感情分析**: テキスト全体の感情を0.0（非常にネガティブ）から1.0（非常にポジティブ）の間の数値（スコア）で評価してください。
-    2.  **行動タグ抽出**: 提示された「行動」タグリストの中から、テキスト内容に最も関連性の高いタグをすべて選択してください。
+    1.  **タグ抽出**: 提示された「行動」タグリストの中から、テキスト内容に最も関連性の高いタグをすべて選択してください。
+    2.  **タグ別感情分析**: ステップ1で選択した各タグについて、そのタグに関連するテキスト部分の感情を個別に分析し、0.0（非常にネガティブ）から1.0（非常にポジティブ）のスコアを算出してください。
 
-    関連性の高いタグがなければ、空のリスト `[]` を返してください。
-    出力は必ず、以下のキーを持つJSON形式で返してください。
-    - `emotion_score`: 数値
-    - `action_tags`: 文字列のリスト
+    関連性の高いタグが一つもなければ、空のオブジェクト `{{}}` を返してください。
+    出力は必ず、キーが「タグ名」、値が「感情スコア」のJSONオブジェクト形式で返してください。
 
     例:
     {{
-        "emotion_score": 0.85,
-        "action_tags": ["食事(飲酒なし・不明)", "景色鑑賞"]
+        "食事(飲酒なし・不明)": 0.85,
+        "景色鑑賞": 1.0
     }}
     ---
     「行動」タグリスト: {action_tags_list}
@@ -348,42 +350,37 @@ def analyze_stop_details(text, action_tags_list):
         response = openai.ChatCompletion.create(
             model="gpt-4o",
             messages=[
-                {"role": "system", "content": "あなたはテキストを多角的に分析し、指定されたJSON形式で感情スコアと行動タグを正確に出力する専門家です。"},
+                {"role": "system", "content": "あなたはテキストを多角的に分析し、関連する行動タグとそのタグに対応する個別の感情スコアをJSONオブジェクトとして正確に出力する専門家です。"},
                 {"role": "user", "content": prompt}
             ],
             temperature=0.1,
             response_format={"type": "json_object"}
         )
+        # resultは {"タグ1": スコア1, "タグ2": スコア2, ...} という形式
         result = json.loads(response.choices[0].message.content)
         
-        score = result.get("emotion_score", 0.5)
-        action_tags = result.get("action_tags", [])
-
-        return {"emotion_score": score, "tags": action_tags}
+        print(f"✅ Per-tag analysis successful. Result: {result}")
+        return result
         
     except openai.error.AuthenticationError as e:
         print(f"[FATAL ERROR] OpenAI認証エラー: {e}")
         raise
     except Exception as e:
-        print(f"[ERROR] 滞在詳細の分析中にエラーが発生しました: {e}")
-        return {"emotion_score": 0.5, "tags": []}
+        print(f"[ERROR] タグ別感情分析中にエラーが発生しました: {e}")
+        return {}
 
-
-### ★★★ 機能変更: 軌跡描画ロジックを修正 ★★★
 def map_emotion_and_routes(travels_data, output_html):
-    """感情ヒートマップ、訪問地、移動手段をレイヤー化して地図を生成する"""
+    """訪問地、移動手段、およびタグ別感情ヒートマップをレイヤー化して地図を生成する"""
     if not travels_data: print("[ERROR] 地図に描画するデータがありません。"); return
     try:
-        first_stop = next((p for t in travels_data for p in t['events'] if p.get('type') == 'stop'), None)
-        if first_stop and 'latitude' in first_stop:
-            start_coords = (first_stop['latitude'], first_stop['longitude'])
-        else:
-            start_coords = (35.6812, 139.7671)
+        first_stop = next((p for t in travels_data for p in t['events'] if p.get('type') == 'stop' and 'latitude' in p), None)
+        start_coords = (first_stop['latitude'], first_stop['longitude']) if first_stop else (35.6812, 139.7671)
         m = folium.Map(location=start_coords, zoom_start=10)
     except (IndexError, KeyError):
         m = folium.Map(location=[35.6812, 139.7671], zoom_start=10)
+    
+    heatmap_data_by_tag = defaultdict(list)
 
-    heatmap_data = []
     for travel in travels_data:
         file_num, color, events = travel["file_num"], travel["color"], travel.get("events", [])
         
@@ -394,8 +391,13 @@ def map_emotion_and_routes(travels_data, output_html):
         
         for stop_data in stop_events:
             coords = (stop_data['latitude'], stop_data['longitude'])
-            tags = stop_data.get('tags', [])
+            per_tag_emotions = stop_data.get('per_tag_emotions', {})
+
+            ### ★★★ ここが修正箇所です ★★★
+            # per_tag_emotions 辞書のキー（＝タグ名）からタグのリストを作成
+            tags = list(per_tag_emotions.keys())
             
+            # --- アイコンを決定するロジック ---
             icon_to_use = None
             place_tags_set = set(tags)
             for tag in TAG_PRIORITY:
@@ -410,27 +412,28 @@ def map_emotion_and_routes(travels_data, output_html):
                 else:
                     icon_to_use = folium.Icon(color="gray", icon="question-sign")
             
+            # --- ポップアップHTMLの組み立て ---
             popup_html = f"<b>{stop_data['place']}</b> (旅行記: {file_num})<br>"
-            popup_html += f"<b>感情スコア: {stop_data.get('emotion_score', 0.5):.2f}</b><br>"
-            if tags:
+            if per_tag_emotions:
                 popup_html += f"<hr style='margin: 3px 0;'>"
-                popup_html += "<b>タグ:</b><br>"
+                popup_html += "<b>タグ別感情スコア:</b><br>"
                 tag_html = ""
-                for tag in tags:
+                for tag, score in per_tag_emotions.items():
                     tag_style = "display:inline-block; background-color:#E0E0E0; color:#333; padding:2px 6px; margin:2px; border-radius:4px; font-size:12px;"
-                    tag_html += f"<span style='{tag_style}'>{tag}</span>"
+                    tag_html += f"<span style='{tag_style}'>{tag} ({score:.2f})</span>"
                 popup_html += tag_html
             
             gif_html = ""
-            for tag in tags:
-                if tag in TAG_TO_GIF:
-                    gif_path = TAG_TO_GIF[tag]
-                    base64_gif = get_image_as_base64(gif_path)
-                    if base64_gif:
-                        if not gif_html:
-                            gif_html += f"<hr style='margin: 3px 0;'>"
-                            gif_html += "<b>関連画像:</b><br>"
-                        gif_html += f'<img src="{base64_gif}" alt="{tag}" style="max-width: 95%; height: auto; margin-top: 5px; border-radius: 4px;">'
+            if tags: # tags変数が存在することを確認
+                for tag in tags:
+                    if tag in TAG_TO_GIF:
+                        gif_path = TAG_TO_GIF[tag]
+                        base64_gif = get_image_as_base64(gif_path)
+                        if base64_gif:
+                            if not gif_html:
+                                gif_html += f"<hr style='margin: 3px 0;'>"
+                                gif_html += "<b>関連画像:</b><br>"
+                            gif_html += f'<img src="{base64_gif}" alt="{tag}" style="max-width: 95%; height: auto; margin-top: 5px; border-radius: 4px;">'
             popup_html += gif_html
 
             if 'reasoning' in stop_data and stop_data['reasoning']:
@@ -444,7 +447,9 @@ def map_emotion_and_routes(travels_data, output_html):
                 tooltip=f"{stop_data['place']} ({file_num})", icon=icon_to_use
             ).add_to(route_group)
             
-            heatmap_data.append([coords[0], coords[1], stop_data.get('emotion_score', 0.5)])
+            # --- ヒートマップ用データの集計 ---
+            for tag, score in per_tag_emotions.items():
+                heatmap_data_by_tag[tag].append([coords[0], coords[1], score])
         
         # --- 軌跡と移動手段の描画ロジック ---
         for i in range(len(stop_events) - 1):
@@ -454,19 +459,14 @@ def map_emotion_and_routes(travels_data, output_html):
             point1 = (start_stop['latitude'], start_stop['longitude'])
             point2 = (end_stop['latitude'], end_stop['longitude'])
 
-            # 2点間の距離を計算
             dist = distance(point1, point2).km
             
-            # 距離が上限値以下の場合のみ線を描画
             if dist <= MAX_DISTANCE_KM:
                 folium.PolyLine([point1, point2], color=color, weight=5, opacity=0.7).add_to(route_group)
 
-                # 移動イベントを探して中間ピンを配置
                 start_index_in_events = -1
-                for idx, event in enumerate(events):
-                    if event == start_stop:
-                        start_index_in_events = idx
-                        break
+                try: start_index_in_events = events.index(start_stop)
+                except ValueError: continue
                 
                 if start_index_in_events != -1:
                     move_event = next((e for e in events[start_index_in_events+1:] if e.get('type') == 'move'), None)
@@ -494,27 +494,27 @@ def map_emotion_and_routes(travels_data, output_html):
         route_group.add_to(m)
         move_group.add_to(m)
 
-    if heatmap_data:
-        heatmap_layer = folium.FeatureGroup(name="感情ヒートマップ", show=False)
-        HeatMap(heatmap_data).add_to(heatmap_layer)
-        heatmap_layer.add_to(m)
+    # --- タグごとのヒートマップレイヤーを生成 ---
+    for tag, data_points in heatmap_data_by_tag.items():
+        if data_points:
+            heatmap_layer = folium.FeatureGroup(name=f"感情ヒートマップ: {tag}", show=False)
+            HeatMap(data_points, radius=20).add_to(heatmap_layer)
+            heatmap_layer.add_to(m)
 
     folium.LayerControl().add_to(m)
     m.add_child(LayerToggleButtons())
     
     m.save(output_html)
-    print(f"\n🌐 滞在・移動を可視化した地図を {output_html} に保存しました。")
+    print(f"\n🌐 タグ別感情分析付きの地図を {output_html} に保存しました。")
 
 def main():
     """メイン処理"""
-    if not os.path.exists(CACHE_DIR):
-        os.makedirs(CACHE_DIR)
+    if not os.path.exists(CACHE_DIR): os.makedirs(CACHE_DIR)
     input_file_path = input('ファイル番号が記載された.txtファイルのパスを入力してください: ')
     try:
         with open(input_file_path, 'r', encoding='utf-8') as f: content = f.read()
         file_nums = [num.strip() for num in content.strip().split(',') if num.strip()]
-    except Exception as e:
-        print(f"[ERROR] 入力ファイルの読み込みに失敗: {e}"); return
+    except Exception as e: print(f"[ERROR] 入力ファイルの読み込みに失敗: {e}"); return
 
     all_travels_data = []
     try:
@@ -559,30 +559,12 @@ def main():
                     print(f"[!] ジオコーディング失敗: {place_name}")
                     if 'latitude' in stop_event: del stop_event['latitude']
 
-            # 場所ごとにまとめたexperienceから感情と行動タグを抽出
-            grouped_experiences = defaultdict(list)
-            for e in stop_events_to_process:
-                if e.get('place'): # placeキーがあるもののみ
-                    grouped_experiences[e['place']].append(e.get('experience', ''))
-            
-            place_analysis_results = {}
-            for place, experiences in grouped_experiences.items():
-                combined_experience = " ".join(experiences)
-                ### ★★★ ここが修正箇所です ★★★
-                # 正しい関数名 analyze_stop_details を使用する
-                analysis_result = analyze_stop_details(combined_experience, ACTION_TAGS)
-                place_analysis_results[place] = analysis_result
+                # タグ別感情分析
+                experience_text = stop_event.get('experience', '')
+                # 新しい分析関数を呼び出す
+                per_tag_emotions = analyze_stop_emotions_by_tag(experience_text, ACTION_TAGS)
+                stop_event['per_tag_emotions'] = per_tag_emotions
 
-            # 感情スコアとタグを元のstop_eventに付与
-            for stop_event in stop_events_to_process:
-                if stop_event.get('place') in place_analysis_results:
-                    analysis = place_analysis_results[stop_event['place']]
-                    stop_event['emotion_score'] = analysis['emotion_score']
-                    stop_event['tags'] = analysis['tags']
-                else: # 分析結果がない場合（ほぼあり得ないが安全のため）
-                    stop_event['emotion_score'] = 0.5
-                    stop_event['tags'] = []
-            
             final_travel_data = {
                 "file_num": file_num, "events": events,
                 "color": COLORS[i % len(COLORS)], "region_hint": region_hint 
