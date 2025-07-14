@@ -5,7 +5,7 @@ import json
 import folium
 from folium.plugins import HeatMap
 from geopy.geocoders import Nominatim
-from geopy.distance import distance ### ★★★ 機能追加 ★★★
+from geopy.distance import distance
 from collections import defaultdict
 import time
 import requests
@@ -138,14 +138,13 @@ class LayerToggleButtons(MacroElement):
                     container.style.flexDirection = 'column';
                     container.style.gap = '3px';
 
-                    // --- 全表示ボタン ---
                     var showButton = L.DomUtil.create('div', '', container);
                     showButton.style.backgroundColor = 'white';
                     showButton.style.padding = '5px';
                     showButton.style.border = '2px solid #ccc';
                     showButton.style.borderRadius = '5px';
                     showButton.style.cursor = 'pointer';
-                    showButton.innerHTML = '全表示'; // テキストをより汎用的に変更
+                    showButton.innerHTML = '全表示';
                     
                     showButton.onclick = function(e) {
                         e.stopPropagation();
@@ -154,25 +153,20 @@ class LayerToggleButtons(MacroElement):
                             const checkbox = labelDiv.querySelector('input[type="checkbox"]');
                             if (span && checkbox) {
                                 const labelText = span.textContent.trim();
-                                // ★★★ 修正箇所 ★★★
-                                // 「旅行記ルート」または「移動手段」で始まるレイヤーを対象にする
                                 if (labelText.startsWith('旅行記ルート') || labelText.startsWith('移動手段')) {
-                                    if (!checkbox.checked) {
-                                        checkbox.click();
-                                    }
+                                    if (!checkbox.checked) { checkbox.click(); }
                                 }
                             }
                         });
                     };
 
-                    // --- 全非表示ボタン ---
                     var hideButton = L.DomUtil.create('div', '', container);
                     hideButton.style.backgroundColor = 'white';
                     hideButton.style.padding = '5px';
                     hideButton.style.border = '2px solid #ccc';
                     hideButton.style.borderRadius = '5px';
                     hideButton.style.cursor = 'pointer';
-                    hideButton.innerHTML = '全非表示'; // テキストをより汎用的に変更
+                    hideButton.innerHTML = '全非表示';
 
                     hideButton.onclick = function(e) {
                         e.stopPropagation();
@@ -181,12 +175,8 @@ class LayerToggleButtons(MacroElement):
                             const checkbox = labelDiv.querySelector('input[type="checkbox"]');
                             if (span && checkbox) {
                                 const labelText = span.textContent.trim();
-                                // ★★★ 修正箇所 ★★★
-                                // 「旅行記ルート」または「移動手段」で始まるレイヤーを対象にする
                                 if (labelText.startsWith('旅行記ルート') || labelText.startsWith('移動手段')) {
-                                    if (checkbox.checked) {
-                                        checkbox.click();
-                                    }
+                                    if (checkbox.checked) { checkbox.click(); }
                                 }
                             }
                         });
@@ -242,73 +232,6 @@ def geocode_place(name, region_hint):
             return location.latitude, location.longitude
     except: return None
 
-def extract_events(texts, region_hint):
-    """GPTを使って旅行記から「滞在」と「移動」のイベントを時系列で抽出する"""
-    print("📌 イベント抽出（滞在・移動）のプロンプトを実行します...")
-    prompt = f"""
-    以下の旅行記のテキストを時系列に沿って分析し、「滞在（stop）」と「移動（move）」のイベントを交互に抽出してください。
-
-    **抽出ルール:**
-    - イベントは必ずリスト形式で、`"type"`キーを持つオブジェクトとしてください。
-    - `"type": "stop"`: ある場所での行動や体験。
-        - `"place"`: 地名
-        - `"latitude"`, `"longitude"`: GPTによる推定座標（フォールバック用）
-        - `"experience"`: その場所での具体的な体験
-        - `"reasoning"`: 座標推定の理由
-    - `"type": "move"`: 場所から場所への移動。
-        - `"means"`: 移動手段（以下のリストから選択）
-        - `"experience"`: 移動中の具体的な体験
-
-    **移動手段リスト:** {MOVE_TAGS}
-
-    **出力形式の厳守:**
-    - 必ずJSON形式のリストとしてください。
-    - 最初と最後のイベントは、多くの場合`"stop"`になります。
-    - `"stop"`と`"move"`は交互に現れるのが基本ですが、テキストに記述がなければ片方が連続しても構いません。
-
-    **出力例:**
-    [
-        {{
-            "type": "stop",
-            "place": "新宿駅",
-            "latitude": 35.6909,
-            "longitude": 139.7004,
-            "experience": "新宿駅に到着し、友人とおちあった。",
-            "reasoning": "テキストの出発点であり、新宿駅の座標を指定した。"
-        }},
-        {{
-            "type": "move",
-            "means": "バス",
-            "experience": "高速バスで草津温泉に向かった。車窓からの景色がきれいだった。"
-        }},
-        {{
-            "type": "stop",
-            "place": "草津温泉バスターミナル",
-            "latitude": 36.6222,
-            "longitude": 138.5964,
-            "experience": "草津温泉バスターミナルに到着。あたりは硫黄の匂いがした。",
-            "reasoning": "テキストの記述と地名から座標を推定した。"
-        }}
-    ]
-
-    ---
-    **分析対象テキスト（日本の「{region_hint}」周辺）:**
-    {texts}
-    """
-    # (openai.ChatCompletion.createの呼び出し部分は変更なし)
-    response = openai.ChatCompletion.create(model=MODEL, messages=[{"role": "system", "content": f"あなたは旅行記を時系列で分析し、滞在（stop）と移動（move）のイベントを正確に抽出する専門家です。"}, {"role": "user", "content": prompt}], temperature=0.5)
-    textforarukikata = response.choices[0].message.content.strip()
-    if prefix in textforarukikata: textforarukikata = textforarukikata.split(prefix, 1)[1]
-    if suffix in textforarukikata: textforarukikata = textforarukikata.rsplit(suffix, 1)[0]
-    try:
-        result = json.loads(textforarukikata.strip())
-        if isinstance(result, list) and all(isinstance(item, dict) for item in result):
-            return result
-        else: return []
-    except Exception as e:
-        print(f"[ERROR] イベント抽出のJSON解析に失敗: {e}")
-        return []
-
 def get_visit_hint(visited_places_text):
     if not visited_places_text.strip(): return "日本"
     messages = [{"role": "system", "content": "都道府県名を答えるときは，県名のみを答えてください．"}, {"role": "user", "content": f"以下の旅行記データから筆者が訪れたと考えられる都道府県を1つだけ答えてください．ただし，特定の語句に拘らずに旅行記全体から総合的に判断してください．\n\n{visited_places_text}"}]
@@ -316,8 +239,78 @@ def get_visit_hint(visited_places_text):
         response = openai.ChatCompletion.create(model='gpt-3.5-turbo', messages=messages, temperature=0.2)
         return response.choices[0].message.content.strip()
     except: return "日本"
-    
-def analyze_stop_emotions_by_tag(text, action_tags_list):
+
+### ★★★ 機能変更: 新しい関数群 (ここから) ★★★
+def parse_schedule(schedule_data):
+    """スケジュールファイル(.sch.json)を解析し、旅程の「骨格」を作成する"""
+    skeleton_events = []
+    for day, entries in schedule_data.items():
+        for entry in entries:
+            place = entry.get("place", "").strip()
+            if not place or place == "_":
+                continue
+            
+            # 「移動(手段)」という形式の項目をmoveイベントとして処理
+            if place.startswith("移動（") and place.endswith("）"):
+                means = place.replace("移動（", "").replace("）", "")
+                skeleton_events.append({"type": "move", "means": means})
+            # 時間がxx:xxでない項目をstopイベントとして処理
+            elif entry.get("time", "xx:xx - xx:xx") != "xx:xx - xx:xx":
+                skeleton_events.append({"type": "stop", "place": place})
+    return skeleton_events
+
+def enrich_events_with_travelogue(events_skeleton, travelogue_text):
+    """GPTを使い、旅程の骨格に旅行記の文章で肉付けする"""
+    print("📌 GPTで旅程の肉付け処理を実行します...")
+    # GPTに渡すために、骨格をJSON文字列に変換
+    skeleton_str = json.dumps(events_skeleton, ensure_ascii=False, indent=2)
+
+    prompt = f"""
+    以下に、旅行の「骨格となる旅程リスト」と、その旅行に関する「旅行記の全文」を示します。
+    あなたのタスクは、旅程リストの各イベント（滞在や移動）に、旅行記の文章から関連する部分を抜き出し、「experience」として割り当てることです。
+
+    **指示:**
+    1.  旅程リストの各オブジェクト（`"type": "stop"`または`"type": "move"`）を順番に見てください。
+    2.  それぞれのイベントに最も関連する描写を「旅行記の全文」から探してください。
+    3.  探し出した文章を、各オブジェクトの`"experience"`という新しいキーの値として追加してください。
+    4.  元の旅程リストの構造と内容は、`experience`を追加する以外は**一切変更しないでください。**
+    5.  関連する描写が見つからない場合は、`"experience": ""`としてください。
+    6.  最終的な出力は、`experience`が追加された完全なJSONリスト形式でなければなりません。
+
+    ---
+    **骨格となる旅程リスト:**
+    {skeleton_str}
+    ---
+    **旅行記の全文:**
+    {travelogue_text}
+    ---
+    **出力（`experience`が追加されたJSONリスト）:**
+    """
+    try:
+        response = openai.ChatCompletion.create(
+            model=MODEL,
+            messages=[
+                {"role": "system", "content": "あなたは、構造化された旅程データと自由記述の旅行記を結びつけ、各イベントに対応する体験談を正確に割り当てる優秀なアシスタントです。"},
+                {"role": "user", "content": prompt}
+            ],
+            temperature=0.2,
+        )
+        # 応答からJSONを抽出
+        text_response = response.choices[0].message.content.strip()
+        if prefix in text_response: text_response = text_response.split(prefix, 1)[1]
+        if suffix in text_response: text_response = text_response.rsplit(suffix, 1)[0]
+        
+        enriched_events = json.loads(text_response.strip())
+        print("✅ 旅程の肉付けが完了しました。")
+        return enriched_events
+    except Exception as e:
+        print(f"[ERROR] 旅程の肉付け処理中にエラーが発生しました: {e}")
+        # エラーが発生した場合は、experienceが空の骨格をそのまま返す
+        for event in events_skeleton:
+            event['experience'] = ""
+        return events_skeleton
+
+def analyze_stop_details(text, action_tags_list):
     """
     1回のAPIコールで、関連する行動タグを抽出し、タグごとの感情スコアを算出する
     """
@@ -392,9 +385,6 @@ def map_emotion_and_routes(travels_data, output_html):
         for stop_data in stop_events:
             coords = (stop_data['latitude'], stop_data['longitude'])
             per_tag_emotions = stop_data.get('per_tag_emotions', {})
-
-            ### ★★★ ここが修正箇所です ★★★
-            # per_tag_emotions 辞書のキー（＝タグ名）からタグのリストを作成
             tags = list(per_tag_emotions.keys())
             
             # --- アイコンを決定するロジック ---
@@ -503,10 +493,71 @@ def map_emotion_and_routes(travels_data, output_html):
 
     folium.LayerControl().add_to(m)
     m.add_child(LayerToggleButtons())
-    
     m.save(output_html)
-    print(f"\n🌐 タグ別感情分析付きの地図を {output_html} に保存しました。")
+    print(f"\n🌐 地図を {output_html} に保存しました。")
 
+### ★★★ 機能変更: 1ファイルごとの処理をまとめる関数 ★★★
+def process_single_travelogue(file_num, i, color):
+    """1つの旅行記ファイル(.tra.jsonと.sch.json)を処理し、分析済みのデータを返す"""
+    # ファイルパスの定義
+    path_tra = f'{directory}{file_num}.tra.json'
+    path_sch = f'{directory}{file_num}.sch.json'
+
+    if not os.path.exists(path_tra) or not os.path.exists(path_sch):
+        print(f"[WARNING] .tra.jsonまたは.sch.jsonが見つかりません: {file_num}")
+        return None
+    
+    # ファイルの読み込み
+    with open(path_tra, "r", encoding="utf-8") as f:
+        travelogue_data = json.load(f)
+    with open(path_sch, "r", encoding="utf-8") as f:
+        schedule_data = json.load(f)
+        
+    full_text = " ".join(sum([e['text'] for e in travelogue_data if e.get('text')], []))
+    if not full_text.strip():
+        print(f"[WARNING] テキストデータがありません: {file_num}")
+        return None
+
+    # Step 1: スケジュールから旅程の骨格を生成
+    events_skeleton = parse_schedule(schedule_data)
+    if not events_skeleton:
+        print(f"[WARNING] スケジュールからイベントの骨格を生成できませんでした: {file_num}")
+        return None
+
+    # Step 2: 旅行記の文章で肉付け
+    region_hint = get_visit_hint(full_text)
+    events = enrich_events_with_travelogue(events_skeleton, full_text)
+
+    # Step 3: 滞在イベントの詳細分析（ジオコーディング、感情、タグ）
+    stop_events = [e for e in events if e.get('type') == 'stop']
+    for stop_event in stop_events:
+        place_name = stop_event.get('place')
+        if not place_name: continue
+        
+        coords = geocode_place(place_name, region_hint)
+        if not coords: coords = (stop_event.get('latitude', 0.0), stop_event.get('longitude', 0.0))
+        if coords[0] == 0.0 and coords[1] == 0.0: coords = None
+        if not coords: coords = geocode_gsi(place_name)
+        
+        if coords:
+            stop_event['latitude'], stop_event['longitude'] = coords
+        else:
+            print(f"[!] ジオコーディング失敗: {place_name}")
+            if 'latitude' in stop_event: del stop_event['latitude']
+        
+        experience_text = stop_event.get('experience', '')
+        per_tag_emotions = analyze_stop_details(experience_text, ACTION_TAGS)
+        stop_event['per_tag_emotions'] = per_tag_emotions
+    
+    # 最終的なデータ構造を返す
+    return {
+        "file_num": file_num,
+        "events": events,
+        "color": color,
+        "region_hint": region_hint
+    }
+
+### ★★★ 機能変更: main関数を新しい構造に合わせて簡素化 ★★★
 def main():
     """メイン処理"""
     if not os.path.exists(CACHE_DIR): os.makedirs(CACHE_DIR)
@@ -527,53 +578,15 @@ def main():
                 continue
 
             print(f"\n{'='*20} [{file_num}] の処理を開始 {'='*20}")
-            path_journal = f'{directory}{file_num}.tra.json'
-            if not os.path.exists(path_journal): print(f"[WARNING] ファイルが見つかりません: {path_journal}"); continue
             
-            with open(path_journal, "r", encoding="utf-8") as f: travel_data = json.load(f)
-            texts = [entry['text'] for entry in travel_data if entry.get('text')]
-            full_text = " ".join(sum(texts, []))
-            if not full_text.strip(): print(f"[WARNING] テキストデータがありません。"); continue
+            # 新しい統括関数を呼び出す
+            final_travel_data = process_single_travelogue(file_num, i, COLORS[i % len(COLORS)])
             
-            region_hint = get_visit_hint(full_text)
-            events = extract_events(full_text, region_hint)
-            if not events: print(f"[WARNING] イベントを抽出できませんでした。"); continue
-
-            stop_events_to_process = [e for e in events if e.get('type') == 'stop']
-            
-            for stop_event in stop_events_to_process:
-                place_name = stop_event.get('place')
-                if not place_name: continue
-
-                coords = geocode_place(place_name, region_hint)
-                if not coords:
-                    coords = (stop_event.get('latitude', 0.0), stop_event.get('longitude', 0.0))
-                    if coords[0] == 0.0 and coords[1] == 0.0: coords = None
-                if not coords:
-                    coords = geocode_gsi(place_name)
-                
-                if coords:
-                    stop_event['latitude'] = coords[0]
-                    stop_event['longitude'] = coords[1]
-                else:
-                    print(f"[!] ジオコーディング失敗: {place_name}")
-                    if 'latitude' in stop_event: del stop_event['latitude']
-
-                # タグ別感情分析
-                experience_text = stop_event.get('experience', '')
-                # 新しい分析関数を呼び出す
-                per_tag_emotions = analyze_stop_emotions_by_tag(experience_text, ACTION_TAGS)
-                stop_event['per_tag_emotions'] = per_tag_emotions
-
-            final_travel_data = {
-                "file_num": file_num, "events": events,
-                "color": COLORS[i % len(COLORS)], "region_hint": region_hint 
-            }
-            all_travels_data.append(final_travel_data)
-
-            with open(cache_path, 'w', encoding='utf-8') as f:
-                json.dump(final_travel_data, f, ensure_ascii=False, indent=4)
-            print(f"✅ [{file_num}] の結果をキャッシュに保存しました。")
+            if final_travel_data:
+                all_travels_data.append(final_travel_data)
+                with open(cache_path, 'w', encoding='utf-8') as f:
+                    json.dump(final_travel_data, f, ensure_ascii=False, indent=4)
+                print(f"✅ [{file_num}] の結果をキャッシュに保存しました。")
 
     except openai.error.AuthenticationError as e:
         print(f"\n[FATAL ERROR] OpenAI認証エラー。処理を中断します。: {e}")
@@ -588,6 +601,7 @@ def main():
             processed_file_nums = [str(t['file_num']) for t in all_travels_data]
             output_filename = f"{base_name}{'_'.join(processed_file_nums)}{extension}"
             
+        print(f"\n🗺️ {len(all_travels_data)}件の旅行記データで地図を生成します...")
         map_emotion_and_routes(all_travels_data, output_filename)
     else:
         print("\n地図を生成するための有効なデータがありませんでした。")
