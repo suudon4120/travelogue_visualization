@@ -91,38 +91,38 @@ TAG_PRIORITY = [
 ]
 DEFAULT_ICON_IMAGE = "images/default.png"
 TAG_TO_GIF = {
-    # 移動関連
-    "徒歩": "gifs/anim_icon_01_徒歩.gif",
-    "車椅子": "gifs/anim_icon_02_車椅子.gif",
-    "自転車(電動)": "gifs/anim_icon_03_自転車(電動).gif",
-    "自転車(非電動)": "gifs/anim_icon_04_自転車(非電動).gif",
-    "バイク": "gifs/anim_icon_05_バイク.gif",
-    "バス": "gifs/anim_icon_06_バス.gif",
-    "タクシー": "gifs/anim_icon_07_タクシー.gif",
-    "自動車(運転)": "gifs/anim_icon_08_自動車(運転).gif",
-    "自動車(同乗)": "gifs/anim_icon_09_自動車(同乗).gif",
-    # 食事関連
-    "食事(飲酒あり)": "gifs/anim_icon_10_飲酒あり.gif",
-    "食事(飲酒なし・不明)": "gifs/anim_icon_11_飲酒なし・不明.gif",
-    "軽食(カフェなど)": "gifs/anim_icon_12_軽食（カフェなど）.gif",
-    # 行動関連
-    "買い物(日用品)": "gifs/anim_icon_13_日用品.gif",
-    "買い物(お土産)": "gifs/anim_icon_14_お土産.gif",
-    "ジョギング": "gifs/anim_icon_15_ジョギング.gif",
-    "ウォーキング": "gifs/anim_icon_16_ウォーキング.gif",
-    "ハイキング": "gifs/anim_icon_17_ハイキング.gif",
-    "散歩": "gifs/anim_icon_18_散歩.gif",
-    "スポーツ": "gifs/anim_icon_19_スポーツ.gif",
-    "レジャー": "gifs/anim_icon_20_レジャー.gif",
-    "ドライブ": "gifs/anim_icon_21_ドライブ.gif",
-    "景色鑑賞": "gifs/anim_icon_22_景色鑑賞.gif",
-    "名所観光": "gifs/anim_icon_23_名所観光.gif",
-    "休養・くつろぎ": "gifs/anim_icon_24_休養・くつろぎ.gif",
-    # その他
-    "仕事": "gifs/anim_icon_25_仕事.gif",
-    "介護・看護": "gifs/anim_icon_26_介護・看護.gif",
-    "育児": "gifs/anim_icon_27_育児.gif",
-    "通院・療養": "gifs/anim_icon_28_通院・療養.gif"
+    # # 移動関連
+    # "徒歩": "gifs/anim_icon_01_徒歩.gif",
+    # "車椅子": "gifs/anim_icon_02_車椅子.gif",
+    # "自転車(電動)": "gifs/anim_icon_03_自転車(電動).gif",
+    # "自転車(非電動)": "gifs/anim_icon_04_自転車(非電動).gif",
+    # "バイク": "gifs/anim_icon_05_バイク.gif",
+    # "バス": "gifs/anim_icon_06_バス.gif",
+    # "タクシー": "gifs/anim_icon_07_タクシー.gif",
+    # "自動車(運転)": "gifs/anim_icon_08_自動車(運転).gif",
+    # "自動車(同乗)": "gifs/anim_icon_09_自動車(同乗).gif",
+    # # 食事関連
+    # "食事(飲酒あり)": "gifs/anim_icon_10_飲酒あり.gif",
+    # "食事(飲酒なし・不明)": "gifs/anim_icon_11_飲酒なし・不明.gif",
+    # "軽食(カフェなど)": "gifs/anim_icon_12_軽食（カフェなど）.gif",
+    # # 行動関連
+    # "買い物(日用品)": "gifs/anim_icon_13_日用品.gif",
+    # "買い物(お土産)": "gifs/anim_icon_14_お土産.gif",
+    # "ジョギング": "gifs/anim_icon_15_ジョギング.gif",
+    # "ウォーキング": "gifs/anim_icon_16_ウォーキング.gif",
+    # "ハイキング": "gifs/anim_icon_17_ハイキング.gif",
+    # "散歩": "gifs/anim_icon_18_散歩.gif",
+    # "スポーツ": "gifs/anim_icon_19_スポーツ.gif",
+    # "レジャー": "gifs/anim_icon_20_レジャー.gif",
+    # "ドライブ": "gifs/anim_icon_21_ドライブ.gif",
+    # "景色鑑賞": "gifs/anim_icon_22_景色鑑賞.gif",
+    # "名所観光": "gifs/anim_icon_23_名所観光.gif",
+    # "休養・くつろぎ": "gifs/anim_icon_24_休養・くつろぎ.gif",
+    # # その他
+    # "仕事": "gifs/anim_icon_25_仕事.gif",
+    # "介護・看護": "gifs/anim_icon_26_介護・看護.gif",
+    # "育児": "gifs/anim_icon_27_育児.gif",
+    # "通院・療養": "gifs/anim_icon_28_通院・療養.gif"
 }
 # ========================================================
 
@@ -322,6 +322,7 @@ def enrich_events_with_travelogue(events_skeleton, travelogue_text, region_hint)
         - `experience`: イベントに最も関連する具体的な描写。
         - `latitude`, `longitude`: 日本の「{region_hint}」周辺の地理情報と、テキスト内の文脈（例：「〇〇駅から徒歩5分」「△△の隣」など）を最大限考慮して、非常に高い精度で推定された、最も確からしい座標。
         - `reasoning`: なぜその座標だと判断したかの簡単な理由。
+        - `location_context`: その場所が属する最も具体的な地名（例: 「京都市伏見区」、「長崎県雲仙市」など）。これは後のジオコーディングのヒントに使います。
     2.  `"type": "move"`のイベントについては、関連する移動中の描写を`experience`として追加してください。
     3.  元の旅程リストの構造と内容は、上記のキーを追加・更新する以外は**一切変更しないでください。**
     4.  関連する描写が見つからない場合は、`"experience": ""`としてください。
@@ -589,11 +590,21 @@ def process_single_travelogue(file_num, i, color):
         if not place_name: continue
         
         # ★★★ geocode_placeに渡すヒントをregion_hintに戻す ★★★
-        coords = geocode_place(place_name, region_hint)
+        coords = None
+        # ★★★ ここからが修正箇所 ★★★
+        # 最優先のヒントとして、GPTが生成した場所ごとの文脈(location_context)を使用
+        context_hint = stop_event.get('location_context', region_hint)
+
+        # 2. Geopy
+        if not coords:
+            coords = geocode_place(place_name, context_hint)
         
+        # 3. GPTの推定座標
         if not coords:
             coords = (stop_event.get('latitude', 0.0), stop_event.get('longitude', 0.0))
             if coords[0] == 0.0 and coords[1] == 0.0: coords = None
+        
+        # 4. 国土地理院API
         if not coords:
             coords = geocode_gsi(place_name)
         
