@@ -221,20 +221,44 @@ def geocode_gsi(name):
             return lat, lon
     except: return None
 
-def geocode_place(name, region_hint):
-    """Geopyを使って地名の緯度経度を取得する"""
+def geocode_place(name, context_hint):
+    """Geopyを使って地名の緯度経度を取得する。文脈ヒントを活用する。"""
     try:
-        query = f"{name}, {region_hint}"
+        # nameそのものと、文脈ヒントを組み合わせてクエリを作成
+        query = f"{name}, {context_hint}"
         print(f"🗺️ Geocoding (Geopy): '{query}'...")
         location = geolocator.geocode(query, timeout=10)
         time.sleep(WAIT_TIME)
         if location:
+            print(f"✅ Geopy Success: {name} → {location.latitude}, {location.longitude}")
             return location.latitude, location.longitude
-    except: return None
+        
+        # クエリが長すぎると失敗することがあるため、nameだけで再試行
+        print(f"   ...Retrying with name only: '{name}'")
+        location = geolocator.geocode(name, timeout=10)
+        time.sleep(WAIT_TIME)
+        if location:
+            print(f"✅ Geopy Success (name only): {name} → {location.latitude}, {location.longitude}")
+            return location.latitude, location.longitude
+
+    except Exception as e:
+        print(f"[ERROR] Geopyエラー: {name}, {e}")
+    
+    print(f"❌ Geopy Failed for: {name}")
+    return None
 
 def get_visit_hint(visited_places_text):
     if not visited_places_text.strip(): return "日本"
-    messages = [{"role": "system", "content": "都道府県名を答えるときは，県名のみを答えてください．"}, {"role": "user", "content": f"以下の旅行記データから筆者が訪れたと考えられる都道府県を1つだけ答えてください．ただし，特定の語句に拘らずに旅行記全体から総合的に判断してください．\n\n{visited_places_text}"}]
+    # ★★★ プロンプトの指示を「すべて」抽出するように変更 ★★★
+    prompt = f"""
+    以下の旅行記データから、筆者が訪れたと考えられる都道府県を【すべて】答えてください。
+    ただし、特定の語句に拘らずに旅行記全体から総合的に判断してください。
+    出力は、カンマ区切りの文字列でお願いします。（例: 東京都, 神奈川県）
+
+    旅行記データ:
+    {visited_places_text}
+    """
+    messages = [{"role": "system", "content": "あなたは旅行記から訪問した都道府県を正確に抽出する専門家です。"}, {"role": "user", "content": prompt}]
     try:
         response = openai.ChatCompletion.create(model='gpt-3.5-turbo', messages=messages, temperature=0.2)
         return response.choices[0].message.content.strip()
@@ -259,23 +283,26 @@ def parse_schedule(schedule_data):
                 skeleton_events.append({"type": "stop", "place": place})
     return skeleton_events
 
-def enrich_events_with_travelogue(events_skeleton, travelogue_text):
-    """GPTを使い、旅程の骨格に旅行記の文章で肉付けする"""
-    print("📌 GPTで旅程の肉付け処理を実行します...")
-    # GPTに渡すために、骨格をJSON文字列に変換
+def enrich_events_with_travelogue(events_skeleton, travelogue_text, region_hint):
+    """
+    GPTを使い、旅程の骨格に旅行記の文章で肉付けし、さらに座標と理由も推定させる
+    """
+    print("📌 GPTで旅程の肉付けと座標推定を同時に実行します...")
     skeleton_str = json.dumps(events_skeleton, ensure_ascii=False, indent=2)
 
     prompt = f"""
     以下に、旅行の「骨格となる旅程リスト」と、その旅行に関する「旅行記の全文」を示します。
-    あなたのタスクは、旅程リストの各イベント（滞在や移動）に、旅行記の文章から関連する部分を抜き出し、「experience」として割り当てることです。
+    あなたのタスクは、旅程リストの各イベント（特に`"type": "stop"`のイベント）について、旅行記の情報を基に詳細を補完することです。
 
     **指示:**
-    1.  旅程リストの各オブジェクト（`"type": "stop"`または`"type": "move"`）を順番に見てください。
-    2.  それぞれのイベントに最も関連する描写を「旅行記の全文」から探してください。
-    3.  探し出した文章を、各オブジェクトの`"experience"`という新しいキーの値として追加してください。
-    4.  元の旅程リストの構造と内容は、`experience`を追加する以外は**一切変更しないでください。**
-    5.  関連する描写が見つからない場合は、`"experience": ""`としてください。
-    6.  最終的な出力は、`experience`が追加された完全なJSONリスト形式でなければなりません。
+    1.  `"type": "stop"`の各イベントについて、以下の情報を「旅行記の全文」から読み取り、対応するキーを追加または更新してください。
+        - `experience`: イベントに最も関連する具体的な描写。
+        - `latitude`, `longitude`: 旅行記全体の文脈（例えば、{region_hint}にいること）を考慮した、最も確からしい座標。
+        - `reasoning`: なぜその座標だと判断したかの簡単な理由。
+    2.  `"type": "move"`のイベントについては、関連する移動中の描写を`experience`として追加してください。
+    3.  元の旅程リストの構造と内容は、上記のキーを追加・更新する以外は**一切変更しないでください。**
+    4.  関連する描写が見つからない場合は、`"experience": ""`としてください。
+    5.  最終的な出力は、情報が補完された完全なJSONリスト形式でなければなりません。
 
     ---
     **骨格となる旅程リスト:**
@@ -284,33 +311,36 @@ def enrich_events_with_travelogue(events_skeleton, travelogue_text):
     **旅行記の全文:**
     {travelogue_text}
     ---
-    **出力（`experience`が追加されたJSONリスト）:**
+    **出力（情報が補完されたJSONリスト）:**
     """
     try:
         response = openai.ChatCompletion.create(
             model=MODEL,
             messages=[
-                {"role": "system", "content": "あなたは、構造化された旅程データと自由記述の旅行記を結びつけ、各イベントに対応する体験談を正確に割り当てる優秀なアシスタントです。"},
+                {"role": "system", "content": f"あなたは、構造化された旅程データと自由記述の旅行記を結びつけ、各イベントに対応する体験談、座標、推定理由を正確に割り当てる優秀なアシスタントです。"},
                 {"role": "user", "content": prompt}
             ],
             temperature=0.2,
         )
-        # 応答からJSONを抽出
         text_response = response.choices[0].message.content.strip()
         if prefix in text_response: text_response = text_response.split(prefix, 1)[1]
         if suffix in text_response: text_response = text_response.rsplit(suffix, 1)[0]
         
         enriched_events = json.loads(text_response.strip())
-        print("✅ 旅程の肉付けが完了しました。")
+        print("✅ 旅程の肉付けと座標推定が完了しました。")
         return enriched_events
     except Exception as e:
-        print(f"[ERROR] 旅程の肉付け処理中にエラーが発生しました: {e}")
-        # エラーが発生した場合は、experienceが空の骨格をそのまま返す
+        print(f"[ERROR] 旅程の肉付け・座標推定処理中にエラーが発生しました: {e}")
+        # エラーが発生した場合は、最低限の情報を付与して返す
         for event in events_skeleton:
             event['experience'] = ""
+            if event.get('type') == 'stop':
+                event['latitude'] = 0.0
+                event['longitude'] = 0.0
+                event['reasoning'] = "GPTによる情報補完中にエラーが発生"
         return events_skeleton
 
-def analyze_stop_details(text, action_tags_list):
+def analyze_stop_emotions_by_tag(text, action_tags_list):
     """
     1回のAPIコールで、関連する行動タグを抽出し、タグごとの感情スコアを算出する
     """
@@ -496,7 +526,6 @@ def map_emotion_and_routes(travels_data, output_html):
     m.save(output_html)
     print(f"\n🌐 地図を {output_html} に保存しました。")
 
-### ★★★ 機能変更: 1ファイルごとの処理をまとめる関数 ★★★
 def process_single_travelogue(file_num, i, color):
     """1つの旅行記ファイル(.tra.jsonと.sch.json)を処理し、分析済みのデータを返す"""
     # ファイルパスの定義
@@ -524,9 +553,9 @@ def process_single_travelogue(file_num, i, color):
         print(f"[WARNING] スケジュールからイベントの骨格を生成できませんでした: {file_num}")
         return None
 
-    # Step 2: 旅行記の文章で肉付け
+    # Step 2: 旅行記の文章で肉付けと座標推定
     region_hint = get_visit_hint(full_text)
-    events = enrich_events_with_travelogue(events_skeleton, full_text)
+    events = enrich_events_with_travelogue(events_skeleton, full_text, region_hint)
 
     # Step 3: 滞在イベントの詳細分析（ジオコーディング、感情、タグ）
     stop_events = [e for e in events if e.get('type') == 'stop']
@@ -534,26 +563,33 @@ def process_single_travelogue(file_num, i, color):
         place_name = stop_event.get('place')
         if not place_name: continue
         
-        coords = geocode_place(place_name, region_hint)
-        if not coords: coords = (stop_event.get('latitude', 0.0), stop_event.get('longitude', 0.0))
-        if coords[0] == 0.0 and coords[1] == 0.0: coords = None
-        if not coords: coords = geocode_gsi(place_name)
+        # ★★★ ここが修正箇所です ★★★
+        # 大まかなregion_hintの代わりに、GPTが生成したreasoningをヒントとして使用
+        context_hint = stop_event.get('reasoning', region_hint)
+        coords = geocode_place(place_name, context_hint)
+        
+        if not coords:
+            coords = (stop_event.get('latitude', 0.0), stop_event.get('longitude', 0.0))
+            if coords[0] == 0.0 and coords[1] == 0.0: coords = None
+        if not coords:
+            # geopyが失敗した場合のみGSIを試す
+            coords = geocode_gsi(place_name)
         
         if coords:
             stop_event['latitude'], stop_event['longitude'] = coords
         else:
-            print(f"[!] ジオコーディング失敗: {place_name}")
+            print(f"[!] 全てのジオコーディングに失敗しました: {place_name}")
             if 'latitude' in stop_event: del stop_event['latitude']
         
         experience_text = stop_event.get('experience', '')
-        per_tag_emotions = analyze_stop_details(experience_text, ACTION_TAGS)
+        per_tag_emotions = analyze_stop_emotions_by_tag(experience_text, ACTION_TAGS)
         stop_event['per_tag_emotions'] = per_tag_emotions
     
     # 最終的なデータ構造を返す
     return {
         "file_num": file_num,
         "events": events,
-        "color": color,
+        "color": COLORS[i % len(COLORS)],
         "region_hint": region_hint
     }
 
