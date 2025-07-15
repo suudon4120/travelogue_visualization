@@ -221,11 +221,11 @@ def geocode_gsi(name):
             return lat, lon
     except: return None
 
-def geocode_place(name, context_hint):
-    """Geopyを使って地名の緯度経度を取得する。文脈ヒントを活用する。"""
+def geocode_place(name, region_hint):
+    """Geopyを使って地名の緯度経度を取得する。ヒントには都道府県名を使用する。"""
     try:
-        # nameそのものと、文脈ヒントを組み合わせてクエリを作成
-        query = f"{name}, {context_hint}"
+        # ★★★ ヒントとして、簡潔な都道府県名（region_hint）を使用する ★★★
+        query = f"{name}, {region_hint}"
         print(f"🗺️ Geocoding (Geopy): '{query}'...")
         location = geolocator.geocode(query, timeout=10)
         time.sleep(WAIT_TIME)
@@ -233,7 +233,7 @@ def geocode_place(name, context_hint):
             print(f"✅ Geopy Success: {name} → {location.latitude}, {location.longitude}")
             return location.latitude, location.longitude
         
-        # クエリが長すぎると失敗することがあるため、nameだけで再試行
+        # 上記で失敗した場合、地名だけで再試行
         print(f"   ...Retrying with name only: '{name}'")
         location = geolocator.geocode(name, timeout=10)
         time.sleep(WAIT_TIME)
@@ -264,7 +264,6 @@ def get_visit_hint(visited_places_text):
         return response.choices[0].message.content.strip()
     except: return "日本"
 
-### ★★★ 機能変更: 新しい関数群 (ここから) ★★★
 def parse_schedule(schedule_data):
     """スケジュールファイル(.sch.json)を解析し、旅程の「骨格」を作成する"""
     skeleton_events = []
@@ -283,6 +282,27 @@ def parse_schedule(schedule_data):
                 skeleton_events.append({"type": "stop", "place": place})
     return skeleton_events
 
+def trim_commute_events(events):
+    """旅程リストの最初と最後の「自宅」との往復を削除する"""
+    if not events:
+        return []
+
+    # 先頭の「自宅」関連イベントを削除
+    # 最初のイベントが「自宅」での滞在で、次に移動イベントが続く場合
+    if len(events) >= 2 and events[0].get('type') == 'stop' and events[0].get('place') == '自宅':
+        if events[1].get('type') == 'move':
+            print("INFO: 自宅からの出発部分を分析対象から除外します。")
+            events = events[2:] # 最初の2つのイベント（自宅と移動）を削除
+
+    # 末尾の「自宅」関連イベントを削除
+    # 最後のイベントが「自宅」での滞在で、その前が移動イベントの場合
+    if len(events) >= 2 and events[-1].get('type') == 'stop' and events[-1].get('place') == '自宅':
+        if events[-2].get('type') == 'move':
+            print("INFO: 自宅への帰宅部分を分析対象から除外します。")
+            events = events[:-2] # 最後の2つのイベント（移動と自宅）を削除
+
+    return events
+
 def enrich_events_with_travelogue(events_skeleton, travelogue_text, region_hint):
     """
     GPTを使い、旅程の骨格に旅行記の文章で肉付けし、さらに座標と理由も推定させる
@@ -294,10 +314,13 @@ def enrich_events_with_travelogue(events_skeleton, travelogue_text, region_hint)
     以下に、旅行の「骨格となる旅程リスト」と、その旅行に関する「旅行記の全文」を示します。
     あなたのタスクは、旅程リストの各イベント（特に`"type": "stop"`のイベント）について、旅行記の情報を基に詳細を補完することです。
 
+    **最重要ルール:**
+    - 「骨格となる旅程リスト」に含まれる`"type"`, `"place"`, `"means"`の各キーの値は**正解データです。出力においては、これらの値を一字一句変更せず、そのままコピーしてください。**
+
     **指示:**
     1.  `"type": "stop"`の各イベントについて、以下の情報を「旅行記の全文」から読み取り、対応するキーを追加または更新してください。
         - `experience`: イベントに最も関連する具体的な描写。
-        - `latitude`, `longitude`: 旅行記全体の文脈（例えば、{region_hint}にいること）を考慮した、最も確からしい座標。
+        - `latitude`, `longitude`: 日本の「{region_hint}」周辺の地理情報と、テキスト内の文脈（例：「〇〇駅から徒歩5分」「△△の隣」など）を最大限考慮して、非常に高い精度で推定された、最も確からしい座標。
         - `reasoning`: なぜその座標だと判断したかの簡単な理由。
     2.  `"type": "move"`のイベントについては、関連する移動中の描写を`experience`として追加してください。
     3.  元の旅程リストの構造と内容は、上記のキーを追加・更新する以外は**一切変更しないでください。**
@@ -320,7 +343,7 @@ def enrich_events_with_travelogue(events_skeleton, travelogue_text, region_hint)
                 {"role": "system", "content": f"あなたは、構造化された旅程データと自由記述の旅行記を結びつけ、各イベントに対応する体験談、座標、推定理由を正確に割り当てる優秀なアシスタントです。"},
                 {"role": "user", "content": prompt}
             ],
-            temperature=0.2,
+            temperature=0.1,
         )
         text_response = response.choices[0].message.content.strip()
         if prefix in text_response: text_response = text_response.split(prefix, 1)[1]
@@ -549,6 +572,8 @@ def process_single_travelogue(file_num, i, color):
 
     # Step 1: スケジュールから旅程の骨格を生成
     events_skeleton = parse_schedule(schedule_data)
+    # Step 1.5: 自宅との往復をトリミング
+    events_skeleton = trim_commute_events(events_skeleton)
     if not events_skeleton:
         print(f"[WARNING] スケジュールからイベントの骨格を生成できませんでした: {file_num}")
         return None
@@ -563,16 +588,13 @@ def process_single_travelogue(file_num, i, color):
         place_name = stop_event.get('place')
         if not place_name: continue
         
-        # ★★★ ここが修正箇所です ★★★
-        # 大まかなregion_hintの代わりに、GPTが生成したreasoningをヒントとして使用
-        context_hint = stop_event.get('reasoning', region_hint)
-        coords = geocode_place(place_name, context_hint)
+        # ★★★ geocode_placeに渡すヒントをregion_hintに戻す ★★★
+        coords = geocode_place(place_name, region_hint)
         
         if not coords:
             coords = (stop_event.get('latitude', 0.0), stop_event.get('longitude', 0.0))
             if coords[0] == 0.0 and coords[1] == 0.0: coords = None
         if not coords:
-            # geopyが失敗した場合のみGSIを試す
             coords = geocode_gsi(place_name)
         
         if coords:
@@ -593,7 +615,6 @@ def process_single_travelogue(file_num, i, color):
         "region_hint": region_hint
     }
 
-### ★★★ 機能変更: main関数を新しい構造に合わせて簡素化 ★★★
 def main():
     """メイン処理"""
     if not os.path.exists(CACHE_DIR): os.makedirs(CACHE_DIR)
