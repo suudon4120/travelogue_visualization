@@ -249,11 +249,9 @@ def geocode_place(name, region_hint):
 
 def get_visit_hint(visited_places_text):
     if not visited_places_text.strip(): return "日本"
-    # ★★★ プロンプトの指示を「すべて」抽出するように変更 ★★★
     prompt = f"""
-    以下の旅行記データから、筆者が訪れたと考えられる都道府県を【すべて】答えてください。
+    以下の旅行記データから、筆者が訪れたと考えられる都道府県を1つだけ答えてください。
     ただし、特定の語句に拘らずに旅行記全体から総合的に判断してください。
-    出力は、カンマ区切りの文字列でお願いします。（例: 東京都, 神奈川県）
 
     旅行記データ:
     {visited_places_text}
@@ -303,6 +301,50 @@ def trim_commute_events(events):
 
     return events
 
+def extract_key_places(travelogue_text, region_hint):
+    """旅行記の文章から、著者が重要視している主要な訪問地のリストを抽出する"""
+    print("📌 GPTで主要な訪問地の抽出を実行します...")
+    prompt = f"""
+    以下の「旅行記の全文」を読み、著者がそこで何らかの体験や感想を記述している「主要な訪問地」の名前をリストアップしてください。
+
+    **指示:**
+    - 単なる通過点や、説明のない地名は含めないでください。
+    - 出発地や帰宅先である「自宅」はリストに含めないでください。
+    - 出力は、訪問した順番に並べた、地名文字列のJSONリスト形式でお願いします。
+    - この旅行の主な舞台は「{region_hint}」周辺です。
+
+    **出力例:**
+    ["新宿駅", "草津温泉バスターミナル", "湯畑", "西の河原公園"]
+
+    ---
+    **旅行記の全文:**
+    {travelogue_text}
+    ---
+    **出力（地名文字列のJSONリスト）:**
+    """
+    try:
+        response = openai.ChatCompletion.create(
+            model="gpt-4o",
+            messages=[
+                {"role": "system", "content": "あなたは旅行記を読んで、著者が体験を語っている重要な訪問地だけを特定し、リストアップする専門家です。"},
+                {"role": "user", "content": prompt}
+            ],
+            temperature=0.1,
+            response_format={"type": "json_object"}
+        )
+        result = json.loads(response.choices[0].message.content)
+        # GPTの出力が {"places": ["..."]} のような形式であると想定
+        key = next(iter(result)) # 最初のキーを取得
+        key_places = result[key]
+        
+        if isinstance(key_places, list):
+            print(f"✅ 主要な訪問地を抽出しました: {key_places}")
+            return key_places
+        return []
+    except Exception as e:
+        print(f"[ERROR] 主要な訪問地の抽出中にエラーが発生しました: {e}")
+        return []
+
 def enrich_events_with_travelogue(events_skeleton, travelogue_text, region_hint):
     """
     GPTを使い、旅程の骨格に旅行記の文章で肉付けし、さらに座標と理由も推定させる
@@ -323,11 +365,15 @@ def enrich_events_with_travelogue(events_skeleton, travelogue_text, region_hint)
         - `latitude`, `longitude`: 日本の「{region_hint}」周辺の地理情報と、テキスト内の文脈（例：「〇〇駅から徒歩5分」「△△の隣」など）を最大限考慮して、非常に高い精度で推定された、最も確からしい座標。
         - `reasoning`: なぜその座標だと判断したかの簡単な理由。
         - `location_context`: その場所が属する最も具体的な地名（例: 「京都市伏見区」、「長崎県雲仙市」など）。これは後のジオコーディングのヒントに使います。
+        - `per_tag_emotions`: 以下の「行動」タグリストの中から関連するタグをすべて特定し、**タグごとに個別の感情スコア（0.0～1.0）を算出して**、`{{"タグ名": スコア, ...}}`という形式のオブジェクトとして格納する。
     2.  `"type": "move"`のイベントについては、関連する移動中の描写を`experience`として追加してください。
     3.  元の旅程リストの構造と内容は、上記のキーを追加・更新する以外は**一切変更しないでください。**
     4.  関連する描写が見つからない場合は、`"experience": ""`としてください。
     5.  最終的な出力は、情報が補完された完全なJSONリスト形式でなければなりません。
 
+    ---
+    「行動」タグリスト: {ACTION_TAGS}
+    ---
     ---
     **骨格となる旅程リスト:**
     {skeleton_str}
@@ -362,6 +408,8 @@ def enrich_events_with_travelogue(events_skeleton, travelogue_text, region_hint)
                 event['latitude'] = 0.0
                 event['longitude'] = 0.0
                 event['reasoning'] = "GPTによる情報補完中にエラーが発生"
+                event['location_context'] = ""
+                event['per_tag_emotions'] = {}
         return events_skeleton
 
 def analyze_stop_emotions_by_tag(text, action_tags_list):
@@ -571,41 +619,45 @@ def process_single_travelogue(file_num, i, color):
         print(f"[WARNING] テキストデータがありません: {file_num}")
         return None
 
-    # Step 1: スケジュールから旅程の骨格を生成
-    events_skeleton = parse_schedule(schedule_data)
-    # Step 1.5: 自宅との往復をトリミング
-    events_skeleton = trim_commute_events(events_skeleton)
-    if not events_skeleton:
-        print(f"[WARNING] スケジュールからイベントの骨格を生成できませんでした: {file_num}")
+    region_hint = get_visit_hint(full_text)
+
+    # Step 1: 旅行記から「主役」となる訪問地を抽出
+    key_places = extract_key_places(full_text, region_hint)
+    if not key_places:
+        print(f"[WARNING] 旅行記から主要な訪問地を抽出できませんでした: {file_num}")
         return None
 
-    # Step 2: 旅行記の文章で肉付けと座標推定
-    region_hint = get_visit_hint(full_text)
-    events = enrich_events_with_travelogue(events_skeleton, full_text, region_hint)
+    # Step 2: スケジュールから完全な旅程の骨格を生成
+    full_events_skeleton = parse_schedule(schedule_data)
+    
+    # Step 3: 主役の訪問地だけを選抜
+    key_event_indices = [idx for idx, event in enumerate(full_events_skeleton) if event.get('type') == 'stop' and event.get('place') in set(key_places)]
+    if not key_event_indices:
+        print(f"[WARNING] スケジュールに主要な訪問地が見つかりませんでした。")
+        return None
+    
+    final_skeleton = full_events_skeleton[key_event_indices[0] : key_event_indices[-1] + 1]
+    print(f"INFO: 分析対象を {len(final_skeleton)} イベントに絞り込みました。")
+    
+    # Step 4: 選抜された旅程に体験談を肉付けと座標推定
+    events = enrich_events_with_travelogue(final_skeleton, full_text, region_hint, ACTION_TAGS)
 
-    # Step 3: 滞在イベントの詳細分析（ジオコーディング、感情、タグ）
+    # Step 5: 滞在イベントの詳細分析（ジオコーディング、感情、タグ）
     stop_events = [e for e in events if e.get('type') == 'stop']
     for stop_event in stop_events:
         place_name = stop_event.get('place')
         if not place_name: continue
         
-        # ★★★ geocode_placeに渡すヒントをregion_hintに戻す ★★★
-        coords = None
-        # ★★★ ここからが修正箇所 ★★★
-        # 最優先のヒントとして、GPTが生成した場所ごとの文脈(location_context)を使用
         context_hint = stop_event.get('location_context', region_hint)
-
-        # 2. Geopy
-        if not coords:
-            coords = geocode_place(place_name, context_hint)
+        # Geopyには、常に簡潔な都道府県名(region_hint)をヒントとして渡す
+        coords = geocode_place(place_name, context_hint)
         
-        # 3. GPTの推定座標
         if not coords:
+            # GPTの推定座標をフォールバックとして使用
             coords = (stop_event.get('latitude', 0.0), stop_event.get('longitude', 0.0))
             if coords[0] == 0.0 and coords[1] == 0.0: coords = None
-        
-        # 4. 国土地理院API
         if not coords:
+            # 国土地理院APIを最終手段として使用
             coords = geocode_gsi(place_name)
         
         if coords:
@@ -613,10 +665,6 @@ def process_single_travelogue(file_num, i, color):
         else:
             print(f"[!] 全てのジオコーディングに失敗しました: {place_name}")
             if 'latitude' in stop_event: del stop_event['latitude']
-        
-        experience_text = stop_event.get('experience', '')
-        per_tag_emotions = analyze_stop_emotions_by_tag(experience_text, ACTION_TAGS)
-        stop_event['per_tag_emotions'] = per_tag_emotions
     
     # 最終的なデータ構造を返す
     return {
