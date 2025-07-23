@@ -426,7 +426,7 @@ def analyze_stop_emotions_by_tag(text, action_tags_list):
     このテキストを分析し、以下のステップを同時に実行してください。
 
     1.  **タグ抽出**: 提示された「行動」タグリストの中から、テキスト内容に最も関連性の高いタグをすべて選択してください。
-    2.  **タグ別感情分析**: ステップ1で選択した各タグについて、そのタグに関連するテキスト部分の感情を個別に分析し、0.0（非常にネガティブ）から1.0（非常にポジティブ）のスコアを算出してください。
+    2.  **タグ別感情分析**: ステップ1で選択した各タグについて、そのタグに関連するテキスト部分の感情を個別に分析し、**-1.0（非常にネガティブ）から 1.0（非常にポジティブ）**のスコアを算出してください。**ニュートラルな感情は0.0**とします。
 
     関連性の高いタグが一つもなければ、空のオブジェクト `{{}}` を返してください。
     出力は必ず、キーが「タグ名」、値が「感情スコア」のJSONオブジェクト形式で返してください。
@@ -435,6 +435,8 @@ def analyze_stop_emotions_by_tag(text, action_tags_list):
     {{
         "食事(飲酒なし・不明)": 0.85,
         "景色鑑賞": 1.0
+        "その他(仕事)": -0.5
+
     }}
     ---
     「行動」タグリスト: {action_tags_list}
@@ -587,11 +589,28 @@ def map_emotion_and_routes(travels_data, output_html):
         move_group.add_to(m)
 
     # --- タグごとのヒートマップレイヤーを生成 ---
+    ### ★★★ ここからが修正箇所です ★★★
+    # 新しいスコア範囲(-1.0〜1.0)に対応したカラーマップを定義
+    # ネガティブ(-1.0) = 青, ニュートラル(0.0) = 白, ポジティブ(1.0) = 赤
+    custom_gradient = {-1.0: 'blue', 0.0: 'white', 1.0: 'red'}
+
     for tag, data_points in heatmap_data_by_tag.items():
         if data_points:
             heatmap_layer = folium.FeatureGroup(name=f"感情ヒートマップ: {tag}", show=False)
-            HeatMap(data_points, radius=20).add_to(heatmap_layer)
+            
+            # HeatMapに新しいスコア範囲とカラーマップを適用
+            HeatMap(
+                data_points,
+                min_opacity=0.2,
+                radius=25,
+                blur=15,
+                gradient=custom_gradient,
+                min_val=-1.0, # ヒートマップの最小値を設定
+                max_val=1.0   # ヒートマップの最大値を設定
+            ).add_to(heatmap_layer)
+            
             heatmap_layer.add_to(m)
+    ### ★★★ 修正ここまで ★★★
 
     folium.LayerControl().add_to(m)
     m.add_child(LayerToggleButtons())
