@@ -91,38 +91,38 @@ TAG_PRIORITY = [
 ]
 DEFAULT_ICON_IMAGE = "images/default.png"
 TAG_TO_GIF = {
-    # 移動関連
-    "徒歩": "gifs/anim_icon_01_徒歩.gif",
-    "車椅子": "gifs/anim_icon_02_車椅子.gif",
-    "自転車(電動)": "gifs/anim_icon_03_自転車(電動).gif",
-    "自転車(非電動)": "gifs/anim_icon_04_自転車(非電動).gif",
-    "バイク": "gifs/anim_icon_05_バイク.gif",
-    "バス": "gifs/anim_icon_06_バス.gif",
-    "タクシー": "gifs/anim_icon_07_タクシー.gif",
-    "自動車(運転)": "gifs/anim_icon_08_自動車(運転).gif",
-    "自動車(同乗)": "gifs/anim_icon_09_自動車(同乗).gif",
-    # 食事関連
-    "食事(飲酒あり)": "gifs/anim_icon_10_飲酒あり.gif",
-    "食事(飲酒なし・不明)": "gifs/anim_icon_11_飲酒なし・不明.gif",
-    "軽食(カフェなど)": "gifs/anim_icon_12_軽食（カフェなど）.gif",
-    # 行動関連
-    "買い物(日用品)": "gifs/anim_icon_13_日用品.gif",
-    "買い物(お土産)": "gifs/anim_icon_14_お土産.gif",
-    "ジョギング": "gifs/anim_icon_15_ジョギング.gif",
-    "ウォーキング": "gifs/anim_icon_16_ウォーキング.gif",
-    "ハイキング": "gifs/anim_icon_17_ハイキング.gif",
-    "散歩": "gifs/anim_icon_18_散歩.gif",
-    "スポーツ": "gifs/anim_icon_19_スポーツ.gif",
-    "レジャー": "gifs/anim_icon_20_レジャー.gif",
-    "ドライブ": "gifs/anim_icon_21_ドライブ.gif",
-    "景色鑑賞": "gifs/anim_icon_22_景色鑑賞.gif",
-    "名所観光": "gifs/anim_icon_23_名所観光.gif",
-    "休養・くつろぎ": "gifs/anim_icon_24_休養・くつろぎ.gif",
-    # その他
-    "仕事": "gifs/anim_icon_25_仕事.gif",
-    "介護・看護": "gifs/anim_icon_26_介護・看護.gif",
-    "育児": "gifs/anim_icon_27_育児.gif",
-    "通院・療養": "gifs/anim_icon_28_通院・療養.gif"
+    # # 移動関連
+    # "徒歩": "gifs/anim_icon_01_徒歩.gif",
+    # "車椅子": "gifs/anim_icon_02_車椅子.gif",
+    # "自転車(電動)": "gifs/anim_icon_03_自転車(電動).gif",
+    # "自転車(非電動)": "gifs/anim_icon_04_自転車(非電動).gif",
+    # "バイク": "gifs/anim_icon_05_バイク.gif",
+    # "バス": "gifs/anim_icon_06_バス.gif",
+    # "タクシー": "gifs/anim_icon_07_タクシー.gif",
+    # "自動車(運転)": "gifs/anim_icon_08_自動車(運転).gif",
+    # "自動車(同乗)": "gifs/anim_icon_09_自動車(同乗).gif",
+    # # 食事関連
+    # "食事(飲酒あり)": "gifs/anim_icon_10_飲酒あり.gif",
+    # "食事(飲酒なし・不明)": "gifs/anim_icon_11_飲酒なし・不明.gif",
+    # "軽食(カフェなど)": "gifs/anim_icon_12_軽食（カフェなど）.gif",
+    # # 行動関連
+    # "買い物(日用品)": "gifs/anim_icon_13_日用品.gif",
+    # "買い物(お土産)": "gifs/anim_icon_14_お土産.gif",
+    # "ジョギング": "gifs/anim_icon_15_ジョギング.gif",
+    # "ウォーキング": "gifs/anim_icon_16_ウォーキング.gif",
+    # "ハイキング": "gifs/anim_icon_17_ハイキング.gif",
+    # "散歩": "gifs/anim_icon_18_散歩.gif",
+    # "スポーツ": "gifs/anim_icon_19_スポーツ.gif",
+    # "レジャー": "gifs/anim_icon_20_レジャー.gif",
+    # "ドライブ": "gifs/anim_icon_21_ドライブ.gif",
+    # "景色鑑賞": "gifs/anim_icon_22_景色鑑賞.gif",
+    # "名所観光": "gifs/anim_icon_23_名所観光.gif",
+    # "休養・くつろぎ": "gifs/anim_icon_24_休養・くつろぎ.gif",
+    # # その他
+    # "仕事": "gifs/anim_icon_25_仕事.gif",
+    # "介護・看護": "gifs/anim_icon_26_介護・看護.gif",
+    # "育児": "gifs/anim_icon_27_育児.gif",
+    # "通院・療養": "gifs/anim_icon_28_通院・療養.gif"
 }
 # ========================================================
 
