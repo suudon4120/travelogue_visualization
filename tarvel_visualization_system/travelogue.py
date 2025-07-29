@@ -371,7 +371,7 @@ def analyze_stop_emotions_by_tag(text, action_tags_list):
         return {}
 
 def map_emotion_and_routes(travels_data, output_html):
-    """訪問地、移動手段、およびタグ別感情ヒートマップをレイヤー化して地図を生成する"""
+    """訪問地、移動手段、およびポジティブ・ネガティブ感情ヒートマップをレイヤー化して地図を生成する"""
     if not travels_data: print("[ERROR] 地図に描画するデータがありません。"); return
     try:
         first_stop = next((p for t in travels_data for p in t['events'] if p.get('type') == 'stop' and 'latitude' in p), None)
@@ -380,22 +380,20 @@ def map_emotion_and_routes(travels_data, output_html):
     except (IndexError, KeyError):
         m = folium.Map(location=[35.6812, 139.7671], zoom_start=10)
     
-    heatmap_data_by_tag = defaultdict(list)
+    # ポジティブとネガティブ、それぞれの感情スコアデータを集計するリスト
+    positive_heatmap_data = []
+    negative_heatmap_data = []
 
     for travel in travels_data:
         file_num, color, events = travel["file_num"], travel["color"], travel.get("events", [])
         
         route_group = folium.FeatureGroup(name=f"旅行記ルート: {file_num}", show=True)
         move_group = folium.FeatureGroup(name=f"移動手段: {file_num}", show=True)
-
         stop_events = [e for e in events if e.get('type') == 'stop' and 'latitude' in e]
         
         for stop_data in stop_events:
             coords = (stop_data['latitude'], stop_data['longitude'])
             per_tag_emotions = stop_data.get('per_tag_emotions', {})
-
-            ### ★★★ ここが修正箇所です ★★★
-            # per_tag_emotions 辞書のキー（＝タグ名）からタグのリストを作成
             tags = list(per_tag_emotions.keys())
             
             # --- アイコンを決定するロジック ---
@@ -437,11 +435,11 @@ def map_emotion_and_routes(travels_data, output_html):
                             gif_html += f'<img src="{base64_gif}" alt="{tag}" style="max-width: 95%; height: auto; margin-top: 5px; border-radius: 4px;">'
             popup_html += gif_html
 
-            if 'reasoning' in stop_data and stop_data['reasoning']:
+            if 'reasoning' in stop_data and stop_data.get('reasoning'):
                 popup_html += f"<hr style='margin: 3px 0;'>"
                 popup_html += f"<b>推定理由:</b><br>{stop_data['reasoning']}<br>"
             popup_html += f"<hr style='margin: 3px 0;'>"
-            popup_html += f"<b>体験:</b><br>{stop_data['experience']}"
+            popup_html += f"<b>体験:</b><br>{stop_data.get('experience', '記述なし')}"
 
             folium.Marker(
                 location=coords, popup=folium.Popup(popup_html, max_width=350),
@@ -450,72 +448,49 @@ def map_emotion_and_routes(travels_data, output_html):
             
             # --- ヒートマップ用データの集計 ---
             for tag, score in per_tag_emotions.items():
-                heatmap_data_by_tag[tag].append([coords[0], coords[1], score])
+                if score > 0:
+                    positive_heatmap_data.append([coords[0], coords[1], score])
+                elif score < 0:
+                    # ネガティブスコアは -1(青)〜0(白) のグラデーションにするため、+1して 0〜1の範囲に正規化
+                    negative_heatmap_data.append([coords[0], coords[1], score + 1])
         
         # --- 軌跡と移動手段の描画ロジック ---
         for i in range(len(stop_events) - 1):
-            start_stop = stop_events[i]
-            end_stop = stop_events[i+1]
-            
-            point1 = (start_stop['latitude'], start_stop['longitude'])
-            point2 = (end_stop['latitude'], end_stop['longitude'])
-
-            dist = distance(point1, point2).km
-            
-            if dist <= MAX_DISTANCE_KM:
+            start_stop, end_stop = stop_events[i], stop_events[i+1]
+            point1, point2 = (start_stop['latitude'], start_stop['longitude']), (end_stop['latitude'], end_stop['longitude'])
+            if distance(point1, point2).km <= MAX_DISTANCE_KM:
                 folium.PolyLine([point1, point2], color=color, weight=5, opacity=0.7).add_to(route_group)
-
-                start_index_in_events = -1
                 try: start_index_in_events = events.index(start_stop)
                 except ValueError: continue
-                
-                if start_index_in_events != -1:
-                    move_event = next((e for e in events[start_index_in_events+1:] if e.get('type') == 'move'), None)
-                    if move_event:
-                        mid_lat = (point1[0] + point2[0]) / 2
-                        mid_lon = (point1[1] + point2[1]) / 2
-                        move_means = move_event.get('means', '不明')
-                        
-                        move_icon = None
-                        if move_means in TAG_TO_IMAGE and os.path.exists(TAG_TO_IMAGE[move_means]):
-                            move_icon = folium.features.CustomIcon(TAG_TO_IMAGE[move_means], icon_size=(30, 30))
-                        else:
-                            move_icon = folium.Icon(color='black', icon='arrow-right', prefix='fa')
-                        
-                        move_popup = f"<b>移動: {move_means}</b><br><hr>"
-                        move_popup += move_event.get('experience', '記述なし')
-
-                        folium.Marker(
-                            location=[mid_lat, mid_lon],
-                            popup=move_popup,
-                            tooltip=f"移動: {move_means}",
-                            icon=move_icon
-                        ).add_to(move_group)
-
+                move_event = next((e for e in events[start_index_in_events+1:] if e.get('type') == 'move'), None)
+                if move_event:
+                    mid_lat, mid_lon = (point1[0] + point2[0]) / 2, (point1[1] + point2[1]) / 2
+                    move_means = move_event.get('means', '不明')
+                    move_icon = folium.features.CustomIcon(TAG_TO_IMAGE[move_means], icon_size=(30, 30)) if move_means in TAG_TO_IMAGE and os.path.exists(TAG_TO_IMAGE[move_means]) else folium.Icon(color='black', icon='arrow-right', prefix='fa')
+                    move_popup = f"<b>移動: {move_means}</b><br><hr>{move_event.get('experience', '記述なし')}"
+                    folium.Marker(location=[mid_lat, mid_lon], popup=move_popup, tooltip=f"移動: {move_means}", icon=move_icon).add_to(move_group)
+        
         route_group.add_to(m)
         move_group.add_to(m)
 
-    # --- タグごとのヒートマップレイヤーを生成 ---
-    for tag, data_points in heatmap_data_by_tag.items():
-        if data_points:
-            heatmap_layer = folium.FeatureGroup(name=f"感情ヒートマップ: {tag}", show=False)
-            ### ★★★ ここからが修正箇所です ★★★
-            # データを0〜1の範囲に正規化して重みとして渡す
-            # (score + 1) / 2 => -1は0に, 0は0.5に, 1は1になる
-            normalized_data = [[lat, lon, (score + 1) / 2] for lat, lon, score in data_points]
-            
-            # 0(青) - 0.5(白) - 1(赤) のグラデーションを定義
-            gradient = {"0.0": 'blue', "0.5": 'white', "1.0": 'red'}
-            
-            HeatMap(
-                normalized_data,
-                min_opacity=0.2,
-                radius=25,
-                blur=15,
-                gradient=gradient
-            ).add_to(heatmap_layer)
-            ### ★★★ 修正ここまで ★★★
-            heatmap_layer.add_to(m)
+    # --- ポジティブとネガティブのヒートマップレイヤーを生成 ---
+    if positive_heatmap_data:
+        positive_layer = folium.FeatureGroup(name="感情ヒートマップ (ポジティブ)", show=False)
+        HeatMap(
+            positive_heatmap_data,
+            gradient={"0.0": 'white', "1.0": 'red'}, # 0(白)〜1(赤)
+            min_opacity=0.3, radius=25, blur=15
+        ).add_to(positive_layer)
+        positive_layer.add_to(m)
+
+    if negative_heatmap_data:
+        negative_layer = folium.FeatureGroup(name="感情ヒートマップ (ネガティブ)", show=False)
+        HeatMap(
+            negative_heatmap_data,
+            gradient={"0.0": 'blue', "1.0": 'white'}, # 正規化済みなので 0(青)〜1(白)
+            min_opacity=0.3, radius=25, blur=15
+        ).add_to(negative_layer)
+        negative_layer.add_to(m)
 
     folium.LayerControl().add_to(m)
     m.add_child(LayerToggleButtons())

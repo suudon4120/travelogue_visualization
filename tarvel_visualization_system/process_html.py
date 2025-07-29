@@ -89,7 +89,7 @@ def extract_data_from_html(file_path):
 
 # --- メイン処理 ---
 # 1. HTMLからデータを抽出
-file_path = 'visited_places_map_emotion_batch_output_20250725.html'
+file_path = 'visited_places_map_emotion_batch_20250729_184324.html'
 data = extract_data_from_html(file_path)
 
 if not data:

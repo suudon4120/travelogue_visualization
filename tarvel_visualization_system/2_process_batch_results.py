@@ -3,6 +3,7 @@ import json
 import time
 from openai import OpenAI
 from dotenv import load_dotenv
+from datetime import datetime
 # 以前のコードから必要な関数をすべてコピーしてくる
 from travelogue import (
     geocode_place, geocode_gsi, map_emotion_and_routes, 
@@ -112,14 +113,15 @@ def main():
 
         # 地図生成
         if all_travels_data:
-            processed_file_nums = [str(t['file_num']) for t in all_travels_data]
-            if len(processed_file_nums) >= 4:
-                output_filename = f"{base_name}batch_output.html"
-            else:
-                output_filename = f"{base_name}{'_'.join(processed_file_nums)}.html"
+            ### ★★★ ここが修正箇所です ★★★
+            # 現在時刻からタイムスタンプ文字列を生成
+            timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+            # タイムスタンプをファイル名に含める
+            output_filename = f"{base_name}batch_{timestamp}.html"
             
             print(f"\n🗺️ {len(all_travels_data)}件の旅行記データで地図を生成します...")
             map_emotion_and_routes(all_travels_data, output_filename)
+            ### ★★★ 修正ここまで ★★★
         else:
             print("\n地図を生成するための有効なデータがありませんでした。")
 
