@@ -331,7 +331,8 @@ def analyze_stop_emotions_by_tag(text, action_tags_list):
     このテキストを分析し、以下のステップを同時に実行してください。
 
     1.  **タグ抽出**: 提示された「行動」タグリストの中から、テキスト内容に最も関連性の高いタグをすべて選択してください。
-    2.  **タグ別感情分析**: ステップ1で選択した各タグについて、そのタグに関連するテキスト部分の感情を個別に分析し、0.0（非常にネガティブ）から1.0（非常にポジティブ）のスコアを算出してください。
+        - **最重要ルール**: 必ずこのリストに含まれるタグのみを使用し、リストにない新しいタグは絶対に創作しないでください。
+    2.  **タグ別感情分析**: ステップ1で選択した各タグについて、そのタグに関連するテキスト部分の感情を個別に分析し、**-1.0（非常にネガティブ）から 1.0（非常にポジティブ）**のスコアを算出してください。**ニュートラルな感情は0.0**とします。
 
     関連性の高いタグが一つもなければ、空のオブジェクト `{{}}` を返してください。
     出力は必ず、キーが「タグ名」、値が「感情スコア」のJSONオブジェクト形式で返してください。
@@ -498,14 +499,29 @@ def map_emotion_and_routes(travels_data, output_html):
     for tag, data_points in heatmap_data_by_tag.items():
         if data_points:
             heatmap_layer = folium.FeatureGroup(name=f"感情ヒートマップ: {tag}", show=False)
-            HeatMap(data_points, radius=20).add_to(heatmap_layer)
+            ### ★★★ ここからが修正箇所です ★★★
+            # データを0〜1の範囲に正規化して重みとして渡す
+            # (score + 1) / 2 => -1は0に, 0は0.5に, 1は1になる
+            normalized_data = [[lat, lon, (score + 1) / 2] for lat, lon, score in data_points]
+            
+            # 0(青) - 0.5(白) - 1(赤) のグラデーションを定義
+            gradient = {"0.0": 'blue', "0.5": 'white', "1.0": 'red'}
+            
+            HeatMap(
+                normalized_data,
+                min_opacity=0.2,
+                radius=25,
+                blur=15,
+                gradient=gradient
+            ).add_to(heatmap_layer)
+            ### ★★★ 修正ここまで ★★★
             heatmap_layer.add_to(m)
 
     folium.LayerControl().add_to(m)
     m.add_child(LayerToggleButtons())
     
     m.save(output_html)
-    print(f"\n🌐 タグ別感情分析付きの地図を {output_html} に保存しました。")
+    print(f"\n🌐 地図を {output_html} に保存しました。")
 
 def main():
     """メイン処理"""
