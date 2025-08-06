@@ -17,6 +17,7 @@ from mgwr.sel_bw import Sel_BW
 
 # 可視化ライブラリ
 import matplotlib.pyplot as plt
+from tqdm import tqdm # 進捗表示用
 
 def extract_data_from_html(file_path):
     """
@@ -107,7 +108,7 @@ else:
     # ★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
     try:
         # Natural Earthからダウンロードした国のシェープファイルを読み込む
-        world = gpd.read_file("ne_110m_admin_0_countries.shp")
+        world = gpd.read_file("./shapefiles/ne_110m_admin_0_countries.shp")
         # 日本のジオメトリのみを抽出
         japan_gdf = world[world['ADMIN'] == 'Japan']
 
