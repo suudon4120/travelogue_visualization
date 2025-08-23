@@ -45,15 +45,26 @@ def main():
 
         results_by_id = {}
         for line in result_content.strip().split('\n'):
-            data = json.loads(line)
-            custom_id = data['custom_id']
-            # responseがエラーの場合もあるためチェック
-            if data.get('response') and data['response']['status_code'] == 200:
-                response_body = data['response']['body']
-                content = json.loads(response_body['choices'][0]['message']['content'])
-                results_by_id[custom_id] = content
-            else:
-                print(f"[WARNING] ID {custom_id} のリクエストでエラーが発生しました。スキップします。")
+            ### ★★★ ここからが修正箇所です ★★★
+            try:
+                data = json.loads(line)
+                custom_id = data['custom_id']
+                
+                # レスポンスが成功しているか確認
+                if data.get('response') and data['response']['status_code'] == 200:
+                    response_body = data['response']['body']
+                    # GPTが生成したJSONコンテンツをさらにパース
+                    # この内側のパースでエラーが発生する可能性がある
+                    content = json.loads(response_body['choices'][0]['message']['content'])
+                    results_by_id[custom_id] = content
+                else:
+                    print(f"[WARNING] ID {custom_id} のリクエストでAPIエラーが発生しました。スキップします。")
+            except json.JSONDecodeError as e:
+                # 壊れたJSONが原因でパースに失敗した場合
+                print(f"[WARNING] 1件のバッチ結果の解析に失敗しました。この結果をスキップします。エラー: {e}")
+                # ループは中断せず、次の行の処理に進む
+                continue
+            ### ★★★ 修正ここまで ★★★
 
 
         print(f"✅ {len(results_by_id)}件の結果を正常にパースしました。")
