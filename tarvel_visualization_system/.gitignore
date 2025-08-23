@@ -1,3 +1,8 @@
 .env
 *.html
 *.json
+*.pbf
+*.gpkg
+*.shp
+*.shx
+*.dbf
