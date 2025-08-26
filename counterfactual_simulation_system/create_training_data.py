@@ -95,26 +95,40 @@ def generate_training_data(schedule_filepath, travelogue_filepath, model):
         else:
             end_anchor_index = len(unified_timeline)
 
-        # Prefix, Middle, Suffix を「塊」として定義
-        prefix_events = unified_timeline[:start_anchor_index]
-        middle_events = unified_timeline[start_anchor_index:end_anchor_index]
-        suffix_events = unified_timeline[end_anchor_index:]
+        # 1. Prefixを直前の1〜2イベントに限定する (ここでは直前のイベントのみ)
+        if start_anchor_index > 0:
+            prefix_events = [unified_timeline[start_anchor_index - 1]]
+        else:
+            prefix_events = [] # 旅の始まりならPrefixは無し
 
-        # PrefixとSuffixが空でない場合のみ学習データとして採用
-        if prefix_events and suffix_events:
-            # PrefixとSuffixは重要なイベントのみを抽出して生成
-            prefix_text = format_events_to_text(prefix_events, key_events_only=True)
-            # Middleは全ての情報を含む
-            middle_text = format_events_to_text(middle_events, key_events_only=False) 
-            suffix_text = format_events_to_text(suffix_events, key_events_only=True)
+        # 2. Middleを定義
+        middle_events = unified_timeline[start_anchor_index:end_anchor_index]
+        
+        # 3. Suffixを直後の1〜2イベントに限定する
+        if end_anchor_index < len(unified_timeline):
+            suffix_events = [unified_timeline[end_anchor_index]]
+        else:
+            suffix_events = [] # 旅の終わりならSuffixは無し
+
+        if prefix_events and suffix_events and middle_events:
+            # 4. 各パートのテキストを生成 (フィルタリングは不要に)
+            prefix_text = format_events_to_text(prefix_events)
+            middle_text = format_events_to_text(middle_events)
+            suffix_text = format_events_to_text(suffix_events)
             
+            # 5. target_textの末尾から不要な「移動」を削除
+            if middle_text.endswith("。移動（車）。"):
+                middle_text = middle_text[:-6]
+
             input_text = f"文頭: {prefix_text} 文末: {suffix_text}"
             target_text = middle_text
             
-            training_samples.append({
-                "input_text": input_text,
-                "target_text": target_text
-            })
+            # target_textが空でなければサンプルを追加
+            if target_text:
+                training_samples.append({
+                    "input_text": input_text,
+                    "target_text": target_text
+                })
             
     return training_samples
 
