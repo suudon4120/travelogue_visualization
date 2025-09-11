@@ -1,0 +1,7 @@
+openai
+python-dotenv
+folium
+geopy
+Jinja2
+requests
+branca

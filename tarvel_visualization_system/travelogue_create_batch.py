@@ -9,7 +9,7 @@ load_dotenv()
 client = OpenAI()
 
 # 入力・出力ファイルの設定
-INPUT_TXT = '00018_to_30501.txt'  # 分析したい旅行記番号のリスト
+INPUT_TXT = 'input.txt'  # 分析したい旅行記番号のリスト
 BATCH_INPUT_FILE = 'batch_input.jsonl' # OpenAIにアップロードするリクエストファイル
 DIRECTORY = "../../2022-地球の歩き方旅行記データセット/data_arukikata/data/domestic/with_schedules/"
 MODEL_TO_USE = "gpt-4o"
