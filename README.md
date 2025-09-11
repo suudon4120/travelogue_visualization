@@ -1,7 +1,7 @@
 # Travelogue Visualization System
 
 <p align="center">
-  <img src="ここにアウトプットのスクリーンショット画像/GIFを挿入" alt="demo">
+  <img src="travelogue_demo.gif" alt="demo">
 </p>
 
 ## 概要 (Overview) 📝
